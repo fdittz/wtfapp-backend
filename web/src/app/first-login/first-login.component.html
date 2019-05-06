@@ -1,0 +1,25 @@
+<div fxLayout="row" fxLayoutAlign="center center">
+    <div fxLayout="column" fxLayoutAlign="center center" style="height: 80vh">
+        <mat-card class="kt-login-card">
+
+                <mat-card-title fxLayoutAlign="center center">
+                	Success!                    
+                </mat-card-title>
+                <mat-card-subtitle fxLayoutAlign="center center">
+                    You're now registered, but you have to fill in a Nickname to identify yourself
+                </mat-card-subtitle>
+                <mat-card-content>
+                	<mat-form-field style="width: 100%">
+						<input matInput [(ngModel)]="nickname" placeholder="Nickname (max 12 chars)" name="nickname" id="nickname" maxlength="12" style="font-size: 3.5em; text-align: center" #input (input)="input.value=$event.target.value.toLowerCase()" >
+					</mat-form-field>
+                </mat-card-content>
+                <mat-card-actions class="kt-card-actions" fxLayout="column" fxLayoutAlign="center center">
+                	<button mat-raised-button color="primary" fxFlexFill class="blue" (click)="registerNickname()">
+                		Proceed
+                	</button><br>
+                </mat-card-actions>
+                <button mat-raised-button color="primary" fxFlexFill class="blue" (click)="testApi()">
+Test                    </button><br>
+        </mat-card>
+    </div>
+</div>

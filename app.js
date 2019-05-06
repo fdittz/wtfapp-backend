@@ -13,5 +13,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser())
 
 app.use('/api/public', public);
+app.use('/api/users', users);
 
 module.exports = app;

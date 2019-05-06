@@ -1,0 +1,46 @@
+<div fxLayout="row" fxLayoutAlign="center center">
+    <div fxLayout="column" fxLayoutAlign="center center" style="height: 80vh">
+        <mat-card class="kt-login-card">
+
+                <mat-card-title fxLayoutAlign="center center">
+                    Quad Club
+                </mat-card-title>
+                <mat-card-subtitle fxLayoutAlign="center center">
+                    Brazilian Team Fortress
+                </mat-card-subtitle>
+                <mat-card-content>
+                	<div mat-card-avatar class="quadclub-login"></div>
+                </mat-card-content>
+                <mat-card-actions class="kt-card-actions" fxLayout="column" fxLayoutAlign="center center">
+                	<button mat-raised-button color="primary" fxFlexFill class="blue" (click)="facebookSignIn()">
+                		<i class="material-icons">account_circle</i> Login with Facebook
+                	</button><br>
+                    <button mat-raised-button color="warn" fxFlexFill (click)="googleSignIn()">
+                        <i class="material-icons">account_circle</i> Login with Google
+                    </button>
+                </mat-card-actions>
+
+        </mat-card>
+    </div>
+</div>
+
+<!--<div *ngIf="auth.user$ | async as user; else login">
+  <pre>
+    {{ user | json }}
+  </pre>
+
+  <hr>
+  <button class="button" (click)="auth.signOut()">Sign Out</button>
+
+</div>
+<div *ngIf="auth.loginFailed$">
+  <pre>
+    Login Failed
+  </pre>
+</div>
+
+<ng-template #login>
+  <button class="button" (click)="auth.googleSignIn()">Login with Google</button>
+  <button mat-raised-button color="primary">Primary</button>
+</ng-template>-->
+
