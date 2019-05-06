@@ -6,4 +6,9 @@ router.get('/', function(req, res, next) {
   res.json({users: [{name: 'Timmy'}]});
 });
 
+/* GET users listing. */
+router.get('/new', function(req, res, next) {
+  res.json({users: [{name: 'Timmy'}]});
+});
+
 module.exports = router;
