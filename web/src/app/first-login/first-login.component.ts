@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-first-login',
@@ -30,12 +31,13 @@ export class FirstLoginComponent implements OnInit {
   }
 
   async testApi() {
-      this.http.get('http://localhost:3000/api/users', {
-          headers: new HttpHeaders().set('Authorization', `Bearer ${this.accessToken}`)
-        })
-        .then((data) => {
-          console.log(data);
+    console.log(this.auth)
+      this.http.get(`/api/users/registernickname/${this.nickname}`, {
+          headers: new HttpHeaders().set('Authorization', `Bearer ${this.auth.accessToken}`)
+        }).subscribe(resp => {
+          console.log(resp);
         });
+
       
   
     //return userRef.set(data, { merge: true }) 

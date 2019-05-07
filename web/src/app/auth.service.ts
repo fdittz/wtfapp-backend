@@ -34,6 +34,9 @@ export class AuthService {
 			switchMap(user => {
 				if (user) {
 					this.uid = user.uid;
+					user.getIdToken(true).then((idToken) => {
+						this.accessToken = idToken;
+					});
 					return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
 				}
 				else {
@@ -45,23 +48,25 @@ export class AuthService {
 	};
 
 	async socialSignIn(provider) {
+		var thisAuth = this;
 		this.redirect(await this.afAuth.auth.signInWithPopup(provider)
 		.then((credential) => {
-			this.loginFailed$ = false;
-			return this.updateUserData(credential.user).then(_ => {
+			thisAuth.loginFailed$ = false;
+			return this.updateUserData(credential.user).then(usuariu => {
 				return credential.user;
 			});
 		})
 		.then((user) => {
 			return user.getIdToken(true).then(function(idToken) {
-				this.accessToken = idToken;
+				console.log(thisAuth);
+				thisAuth.accessToken = idToken;
 				return user;
 			})	
 		})
 		.then((user) => {
 			return this.getUser(user).ref.get().then((doc) => {
 				if (doc.exists) 
-					if (!doc.data().login)
+					if (!doc.data().nickname)
 						return "/first";
 					else
 						return this.redirectUrl ? this.router.parseUrl(this.redirectUrl) : "/";				
@@ -71,11 +76,7 @@ export class AuthService {
 		})
 		.catch(error => {
 			this.loginFailed$ = true;
-		}));
-		
-
-		
-				
+		}));	
 	};
 
 	private redirect(url) {
@@ -103,13 +104,19 @@ export class AuthService {
 
 	async registerNickname(nickname) {
 
-  		console.log(nickname);
 		const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${this.uid}`);
 		const data = {
 			uid: this.uid,
 			nickname: nickname.toLowerCase()
 		}
-		return userRef.set(data, { merge: true }) 
+		
+		userRef.set(data, { merge: true }).then(_ => { 
+			console.log(userRef.ref.get().then(teste => {
+				console.log("tt");
+			}))
+		});
+	
+
 		
 		//return userRef.set(data, { merge: true }) 
 		
