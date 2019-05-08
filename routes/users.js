@@ -13,24 +13,48 @@ router.get('/new', function(req, res, next) {
 });
 
 router.get('/registernickname/:nickname', function(req, res, next) {
+	if (req.params.nickname.length < 4) {
+		return res.status(400).json({
+			status:400,
+			message: 'nickname must be at least 4 characters long'
+		});
+	}
 	var authHeaders = req.headers.authorization;
 	var token = authHeaders.split(" ")[1];
-	console.log(token)
+	console.log("TESTY");
+
 	
-	admin.auth().verifyIdToken(token).then(function(decodedToken) {
-  				console.log(decodedToken);
-  			});
-	var db = admin.firestore();
-  	db.collection('nicknames')
-  	.doc(req.params.nickname)
-  	.get()
-  	.then((doc) => {
-  		if (doc.exists) {
-  			admin.auth().verifyToken(token).then(function(decodedToken) {
-  				console.log(decodedToken);
-  			})
-  		}
-  	})
+	return admin.auth().verifyIdToken(token).then(function(decodedToken) {
+		var db = admin.firestore();
+	  	return db.collection('nicknames')
+	  	.doc(req.params.nickname)
+	  	.get()
+	  	.then((doc) => {
+	  		console.log("DOCCY");
+	  		if (!doc.exists) {
+	  			db.collection('nicknames')
+	  			.doc(req.params.nickname)
+	  			.set({uid: decodedToken.uid}, {merge: true});
+	  			return res.status(200).json({
+					status:200,
+					message: 'nickname registered'
+				});
+	  		}
+	  		else if (doc.data().uid == decodedToken.uid) {
+	  			return res.status(400).json({
+					status:400,
+					message: 'you already registered this nickname'
+				});
+	  		}
+	  		else {
+	  			return res.status(400).json({
+					status:400,
+					message: 'nickname already registered'
+				});
+	  		}
+	  	})
+
+	});
   	
   
 
