@@ -79,7 +79,7 @@ export class AuthService {
 		}));	
 	};
 
-	private redirect(url) {
+	public redirect(url) {
 		let navigationExtras: NavigationExtras = {
           queryParamsHandling: 'preserve',
           preserveFragment: true

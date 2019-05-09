@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var admin = require('../util/firebaseadmin');
+var UserService = require("../services/UserService")
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -20,41 +21,32 @@ router.get('/registernickname/:nickname', function(req, res, next) {
 		});
 	}
 	var authHeaders = req.headers.authorization;
-	var token = authHeaders.split(" ")[1];
-	console.log("TESTY");
-
-	
-	return admin.auth().verifyIdToken(token).then(function(decodedToken) {
-		var db = admin.firestore();
-	  	return db.collection('nicknames')
-	  	.doc(req.params.nickname)
-	  	.get()
-	  	.then((doc) => {
-	  		console.log("DOCCY");
-	  		if (!doc.exists) {
-	  			db.collection('nicknames')
-	  			.doc(req.params.nickname)
-	  			.set({uid: decodedToken.uid}, {merge: true});
-	  			return res.status(200).json({
-					status:200,
-					message: 'nickname registered'
-				});
-	  		}
-	  		else if (doc.data().uid == decodedToken.uid) {
-	  			return res.status(400).json({
-					status:400,
-					message: 'you already registered this nickname'
-				});
-	  		}
-	  		else {
-	  			return res.status(400).json({
-					status:400,
-					message: 'nickname already registered'
-				});
-	  		}
-	  	})
-
-	});
+	if (authHeaders) {
+		var token = authHeaders.split(" ")[1];
+		return admin.auth().verifyIdToken(token).then(function(decodedToken) {
+			return UserService.registerNickname(decodedToken.uid, req.params.nickname)
+			.then(
+				(success) => {
+					return res.status(200).json({
+						status:200,
+						message: success
+					});
+				}, 
+				(error) => {
+					return res.status(400).json({
+						status:400,
+						message: error
+					});
+				}
+			);
+		})
+	}
+	else {
+		return res.status(401).json({
+			status:401,
+			message: 'Unauthorized'
+		});
+	}
   	
   
 
