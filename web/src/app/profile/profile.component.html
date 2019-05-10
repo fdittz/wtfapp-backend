@@ -1,3 +1,33 @@
-<p>
-  profile works!
-</p>
+<div fxLayout="row" fxLayoutAlign="center center">
+  <div fxLayout="column" fxLayoutAlign="center center" style="height: 80vh">
+      <mat-card class="kt-login-card" style="width: 400px; min-height: 400px">
+        <mat-card-content fxLayoutAlign="center center">
+          <div class="image-cropper"><img src="{{player ? player.photoURL : ''}}"/>  </div>
+        </mat-card-content>
+              <mat-card-title fxLayoutAlign="center center">
+                  {{player ? player.nickname : " "}}
+              </mat-card-title>
+              <mat-card-subtitle fxLayoutAlign="center center">
+                  {{player ? player.name : " "}}
+              </mat-card-subtitle>
+              
+              <mat-card-actions class="kt-card-actions" fxLayout="column" fxLayoutAlign="center center">
+                <button *ngIf="!editSecret"mat-raised-button color="primary" fxFlexFill class="blue" (click)="editSecret = true">
+                  New Secret
+                </button><br>
+                <mat-card-subtitle *ngIf="editSecret" fxLayoutAlign="center center">
+                  Communication between Quake Servers and the auth server is not encrypted, so please don't re-use any password from other services
+                </mat-card-subtitle>
+                <mat-form-field *ngIf="editSecret" style="width: 100%">
+                  <input matInput [(ngModel)]="secret" placeholder="Secret (min 4 chars)" name="secret" id="secret" maxlength="20" style="text-align: center" #input type="password">
+                </mat-form-field>
+                <button *ngIf="editSecret"mat-raised-button color="primary" fxFlexFill class="blue" (click)="editSecret = false">
+                  Set Secret
+                </button><br>
+
+                
+              </mat-card-actions>
+
+      </mat-card>
+  </div>
+</div>
