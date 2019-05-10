@@ -20,7 +20,7 @@ export class AuthService {
 	loginFailed$: boolean;
 	redirectUrl: string;
 	loggedInFirebase: boolean;
-	accessToken: string;
+	accessToken: Promise<string>;
 
 	user$: Observable<User>;
 	uid: string;
@@ -34,8 +34,8 @@ export class AuthService {
 			switchMap(user => {
 				if (user) {
 					this.uid = user.uid;
-					user.getIdToken(true).then((idToken) => {
-						this.accessToken = idToken;
+					this.accessToken = user.getIdToken(true).then((idToken) => {
+						return Promise.resolve(idToken);
 					});
 					return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
 				}
@@ -58,8 +58,6 @@ export class AuthService {
 		})
 		.then((user) => {
 			return user.getIdToken(true).then(function(idToken) {
-				console.log(thisAuth);
-				thisAuth.accessToken = idToken;
 				return user;
 			})	
 		})
@@ -101,27 +99,6 @@ export class AuthService {
 		return userRef.set(data, { merge: true }) 
 		
 	}
-
-	async registerNickname(nickname) {
-
-		const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${this.uid}`);
-		const data = {
-			uid: this.uid,
-			nickname: nickname.toLowerCase()
-		}
-		
-		userRef.set(data, { merge: true }).then(_ => { 
-			console.log(userRef.ref.get().then(teste => {
-				console.log("tt");
-			}))
-		});
-	
-
-		
-		//return userRef.set(data, { merge: true }) 
-		
-	
-  	}
 
 	private getUser(user) {
 		return this.afs.doc(`users/${user.uid}`);

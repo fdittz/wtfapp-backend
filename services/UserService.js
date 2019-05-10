@@ -1,18 +1,17 @@
 var admin = require('../util/firebaseadmin');
 
 class UserService {
-    constructor() {
 
-    }
+    constructor() {
+        this.db = admin.firestore();
+    }   
 
     registerNickname(userUid, newNickname) {
-
-        var db = admin.firestore();
-        var nickRef = db.collection('nicknames');
+        var nickRef = this.db.collection('nicknames');
         var nickDocRef = nickRef.doc(newNickname);
-        var userRef = db.collection('users').doc(userUid);
+        var userRef = this.db.collection('users').doc(userUid);
 
-        return db.runTransaction((transaction) => {
+        return this.db.runTransaction((transaction) => {
             return transaction.get(nickDocRef).then((nickDoc) => {
                 if (!nickDoc.exists) {
                     return nickRef.where("uid", "==", userUid).get()
@@ -35,14 +34,29 @@ class UserService {
                     return Promise.reject('nickname already taken');
             })
             .catch((error) => {
-                console.log(error);
+                console.error(error);
                 return Promise.reject(error);
             })
         })
-
-
+        .catch(error => { console.error(error)})
     }
 
+    getUserProfile(userUid, nickname) {
+        var userRef = this.db.collection('users');
+        return userRef.where("nickname", "==", nickname).get()
+        .then(result => {
+            if (result.docs.length) {
+                var userFound = result.docs[0].data();
+                if (userFound.uid == userUid) {
+                   return userFound;
+                }
+                else
+                    return {name: userFound.name, nickname: userFound.nickname}
+            }
+            
+        });
+
+    }
 }
 
 module.exports = new UserService();

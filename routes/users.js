@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var admin = require('../util/firebaseadmin');
 var UserService = require("../services/UserService")
+var isUserAuthenticated  = require('../middleware/auth')
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -13,42 +14,54 @@ router.get('/new', function(req, res, next) {
   res.json({users: [{name: 'Timmy'}]});
 });
 
-router.get('/registernickname/:nickname', function(req, res, next) {
+router.get('/registernickname/:nickname', isUserAuthenticated, function(req, res, next) {
 	if (req.params.nickname.length < 4) {
 		return res.status(400).json({
 			status:400,
 			message: 'nickname must be at least 4 characters long'
 		});
 	}
-	var authHeaders = req.headers.authorization;
-	if (authHeaders) {
-		var token = authHeaders.split(" ")[1];
-		return admin.auth().verifyIdToken(token).then(function(decodedToken) {
-			return UserService.registerNickname(decodedToken.uid, req.params.nickname)
-			.then(
-				(success) => {
-					return res.status(200).json({
-						status:200,
-						message: success
-					});
-				}, 
-				(error) => {
-					return res.status(400).json({
-						status:400,
-						message: error
-					});
-				}
-			);
-		})
-	}
-	else {
-		return res.status(401).json({
-			status:401,
-			message: 'Unauthorized'
+	return UserService.registerNickname(res.locals.auth.uid, req.params.nickname)
+	.then(
+		(success) => {
+			return res.status(200).json({
+				status:200,
+				message: success
+			});
+		}, 
+		(error) => {
+			return res.status(400).json({
+				status:400,
+				message: error
+			});
+		}
+	);
+});
+
+router.get('/:nickname', isUserAuthenticated, function(req, res, next) {
+	if (req.params.nickname.length < 4) {
+		return res.status(400).json({
+			status:400,
+			message: 'nickname must be at least 4 characters long'
 		});
 	}
-  	
-  
+	return UserService.getUserProfile(res.locals.auth.uid, req.params.nickname)
+	.then((user) => {
+		if (user)
+			return res.status(200).json(user);
+		else
+			return res.status(404).json({
+				status:404,
+				message: "Player not found"
+			})
+	})
+	.catch((err) => {
+		console.error(err);
+		return res.status(500).json({
+			status: 500,
+			message: "error"
+		});
+	});
 
 });
 module.exports = router;
