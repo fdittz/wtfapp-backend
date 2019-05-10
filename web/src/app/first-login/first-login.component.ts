@@ -27,19 +27,31 @@ export class FirstLoginComponent implements OnInit {
   async registerNickname() {
       var self = this;
       this.http.get(`/api/users/registernickname/${this.nickname}`, {
-          headers: new HttpHeaders().set('Authorization', `Bearer ${this.auth.accessToken}`)
+          headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
         }).subscribe(resp => {
-          console.log("AAAAAAAAAAAA")
           if (resp["status"] == 200) {
             this.msgError = "";
             this.auth.redirect("/");
           }
         }, resp => {
             this.msgError = resp.error.message;
+            console.log(this.msgError);
         })
-
-    
+  }
   
+  async testApi() {
+    var self = this;
+    this.http.get(`/api/users/${this.nickname}`, {
+        headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
+      }).subscribe(resp => {
+        if (resp["status"] == 200) {
+          this.msgError = "";
+          console.log(resp);
+        }
+      }, resp => {
+          this.msgError = resp.error.message;
+          console.log(this.msgError);
+      })
   }
 
 }
