@@ -1,4 +1,5 @@
 var admin = require('../util/firebaseadmin');
+var CryptoJS = require('crypto-js');
 
 class UserService {
 
@@ -55,7 +56,30 @@ class UserService {
             }
             
         });
+    }
 
+    login(nickname, secret) {
+        var userRef = this.db.collection('users');
+        return userRef.where("nickname", "==", nickname).get()
+        .then(result => {
+            if (result.docs.length) {
+                var userFound = result.docs[0].data();
+                var hmac = CryptoJS.HmacSHA512(secret,userFound.salt);
+                var saltedHash = CryptoJS.enc.Base64.stringify(hmac);
+                if (saltedHash == userFound.secret) {
+                    console.log("succ");
+                    return Promise.resolve("success");
+                }
+                else {
+                    console.log("err pass: " + nickname);
+                    return Promise.reject("invalid login/pass");
+                }
+            }
+            else {
+                console.log("err notfound: " + nickname);
+                return Promise.reject("invalid login/pass");
+            }            
+        });
     }
 }
 

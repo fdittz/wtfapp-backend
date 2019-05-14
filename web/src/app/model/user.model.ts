@@ -2,5 +2,7 @@ export interface User {
   uid: string;
   name?: string;
   photoURL?: string;
-  username?: string;
+  nickname?: string;
+  secret?: string;
+  salt?: string;
 }
