@@ -2,9 +2,11 @@ import { Component, OnInit, } from '@angular/core';
 import { ActivatedRoute,  ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
-iimport * as CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
+import { User  } from '../model/user.model';
 
 @Component({
   selector: 'app-profile',
@@ -12,15 +14,18 @@ iimport * as CryptoJS from 'crypto-js';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
+
   msgError: String;
   player: Object;
-  token: string;
   editSecret: boolean;
+  nickname: string;
+  secret: string;
 
   constructor(
     public auth: AuthService,
     private http: HttpClient,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private afs: AngularFirestore
     ) { }
 
   ngOnInit() {
@@ -43,17 +48,23 @@ export class ProfileComponent implements OnInit {
       })
   }
 
-  private updateSecret(secret) {
-
+  private updateSecret() {
+    if (!this.secret) {
+      this.msgError = "No secret supplied";
+      return;
+    }
 		const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${this.auth.uid}`);
-
+    console.log(this.secret);
+    var salt = CryptoJS.lib.WordArray.random(16).toString().slice(0,16);
+    var hmac = CryptoJS.HmacSHA512(this.secret,salt);
+    var saltedHash = CryptoJS.enc.Base64.stringify(hmac);
+    console.log(salt);
 		const data = {
-			uid: user.uid,
-			email: user.email,
-			name: user.displayName,
-			photoURL: user.photoURL
+      uid: this.auth.uid,
+			secret: saltedHash,
+			salt: salt
 		}
-		return userRef.set(data, { merge: true }) 
+		return userRef.set(data, { merge: true }).then(_ => console.log("Secret updated"));
 		
 	}
 
