@@ -12,3 +12,32 @@ img {
     height: 100%;
     width: auto;
 }
+
+.code {
+    font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+    background: #333;
+    border-radius: 5px;
+    padding: 0 5px;
+}
+.code-block {
+    background: #333;
+    width: 100%;
+    line-height: 4em;
+    text-align: center;
+    border-radius: 10px;
+    transition: 0.3s;
+    opacity: 1;
+
+}
+
+.code-block.hidden {
+   opacity: 0;
+
+}
+
+.link {
+    cursor: pointer;
+    background: none;
+    border: 0;
+    color: #dcff56;
+}
