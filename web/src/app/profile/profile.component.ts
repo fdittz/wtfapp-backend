@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
   msgError: String;
   player: Object;
   editSecret: boolean;
+  secretSet: boolean;
   nickname: string;
   secret: string;
 
@@ -50,6 +51,7 @@ export class ProfileComponent implements OnInit {
 
   private updateSecret() {
     if (!this.secret) {
+      console.log("TESTE");
       this.msgError = "No secret supplied";
       return;
     }
@@ -64,7 +66,9 @@ export class ProfileComponent implements OnInit {
 			secret: saltedHash,
 			salt: salt
 		}
-		return userRef.set(data, { merge: true }).then(_ => console.log("Secret updated"));
+		return userRef.set(data, { merge: true }).then(_ => {
+      this.secretSet = true;
+    });
 		
 	}
 
