@@ -11,7 +11,7 @@
                   {{player ? player.name : " "}}
               </mat-card-subtitle>
               
-              <mat-card-actions class="kt-card-actions" fxLayout="column" fxLayoutAlign="center center">
+              <mat-card-actions *ngIf="!secretSet" class="kt-card-actions" fxLayout="column" fxLayoutAlign="center center">
                 <button *ngIf="!editSecret"mat-raised-button color="primary" fxFlexFill class="blue" (click)="editSecret = true">
                   New Secret
                 </button><br>
@@ -21,13 +21,24 @@
                 <mat-form-field *ngIf="editSecret" style="width: 100%">
                   <input matInput [(ngModel)]="secret" placeholder="Secret (min 4 chars)" name="secret" id="secret" maxlength="20" style="text-align: center" #input type="password">
                 </mat-form-field>
-                <button *ngIf="editSecret"mat-raised-button color="primary" fxFlexFill class="blue" (click)="editSecret = false">
+                <button *ngIf="editSecret"mat-raised-button color="primary" fxFlexFill class="blue" (click)="updateSecret()">
                   Set Secret
                 </button><br>
-                <button (click)="updateSecret()">Test1</button>
-
-                
               </mat-card-actions>
+
+              <mat-card-content *ngIf="secretSet" class="kt-card-actions" fxLayout="column" fxLayoutAlign="center center">            
+                  New secret set! To login, while in game, type <p class="code">"cmd login	&#60;nickname&#62; 	&#60;secret&#62;"</p>
+              </mat-card-content>      
+                
+              <mat-card-content *ngIf="secretSet" class="kt-card-actions">   
+                    You can paste the following code into your <span class="code">autoexec.cfg</span> inside your <span class="code">fortress/</span> folder,
+                    then you just have to type <span class="code">/login</span> in your console to log in.<br> Use it at your own risk.<br/><br/>
+                    <button class="link" *ngIf="!showAlias" (click)="showAlias = true">Click to show (includes secret)</button>
+                    <button class="link" *ngIf="showAlias" (click)="showAlias = false">Click to hide</button>
+                    <div class="code code-block {{!showAlias ? 'hidden' : ''}} "> 
+                      alias login "cmd login {{player.nickname}} {{secret}}"
+                    </div>                 
+                </mat-card-content>
 
       </mat-card>
   </div>
