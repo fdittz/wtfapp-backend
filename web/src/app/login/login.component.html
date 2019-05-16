@@ -1,28 +1,26 @@
-<div fxLayout="row" fxLayoutAlign="center center">
-    <div fxLayout="column" fxLayoutAlign="center center" style="height: 80vh">
-        <mat-card class="kt-login-card">
+<section class="section no-bg">
+  <div class="container vert-center">
+      <div class="card login has-text-centered">
+          <div class="card-content">
+              <div class="has-text-centered">
+                  <div style="background: url(assets/img/quadclub.png); width: 127px; height: 127px; border-radius: 50%;margin: 0 auto 1em">
+                  </div>
+              </div>
+              <div class="media-content has-text-centered">
+                  <p class="title is-4">Quad Club</p>
+                  <p class="subtitle is-6">Brazlian Team Fortress</p>
+              </div>
+              <div class="content">
+              <div class="card-button">
+                  <a class="button is-danger" (click)="googleSignIn()"><i class="fab fa-google"></i>&nbsp;&nbsp;&nbsp;&nbsp; Login with Google</a>   
+              </div>                    
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
 
-                <mat-card-title fxLayoutAlign="center center">
-                    Quad Club
-                </mat-card-title>
-                <mat-card-subtitle fxLayoutAlign="center center">
-                    Brazilian Team Fortress
-                </mat-card-subtitle>
-                <mat-card-content>
-                	<div mat-card-avatar class="quadclub-login"></div>
-                </mat-card-content>
-                <mat-card-actions class="kt-card-actions" fxLayout="column" fxLayoutAlign="center center">
-                	<button mat-raised-button color="primary" fxFlexFill class="blue" (click)="facebookSignIn()">
-                		<i class="material-icons">account_circle</i> Login with Facebook
-                	</button><br>
-                    <button mat-raised-button color="warn" fxFlexFill (click)="googleSignIn()">
-                        <i class="material-icons">account_circle</i> Login with Google
-                    </button>
-                </mat-card-actions>
 
-        </mat-card>
-    </div>
-</div>
 
 <!--<div *ngIf="auth.user$ | async as user; else login">
   <pre>

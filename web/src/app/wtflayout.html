@@ -1,15 +1,71 @@
-<div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="css/bulma-superhero.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  </head>
+  <body>
+  <header>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+              
+        <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item">
+            Profile
+            </a>
+    
+            <a class="navbar-item">
+            Player List
+            </a>
+
+        </div>
+    
+        <div class="navbar-end">
+        </div>
+        </div>
+    </nav>
+  </header>
+
+  <section class="section no-bg">
+    <div class="container vert-center">
+        <div class="card login has-text-centered">
+            <div class="card-content">
+            
+                <div class="has-text-centered">
+                    <div style="background: url(assets/img/quadclub.png); width: 127px; height: 127px; border-radius: 50%;margin: 0 auto 1em">
+                    </div>
+                    </figure>
+                </div>
+                <div class="media-content has-text-centered">
+                    <p class="title is-4">Quad Club</p>
+                    <p class="subtitle is-6">Brazlian Team Fortress</p>
+                </div>
+                <div class="content">
+                <div class="card-button">
+                    <a class="button is-danger"><i class="fab fa-google"></i>&nbsp;&nbsp;&nbsp;&nbsp; Login with Google</a>   
+                </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+  </section>
+
+  <div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
     <section class="hero player-title no-bg is-small">
         <div class="hero-body player-title no-bg">
             <div class="media">
                 <div class="media-left">
                     <figure class="image is-96x96">
-                    <img class="is-rounded" src="{{player ? player.photoURL : 'https://bulma.io/images/placeholders/128x128.png'}}"/>
+                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
                     </figure>
                 </div>
                 <div class="media-content">
                     <h1 class="title">
-                      {{player ? player.nickname : " "}}
+                    PlayerName
                     </h1>
                     <h2 class="subtitle">
                         <button class="button mb mt" data-target="modal-secret">Change secret</button>   
@@ -73,3 +129,26 @@
     </section>
 </div>
 
+<section class="section no-bg">
+        <div class="container vert-center">
+            <div class="card has-text-centered  center-div">
+                <div class="card-content">
+                    <div class="media-content has-text-centered">
+                        <p class="title is-4">No Nickname set</p>
+                        <p class="subtitle is-6">You must have a Nickname to continue.</p>
+                    </div>
+                    <div class="content">
+                        <div class="field">
+                            <div class="control is-large">
+                                <input class="input is-large input-secret" type="text" placeholder="Type your nickname">
+                            </div>
+                        </div>
+
+                        <div class="card-button">
+                            <a class="button is-primary">Set Nickname</a>   
+                        </div>                    
+                    </div>
+                </div>
+            </div>
+        </div>
+</html>
