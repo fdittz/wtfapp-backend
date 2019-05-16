@@ -1,0 +1,96 @@
+body {
+    background-color: black;
+    background-image: url(/assets/img/conback.png);
+    min-height: 100vh;
+    background-repeat: no-repeat
+}
+
+.no-bg {
+    background: transparent!important;
+}
+
+.card {
+    background: #2B3E50;
+    border-radius: 5px;
+    border: none;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
+}
+
+.login {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.card-button {
+    margin: 1em 0;
+}
+
+.button {
+    border-radius: 5px;
+}
+
+.vert-center {
+    display: flex;
+    align-items: center;
+    min-height: calc(100vh - 148px)
+}
+.center-div {
+    margin-left: auto;
+    margin-right: auto;
+}
+.player-title {
+    width: 100%;
+}
+
+.mb {
+    margin-bottom: 1em;
+}
+
+.mt {
+    margin-top: 1em;
+}
+
+.input-secret {
+    background: #222;
+    color: #fff;
+    margin: 1em 0 0;
+    border: 1px solid #444;
+    border-radius: 5px;
+    text-align: center;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #fff!important;
+    opacity: 0.2; /* Firefox */
+    font-weight: 100;
+    font-style: italic;
+    text-align:left;
+}
+  
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #fff!important;
+    opacity: 0.2; /* Firefox */
+    font-weight: 100;
+    font-style: italic
+ }
+  
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: #fff!important;
+    opacity: 0.2; /* Firefox */
+    font-weight: 100;
+    font-style: italic
+}
+
+code {
+    background-color: #111;
+    border-radius: 5px;
+}
+
+code.large {
+    display: block;
+    font-size: 1.2em;
+    color: #ccc;
+    height: 5em;
+}

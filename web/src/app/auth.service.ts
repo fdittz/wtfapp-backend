@@ -67,7 +67,7 @@ export class AuthService {
 					if (!doc.data().nickname)
 						return "/first";
 					else
-						return this.redirectUrl ? this.router.parseUrl(this.redirectUrl) : "/";				
+						return this.redirectUrl ? this.router.parseUrl(this.redirectUrl) : `/profile/${doc.data().nickname}`;				
 				else
 					return "/";
 			});
