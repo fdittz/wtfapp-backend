@@ -2,7 +2,7 @@ export interface User {
   uid: string;
   name?: string;
   photoURL?: string;
-  nickname?: string;
+  login?: string;
   secret?: string;
   salt?: string;
 }

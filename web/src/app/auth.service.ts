@@ -64,10 +64,13 @@ export class AuthService {
 		.then((user) => {
 			return this.getUser(user).ref.get().then((doc) => {
 				if (doc.exists) 
-					if (!doc.data().nickname)
+					if (!doc.data().login)
 						return "/first";
-					else
-						return this.redirectUrl ? this.router.parseUrl(this.redirectUrl) : `/profile/${doc.data().nickname}`;				
+					else {
+						if (this.redirectUrl == "/")
+							this.redirectUrl = `/profile/${doc.data().login}`;
+						return this.redirectUrl ? this.router.parseUrl(this.redirectUrl) : `/profile/${doc.data().login}`;	
+					}			
 				else
 					return "/";
 			});
