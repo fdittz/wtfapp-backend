@@ -7,9 +7,9 @@ class UserService {
         this.db = admin.firestore();
     }   
 
-    registerNickname(userUid, newNickname) {
-        var nickRef = this.db.collection('nicknames');
-        var nickDocRef = nickRef.doc(newNickname);
+    registerLogin(userUid, newLogin) {
+        var nickRef = this.db.collection('logins');
+        var nickDocRef = nickRef.doc(newLogin);
         var userRef = this.db.collection('users').doc(userUid);
 
         return this.db.runTransaction((transaction) => {
@@ -25,14 +25,14 @@ class UserService {
                         transaction.set(nickDocRef, {uid: userUid}, {merge: true});
                     })
                     .then(_ => {
-                        transaction.update(userRef, {nickname: newNickname});
-                        return Promise.resolve("Nickname " + newNickname + " registered");
+                        transaction.update(userRef, {login: newLogin});
+                        return Promise.resolve("Login " + newLogin + " registered");
                     })
                 }
                 else if (nickDoc.data().uid == userUid)
-                    return Promise.reject('you have already registered this nickname');
+                    return Promise.reject('you have already registered this login');
                 else 
-                    return Promise.reject('nickname already taken');
+                    return Promise.reject('login already taken');
             })
             .catch((error) => {
                 console.error(error);
@@ -42,9 +42,9 @@ class UserService {
         .catch(error => { console.error(error)})
     }
 
-    getUserProfile(userUid, nickname) {
+    getUserProfile(userUid, login) {
         var userRef = this.db.collection('users');
-        return userRef.where("nickname", "==", nickname).get()
+        return userRef.where("login", "==", login).get()
         .then(result => {
             if (result.docs.length) {
                 var userFound = result.docs[0].data();
@@ -52,15 +52,15 @@ class UserService {
                    return userFound;
                 }
                 else
-                    return {name: userFound.name, nickname: userFound.nickname}
+                    return {name: userFound.name, login: userFound.login}
             }
             
         });
     }
 
-    login(nickname, secret) {
+    login(login, secret) {
         var userRef = this.db.collection('users');
-        return userRef.where("nickname", "==", nickname).get()
+        return userRef.where("login", "==", login).get()
         .then(result => {
             if (result.docs.length) {
                 var userFound = result.docs[0].data();
@@ -71,12 +71,12 @@ class UserService {
                     return Promise.resolve("success");
                 }
                 else {
-                    console.log("err pass: " + nickname);
+                    console.log("err pass: " + login);
                     return Promise.reject("invalid login/pass");
                 }
             }
             else {
-                console.log("err notfound: " + nickname);
+                console.log("err notfound: " + login);
                 return Promise.reject("invalid login/pass");
             }            
         });

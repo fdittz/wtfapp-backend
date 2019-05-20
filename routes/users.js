@@ -14,14 +14,14 @@ router.get('/new', function(req, res, next) {
   res.json({users: [{name: 'Timmy'}]});
 });
 
-router.get('/registernickname/:nickname', isUserAuthenticated, function(req, res, next) {
-	if (req.params.nickname.length < 4) {
+router.get('/registerlogin/:login', isUserAuthenticated, function(req, res, next) {
+	if (req.params.login.length < 4) {
 		return res.status(400).json({
 			status:400,
-			message: 'nickname must be at least 4 characters long'
+			message: 'login must be at least 4 characters long'
 		});
 	}
-	return UserService.registerNickname(res.locals.auth.uid, req.params.nickname)
+	return UserService.registerLogin(res.locals.auth.uid, req.params.login)
 	.then(
 		(success) => {
 			return res.status(200).json({
@@ -38,14 +38,14 @@ router.get('/registernickname/:nickname', isUserAuthenticated, function(req, res
 	);
 });
 
-router.get('/:nickname', isUserAuthenticated, function(req, res, next) {
-	if (req.params.nickname.length < 4) {
+router.get('/:login', isUserAuthenticated, function(req, res, next) {
+	if (req.params.login.length < 4) {
 		return res.status(400).json({
 			status:400,
-			message: 'nickname must be at least 4 characters long'
+			message: 'login must be at least 4 characters long'
 		});
 	}
-	return UserService.getUserProfile(res.locals.auth.uid, req.params.nickname)
+	return UserService.getUserProfile(res.locals.auth.uid, req.params.login)
 	.then((user) => {
 		if (user)
 			return res.status(200).json(user);
