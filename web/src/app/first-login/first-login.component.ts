@@ -11,7 +11,7 @@ import { auth } from 'firebase';
 })
 export class FirstLoginComponent implements OnInit {
 
-  nickname: string;
+  login: string;
   msgError: string;
   constructor(
     public auth: AuthService,
@@ -24,9 +24,9 @@ export class FirstLoginComponent implements OnInit {
 
   }
 
-  async registerNickname() {
+  async registerLogin() {
       var self = this;
-      this.http.get(`/api/users/registernickname/${this.nickname}`, {
+      this.http.get(`/api/users/registerlogin/${this.login}`, {
           headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
         }).subscribe(resp => {
           if (resp["status"] == 200) {
@@ -41,7 +41,7 @@ export class FirstLoginComponent implements OnInit {
   
   async testApi() {
     var self = this;
-    this.http.get(`/api/users/${this.nickname}`, {
+    this.http.get(`/api/users/${this.login}`, {
         headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
       }).subscribe(resp => {
         if (resp["status"] == 200) {

@@ -13,7 +13,7 @@ router.get('/user/list', function(req, res, next) {
         if (doc.data().name)
           users.push( {
             name: doc.data().name,
-            nickname: doc.data().nickname,
+            login: doc.data().login,
             photoURL: doc.data().photoURL
           });
 

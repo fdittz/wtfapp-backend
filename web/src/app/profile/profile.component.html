@@ -9,54 +9,58 @@
                 </div>
                 <div class="media-content">
                     <h1 class="title">
-                      {{player ? player.nickname : " "}}
+                      {{player ? player.login : " "}}
                     </h1>
                     <h2 class="subtitle">
-                        <button class="button mb mt" data-target="modal-secret">Change secret</button>   
+                        <button class="button mb mt" (click)="editSecret = true" data-target="modal-secret">{{ player.secret ? 'Change Secret' : 'Create secret'}}</button>   
                     </h2>
                 </div>
                 
-                <div id="modal-secret" class="modal">
+                <div id="modal-secret" class="modal" style="display: block" *ngIf="editSecret">
                     <div class="modal-background"></div>
                     <div class="modal-content">
                         <!-- Any other Bulma elements you want -->
 
                         
                         <div class="card has-text-centered">
-                            <div class="card-content">
-                                <div class="media-content has-text-centered">
+                            <div class="card-content" *ngIf="!secretSet">
+                                <div class="media-content has-text-centered" *ngIf="player.secret">
                                     <p class="title is-4">New Secret</p>
                                     <p class="subtitle is-6">The "secret" is the "password" you use to login in-game. The secret is not encrypted, so don't repeat any password or use anything that might be sensitive</p>
+                                </div>
+                                <div class="media-content has-text-centered" *ngIf="!player.secret">
+                                    <p class="title is-4">You don't have a Secret</p>
+                                    <p class="subtitle is-6"><b>You need a secret to login in-game</b><br>The "secret" is the "password" you use to login in-game. The secret is not encrypted, so don't repeat any password or use anything that might be sensitive</p>
                                 </div>
                                 <div class="content">
                                     <div class="field">
                                         <div class="control is-large">
-                                            <input class="input is-large input-secret" type="text" placeholder="Click and type your new secret">
+                                            <input class="input is-large input-secret" type="text"  [(ngModel)]="secret" placeholder="Click and type your new secret">
                                         </div>
                                     </div>
 
                                     <div class="card-button">
-                                        <a class="button is-primary">Set new Secret</a>   
+                                        <a class="button is-primary" id="secretBtn" (click)="updateSecret()">Set new Secret</a>   
                                     </div>                    
                                 </div>
                             </div>
 
-                            <div class="card-content">
+                            <div class="card-content" *ngIf="secretSet">
                                 <div class="media-content has-text-centered">
                                     <p class="title is-4">Secret set</p>
-                                    <p class="subtitle is-6">To login, while in game, type> <br><code>cmd login &#60;nickname&#62; &#60;your-new-secret&#62;</code></p>
+                                    <p class="subtitle is-6">To login, while in game, type> <br><code>cmd login &#60;login&#62; &#60;your-new-secret&#62;</code></p>
 
                                     <p class="subtitle is-6">You can paste the following command into your <code>autoexec.cfg</code> inside your <code>fortress/</code> folder,
                                         then you just have to type <code>/login</code> in your console to log in.<br> Use it at your own risk.<br/><br/></p>
                                 </div>
                                 <div class="content">
-                                    <div class="field">
-                                        <code class="large"><br>alias login "cmd login fabio fabiop"<br><br></code>
+                                    <div class="field" *ngIf="showAlias">
+                                        <code class="large"><br>alias login "cmd login {{player.login}} {{secret}}"<br><br></code>
                                     </div>
 
-                                    <div class="field">
-                                            <code class="large"><i class="far fa-eye" style="font-size: 2em"></i><br> click to view<br></code>
-                                        </div>
+                                    <div class="field" *ngIf="!showAlias" style="cursor: pointer" (click)="showAlias = true">
+                                        <code class="large"><i class="far fa-eye" style="font-size: 2em"></i><br> click to view<br></code>
+                                    </div>
               
                                 </div>
                             </div>
@@ -66,7 +70,7 @@
 
 
                     </div>
-                    <button class="modal-close is-large" aria-label="close"></button>
+                    <button class="modal-close is-large" *ngIf="player.secret" aria-label="close" (click)="editSecret = false; secretSet = false; showAlias = false; secret = ''"></button>
                 </div>
             </div>
         </div>
