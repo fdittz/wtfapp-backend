@@ -15,6 +15,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 //import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { RootComponent } from './root/root.component';
+import { PlayerListComponent } from './player-list/player-list.component';
 
 
 const config = {
@@ -33,7 +35,9 @@ var angu
     AppComponent,
     FirstLoginComponent,
     ProfileComponent,
-    LoginComponent
+    LoginComponent,
+    RootComponent,
+    PlayerListComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,30 @@
+<div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
+    <nav class="panel">
+        <div class="panel-block">
+            <p class="control has-icons-left">
+                <input class="input is-small" type="text" placeholder="search">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                </span>
+            </p>
+        </div>
+        <a class="panel-block is-active" *ngFor="let player of players;" href="/profile/{{player.login}}">
+            <span class="panel-icon">
+                <i class="fas fa-book" aria-hidden="true"></i>
+            </span>
+            {{player.login}}
+        </a>        
+    </nav>
+
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <ul class="pagination-list">
+          <li *ngFor="let dummy of ' '.repeat(pages).split(''), let x = index" *ngIf="index < currentPage + 2"><a class="pagination-link" [ngClass]="currentPage == x+1 ? 'is-current' : ''">{{x+1}}</a></li>
+          <li><span class="pagination-ellipsis">&hellip;</span></li>
+          <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
+          <li><a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a></li>
+          <li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
+          <li><span class="pagination-ellipsis">&hellip;</span></li>
+          <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
+        </ul>
+      </nav>
+</div>

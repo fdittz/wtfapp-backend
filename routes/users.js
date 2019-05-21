@@ -5,8 +5,22 @@ var UserService = require("../services/UserService")
 var isUserAuthenticated  = require('../middleware/auth')
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.json({users: [{name: 'Timmy'}]});
+router.get('/list/:page?', function(req, res, next) {
+  const PAGE_SIZE = 2;
+  var page = req.params.page ? req.params.page : 1;
+  return UserService.getUsersRef(PAGE_SIZE)
+  .then((result) => {
+	var firstUser = result.firstUsers[page-1];
+	if (firstUser) {
+		UserService.getUsers(firstUser,PAGE_SIZE).then(users => {
+			res.json({pages: result.pages, users: users});
+		});
+	}
+	else {
+		res.json([]);
+	}
+	
+  })
 });
 
 /* GET users listing. */
@@ -64,4 +78,5 @@ router.get('/:login', isUserAuthenticated, function(req, res, next) {
 	});
 
 });
+
 module.exports = router;

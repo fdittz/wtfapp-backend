@@ -58,6 +58,38 @@ class UserService {
         });
     }
 
+    getUsersRef(pageSize) {
+        var userRef = this.db.collection('users').where("login",">","").orderBy("login");
+        return userRef.get()
+        .then(result => {
+            var response = {
+                pages: Math.floor(result.docs.length/pageSize) + 1,
+                firstUsers: []
+            };
+            if (result.docs.length > 0) { 
+                for (var i = 0; i < result.docs.length; i = i + pageSize) {
+                    if (result.docs[i])
+                    response.firstUsers.push(result.docs[i]);
+                }
+            }
+            return response;
+        })
+    }
+    
+    getUsers(startUser,offset) {
+        var userRef = this.db.collection('users').where("login",">","").orderBy("login").startAt(startUser).limit(offset);
+        return userRef.get()
+        .then(result => {
+            if (result.docs.length) {
+                var users = [];
+                result.docs.forEach(user => {
+                    users.push({login: user.data().login, name: user.data().name});
+                })
+                return users;
+            }
+        });
+    }
+
     login(login, secret) {
         var userRef = this.db.collection('users');
         return userRef.where("login", "==", login).get()

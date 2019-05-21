@@ -22,9 +22,9 @@ export class LoginGuard implements CanActivate{
                 this.auth.redirectUrl = state.url;
                 this.router.navigate(['/first']);
               }
-              else {                
+/*               else {                
                 this.router.navigate([`/profile/${userdata.login}`]);
-              }
+              } */
             })
 	        })
 	    );
