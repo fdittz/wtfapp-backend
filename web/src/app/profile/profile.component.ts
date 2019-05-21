@@ -46,7 +46,8 @@ export class ProfileComponent implements OnInit {
       }).subscribe(resp => {
         this.player = <User>resp;
         if (this.auth.uid == this.player.uid && !this.player.secret) {
-          this.editSecret = true;
+          if (!this.player.secret)
+            this.editSecret = true;
         }
       }, resp => {
           this.msgError = resp.error.message;
