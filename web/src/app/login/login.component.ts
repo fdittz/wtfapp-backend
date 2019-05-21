@@ -16,11 +16,6 @@ export class LoginComponent implements OnInit {
     	return this.auth.socialSignIn(new auth.GoogleAuthProvider());
     }
 
-    async facebookSignIn() {
-    	return this.auth.socialSignIn(new auth.FacebookAuthProvider());
-    }
-
-
     ngOnInit() {
     }
 

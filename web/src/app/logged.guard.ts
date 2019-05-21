@@ -17,11 +17,15 @@ export class LoggedGuard implements CanActivate {
          map(user => !!user), // <-- map to boolean
          tap(loggedIn => {				
               if (loggedIn) {
-                console.log('access denied')                
-                this.router.navigate(['/']);
                 this.auth.user$.subscribe(userdata => {                  
                   this.router.navigate([`/profile/${userdata.login}`]);
                 })
+                return true;
+              }
+              else
+              {
+                this.router.navigate([`/login`]);
+                return true;
               }
          })
      );
