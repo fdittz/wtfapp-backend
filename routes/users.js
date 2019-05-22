@@ -13,7 +13,7 @@ router.get('/list/:page?', function(req, res, next) {
 	var firstUser = result.firstUsers[page-1];
 	if (firstUser) {
 		UserService.getUsers(firstUser,PAGE_SIZE).then(users => {
-			res.json({pages: result.pages, users: users});
+			res.json({pages: result.pages, numUsers: result.numUsers, users: users});
 		});
 	}
 	else {
