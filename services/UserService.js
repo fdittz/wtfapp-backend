@@ -64,6 +64,7 @@ class UserService {
         .then(result => {
             var response = {
                 pages: Math.floor(result.docs.length/pageSize) + 1,
+                numUsers: result.docs.length,
                 firstUsers: []
             };
             if (result.docs.length > 0) { 
