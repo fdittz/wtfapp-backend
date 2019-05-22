@@ -8,7 +8,7 @@
                 </span>
             </p>
         </div>
-        <a class="panel-block is-active" *ngFor="let player of players;" href="/profile/{{player.login}}">
+        <a class="panel-block is-active" *ngFor="let player of players | paginate: { itemsPerPage: 1, currentPage: 1, totalItems: numPlayers }" href="/profile/{{player.login}}">
             <span class="panel-icon">
                 <i class="fas fa-book" aria-hidden="true"></i>
             </span>
@@ -16,9 +16,13 @@
         </a>        
     </nav>
 
-    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+   
+
+		<pagination (pageChange)="p = $event"></pagination>
+
+    <!--<nav class="pagination is-centered" role="navigation" aria-label="pagination">
         <ul class="pagination-list">
-          <li *ngFor="let dummy of ' '.repeat(pages).split(''), let x = index" *ngIf="index < currentPage + 2"><a class="pagination-link" [ngClass]="currentPage == x+1 ? 'is-current' : ''">{{x+1}}</a></li>
+          <li *ngFor="let dummy of ' '.repeat(pages).split(''), let x = index"><a class="pagination-link" [ngClass]="currentPage == x+1 ? 'is-current' : ''">{{x+1}}</a></li>
           <li><span class="pagination-ellipsis">&hellip;</span></li>
           <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
           <li><a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a></li>
@@ -26,5 +30,5 @@
           <li><span class="pagination-ellipsis">&hellip;</span></li>
           <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
         </ul>
-      </nav>
+      </nav>-->
 </div>

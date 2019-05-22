@@ -17,6 +17,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RootComponent } from './root/root.component';
 import { PlayerListComponent } from './player-list/player-list.component';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { PaginationComponent } from './pagination/pagination.component'; // <-- import the module
 
 
 const config = {
@@ -37,7 +39,8 @@ var angu
     ProfileComponent,
     LoginComponent,
     RootComponent,
-    PlayerListComponent
+    PlayerListComponent,
+    PaginationComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +59,8 @@ var angu
     MatButtonModule, 
     MatFormFieldModule, 
     MatInputModule, 
-    MatGridListModule
+    MatGridListModule,
+    NgxPaginationModule
   ],
   providers: [],
   bootstrap: [AppComponent]

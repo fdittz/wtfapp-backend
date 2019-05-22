@@ -4,6 +4,7 @@ import { AuthService } from '../auth.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { User  } from '../model/user.model';
+import { PaginationComponent } from '../pagination/pagination.component'
 
 
 @Component({
@@ -16,6 +17,7 @@ export class PlayerListComponent implements OnInit {
   players: Array<User>;
   pages: number;
   currentPage: number;
+  numPlayers: number;
   msgError: string;
 
   constructor(
@@ -40,6 +42,7 @@ export class PlayerListComponent implements OnInit {
         var users = resp["users"];
         this.players = <Array<User>>users;
         this.pages = resp["pages"];
+        this.numPlayers = resp["numUsers"];
       }, resp => {
           this.msgError = resp.error.message;
       })
