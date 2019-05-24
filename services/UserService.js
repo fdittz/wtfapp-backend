@@ -12,34 +12,39 @@ class UserService {
         var nickDocRef = nickRef.doc(newLogin);
         var userRef = this.db.collection('users').doc(userUid);
 
-        return this.db.runTransaction((transaction) => {
-            return transaction.get(nickDocRef).then((nickDoc) => {
-                if (!nickDoc.exists) {
-                    return nickRef.where("uid", "==", userUid).get()
-                    .then(result => {
-                        result.forEach(nickFound => {
-                            transaction.delete(nickFound.ref);
+        return userRef.get()
+        .then(result => {
+            if (result.data().login)
+                return Promise.reject("Login already defined")
+            return this.db.runTransaction((transaction) => {
+                return transaction.get(nickDocRef).then((nickDoc) => {
+                    if (!nickDoc.exists) {
+                        return nickRef.where("uid", "==", userUid).get()
+                        .then(result => {
+                            result.forEach(nickFound => {
+                                transaction.delete(nickFound.ref);
+                            })
                         })
-                    })
-                    .then(_ => {
-                        transaction.set(nickDocRef, {uid: userUid}, {merge: true});
-                    })
-                    .then(_ => {
-                        transaction.update(userRef, {login: newLogin});
-                        return Promise.resolve("Login " + newLogin + " registered");
-                    })
-                }
-                else if (nickDoc.data().uid == userUid)
-                    return Promise.reject('you have already registered this login');
-                else 
-                    return Promise.reject('login already taken');
+                        .then(_ => {
+                            transaction.set(nickDocRef, {uid: userUid}, {merge: true});
+                        })
+                        .then(_ => {
+                            transaction.update(userRef, {login: newLogin});
+                            return Promise.resolve("Login " + newLogin + " registered");
+                        })
+                    }
+                    else if (nickDoc.data().uid == userUid)
+                        return Promise.reject('you have already registered this login');
+                    else 
+                        return Promise.reject('login already taken');
+                })
+                .catch((error) => {
+                    console.error(error);
+                    return Promise.reject(error);
+                })
             })
-            .catch((error) => {
-                console.error(error);
-                return Promise.reject(error);
-            })
-        })
-        .catch(error => { console.error(error)})
+            .catch(error => { console.error(error)})
+        });
     }
 
     getUserProfile(userUid, login) {
@@ -70,7 +75,7 @@ class UserService {
             if (result.docs.length > 0) { 
                 for (var i = 0; i < result.docs.length; i = i + pageSize) {
                     if (result.docs[i])
-                    response.firstUsers.push(result.docs[i]);
+                    response.firstUsers.push(result.docs[i].data().login);
                 }
             }
             return response;

@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { User  } from '../model/user.model';
 import { PaginationComponent } from '../pagination/pagination.component'
+import {Location} from '@angular/common';
+
 
 
 @Component({
@@ -19,21 +21,24 @@ export class PlayerListComponent implements OnInit {
   currentPage: number;
   numPlayers: number;
   msgError: string;
+  firstUsers: Array<string>;
+  perPage: number;
 
   constructor(
     public auth: AuthService,
     private http: HttpClient,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private location: Location) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       this.currentPage = paramMap["params"].page;
-      this.getPlayerList(this.currentPage);
+      this.getPlayerList();
     })
   }
 
-  async getPlayerList(page) {
-    var self = this;
+  async getPlayerList() {
+    var page = this.currentPage;
     if (!page)
       page = 1;
     return this.http.get(`/api/users/list/${page}`, {
@@ -43,9 +48,38 @@ export class PlayerListComponent implements OnInit {
         this.players = <Array<User>>users;
         this.pages = resp["pages"];
         this.numPlayers = resp["numUsers"];
+        this.firstUsers = resp["firstUsers"];
+        this.perPage = resp["perPage"];
+        console.log(this.perPage);
       }, resp => {
           this.msgError = resp.error.message;
       })
+  }
+
+
+  async updatePlayerList() {
+    var page = this.currentPage;
+    if (!page)
+      page = 1;
+    var firstUser = this.firstUsers[page-1]
+    return this.http.get(`/api/users/list/fetch/${firstUser}`, {
+        headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
+      }).subscribe(resp => {
+        var users = resp["users"];
+        this.players = <Array<User>>users;
+        this.perPage = resp["perPage"];
+      }, resp => {
+          this.msgError = resp.error.message;
+      })
+  }
+
+  pageChanged(event){
+    this.currentPage = event;
+    if (this.firstUsers)
+      this.updatePlayerList();
+    else
+      this.getPlayerList();
+    this.location.go(`/playerlist/${this.currentPage}`);
   }
 
 }

@@ -8,7 +8,7 @@
                 </span>
             </p>
         </div>
-        <a class="panel-block is-active" *ngFor="let player of players | paginate: { itemsPerPage: 1, currentPage: 1, totalItems: numPlayers }" href="/profile/{{player.login}}">
+        <a class="panel-block is-active" *ngFor="let player of players | paginate: { itemsPerPage: perPage, currentPage: currentPage, totalItems: numPlayers }" href="/profile/{{player.login}}">
             <span class="panel-icon">
                 <i class="fas fa-book" aria-hidden="true"></i>
             </span>
@@ -16,9 +16,9 @@
         </a>        
     </nav>
 
-   
+    
 
-		<pagination (pageChange)="p = $event"></pagination>
+		<pagination (pageChange)="pageChanged($event); p = $event"></pagination>
 
     <!--<nav class="pagination is-centered" role="navigation" aria-label="pagination">
         <ul class="pagination-list">
