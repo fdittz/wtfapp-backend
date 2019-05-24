@@ -4,24 +4,39 @@ var admin = require('../util/firebaseadmin');
 var UserService = require("../services/UserService")
 var isUserAuthenticated  = require('../middleware/auth')
 
+const PAGE_SIZE = 25;
+
 /* GET users listing. */
 router.get('/list/:page?', function(req, res, next) {
-  const PAGE_SIZE = 2;
   var page = req.params.page ? req.params.page : 1;
   return UserService.getUsersRef(PAGE_SIZE)
   .then((result) => {
 	var firstUser = result.firstUsers[page-1];
 	if (firstUser) {
 		UserService.getUsers(firstUser,PAGE_SIZE).then(users => {
-			res.json({pages: result.pages, numUsers: result.numUsers, users: users});
+			res.json({pages: result.pages, numUsers: result.numUsers, users: users, firstUsers: result.firstUsers, perPage: PAGE_SIZE});
 		});
 	}
 	else {
-		res.json([]);
+		res.status(404).json({pages: 0, numUsers: 0, users: [], firstUsers: [], perPage: PAGE_SIZE });
 	}
 	
   })
 });
+
+router.get('/list/fetch/:firstUser?', function(req, res, next) {
+	  var firstUser = req.params.firstUser
+	  if (firstUser) {
+		  UserService.getUsers(firstUser,PAGE_SIZE).then(users => {
+			  res.json({users: users, perPage: PAGE_SIZE});
+		  });
+	  }
+	  else {
+		  res.status(404).json({users: [], perPage: PAGE_SIZE});
+	  }
+	  
+	
+  });
 
 /* GET users listing. */
 router.get('/new', function(req, res, next) {
