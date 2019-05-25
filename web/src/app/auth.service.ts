@@ -11,6 +11,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { User  } from './model/user.model';
 import { UserPrivate  } from './model/userprivate.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,8 @@ export class AuthService {
 	constructor(
 		private afAuth: AngularFireAuth,
 		private afs: AngularFirestore,
-		private router: Router
+		private router: Router,
+		private http: HttpClient
 	) { 
 		this.user$ = this.afAuth.authState.pipe(
 			switchMap(user => {
@@ -52,14 +54,9 @@ export class AuthService {
 		this.redirect(await this.afAuth.auth.signInWithPopup(provider)
 		.then((credential) => {
 			thisAuth.loginFailed$ = false;
-			return this.updateUserData(credential.user).then(usuariu => {
+			return this.updateUserData(credential.user).then(_ => {
 				return credential.user;
 			});
-		})
-		.then((user) => {
-			return user.getIdToken(true).then(function(idToken) {
-				return user;
-			})	
 		})
 		.then((user) => {
 			return this.getUser(user).ref.get().then((doc) => {
@@ -89,18 +86,18 @@ export class AuthService {
 		this.router.navigateByUrl(url, navigationExtras);
 	}
 
-	private updateUserData(user) {
-
-		const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
-
+	private async updateUserData(user) {
 		const data = {
 			uid: user.uid,
 			email: user.email,
 			name: user.displayName,
 			photoURL: user.photoURL
 		}
-		return userRef.set(data, { merge: true }) 
-		
+		return this.http.post(`/api/users/new`, data, {
+			headers: new HttpHeaders().set('Authorization', `Bearer ${await this.accessToken}`)
+		}).subscribe(user => {
+			return user;
+		})
 	}
 
 	private getUser(user) {

@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { User  } from '../model/user.model';
 import { PaginationComponent } from '../pagination/pagination.component'
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
 
 
 
@@ -50,7 +50,6 @@ export class PlayerListComponent implements OnInit {
         this.numPlayers = resp["numUsers"];
         this.firstUsers = resp["firstUsers"];
         this.perPage = resp["perPage"];
-        console.log(this.perPage);
       }, resp => {
           this.msgError = resp.error.message;
       })

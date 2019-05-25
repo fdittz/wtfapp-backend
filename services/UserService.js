@@ -7,6 +7,24 @@ class UserService {
         this.db = admin.firestore();
     }   
 
+    newUser(data) {
+        const userRef = this.db.collection('users').doc(data.uid);
+		return userRef.set(data, { merge: true }) 
+    }
+
+    updateSecret(userUid, newSecret) {
+        const userRef = this.db.collection('users').doc(userUid);
+        var salt = CryptoJS.lib.WordArray.random(16).toString().slice(0,16);
+        var hmac = CryptoJS.HmacSHA512(newSecret, salt);
+        var saltedHash = CryptoJS.enc.Base64.stringify(hmac);
+        const newData = {
+            uid: userUid,
+            secret: saltedHash,
+            salt: salt
+        }
+        return userRef.set(newData, { merge: true });;
+    }
+
     registerLogin(userUid, newLogin) {
         var nickRef = this.db.collection('logins');
         var nickDocRef = nickRef.doc(newLogin);

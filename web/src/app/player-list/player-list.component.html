@@ -1,25 +1,37 @@
-<div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
-    <nav class="panel">
-        <div class="panel-block">
-            <p class="control has-icons-left">
-                <input class="input is-small" type="text" placeholder="search">
-                <span class="icon is-small is-left">
-                    <i class="fas fa-search" aria-hidden="true"></i>
+<section class="section no-bg">
+    <div class="column is-9 center-div card">
+        <nav class="panel">
+            <div class="panel-block {{players ? '' : 'loading-blink'}}">
+                <p class="control has-icons-left">
+                    <input class="input is-small is-rounded" type="text" placeholder="search">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                    </span>
+                </p>
+            </div>
+            
+            <a class="panel-block is-active" *ngFor="let player of players | paginate: { itemsPerPage: perPage, currentPage: currentPage, totalItems: numPlayers }" href="/profile/{{player.login}}">
+                <span class="panel-icon">
+                    <i class="fas fa-book" aria-hidden="true"></i>
                 </span>
-            </p>
-        </div>
-        <a class="panel-block is-active" *ngFor="let player of players | paginate: { itemsPerPage: perPage, currentPage: currentPage, totalItems: numPlayers }" href="/profile/{{player.login}}">
-            <span class="panel-icon">
-                <i class="fas fa-book" aria-hidden="true"></i>
+                {{player.login}}
+            </a>        
+
+            <span  *ngIf="!players">
+                <a class="panel-block is-active loading-blink" *ngFor="let dummy of ' '.repeat(10).split('')">
+                    <span class="panel-icon">
+                        <i class="fas fa-book" aria-hidden="true"></i>
+                    </span>
+                    <span class="loading-playerlogin"></span>
+                </a>  
             </span>
-            {{player.login}}
-        </a>        
-    </nav>
-
-    
-
-		<pagination (pageChange)="pageChanged($event); p = $event"></pagination>
-
+        </nav>
+        <div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
+            <pagination (pageChange)="pageChanged($event); p = $event"></pagination>
+        </div>
+    </div>
+   
+</section>
     <!--<nav class="pagination is-centered" role="navigation" aria-label="pagination">
         <ul class="pagination-list">
           <li *ngFor="let dummy of ' '.repeat(pages).split(''), let x = index"><a class="pagination-link" [ngClass]="currentPage == x+1 ? 'is-current' : ''">{{x+1}}</a></li>
@@ -31,4 +43,3 @@
           <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
         </ul>
       </nav>-->
-</div>
