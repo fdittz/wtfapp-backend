@@ -16,7 +16,6 @@ module.exports = isUserAuthenticated = (req,res,next) => {
             res.locals.auth = {
                 uid
             }
-            console.log(res.locals.auth);
             next();
         })
         .catch((error) => {

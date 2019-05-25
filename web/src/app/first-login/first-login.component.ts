@@ -25,8 +25,7 @@ export class FirstLoginComponent implements OnInit {
   }
 
   async registerLogin() {
-      var self = this;
-      this.http.get(`/api/users/registerlogin/${this.login}`, {
+      this.http.post(`/api/users/registerlogin`, {login: this.login}, {
           headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
         }).subscribe(resp => {
           if (resp["status"] == 200) {
@@ -38,20 +37,4 @@ export class FirstLoginComponent implements OnInit {
             console.log(this.msgError);
         })
   }
-  
-  async testApi() {
-    var self = this;
-    this.http.get(`/api/users/${this.login}`, {
-        headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
-      }).subscribe(resp => {
-        if (resp["status"] == 200) {
-          this.msgError = "";
-          console.log(resp);
-        }
-      }, resp => {
-          this.msgError = resp.error.message;
-          console.log(this.msgError);
-      })
-  }
-
 }

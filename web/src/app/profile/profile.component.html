@@ -1,5 +1,5 @@
 <div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
-    <section class="hero player-title no-bg is-small">
+    <section class="hero player-title no-bg is-small {{player ? '' : 'loading-blink'}}">
         <div class="hero-body player-title no-bg">
             <div class="media">
                 <div class="media-left">
@@ -10,15 +10,16 @@
                 <div class="media-content">
                     <h1 class="title">
                       {{player ? player.login : " "}}
+                      <span class="loading-login" *ngIf="!player">&nbsp;</span>
                     </h1>
-                    <h2 class="subtitle">
-                        <button class="button mb mt" (click)="editSecret = true" data-target="modal-secret">{{ player.secret ? 'Change Secret' : 'Create secret'}}</button>   
+                    <h2 class="subtitle" *ngIf="player?.uid == auth?.uid">
+                        <button class="button mb mt" (click)="editSecret = true" data-target="modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>   
                     </h2>
                 </div>
                 
-                <div id="modal-secret" class="modal" style="display: block" *ngIf="editSecret">
+                <div id="modal-secret" class="modal" style="display: block;" *ngIf="editSecret">
                     <div class="modal-background"></div>
-                    <div class="modal-content">
+                    <div class="modal-content" style="top: 20vh">
                         <!-- Any other Bulma elements you want -->
 
                         
