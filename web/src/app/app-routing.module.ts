@@ -13,6 +13,7 @@ const routes: Routes = [
 	{ path: '', component: RootComponent, canActivate: [LoggedGuard] },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'first',	component: FirstLoginComponent,  canActivate: [AuthGuard, LoginGuard] },
+	{ path: 'profile',	component: ProfileComponent,  canActivate: [AuthGuard, LoginGuard] },
 	{ path: 'profile/:login',	component: ProfileComponent,  canActivate: [AuthGuard, LoginGuard] },
 	{ path: 'playerlist',	component: PlayerListComponent,  canActivate: [AuthGuard, LoginGuard] },
 	{ path: 'playerlist/:page',	component: PlayerListComponent,  canActivate: [AuthGuard, LoginGuard] }

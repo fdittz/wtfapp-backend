@@ -1,0 +1,15 @@
+<div *ngIf="isLoading | async" class="overlay" style="display: flex;
+align-items: center;
+justify-content: center;
+position: absolute;
+z-index: 1000;
+width: 100vw;
+top: 0;
+height: 100vh;
+border-radius: 5px;" >
+<div class="overlay-small button is-loading" style="width: 200px; height: 100px; position: initial; border: 0; font-size: 3em;">
+    <div class="loader-overlay">
+        <div *ngIf="show" class="loader"></div>
+      </div>
+  </div>
+</div>

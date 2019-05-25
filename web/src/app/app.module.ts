@@ -18,8 +18,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { RootComponent } from './root/root.component';
 import { PlayerListComponent } from './player-list/player-list.component';
 import {NgxPaginationModule} from 'ngx-pagination';
-import { PaginationComponent } from './pagination/pagination.component'; // <-- import the module
-
+import { PaginationComponent } from './pagination/pagination.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { LoaderComponent } from './loader/loader.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoaderService } from './services/loader.service';
+import { LoaderInterceptor } from './interceptors/loader.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 const config = {
     apiKey: "AIzaSyD0YSSJ8To0e6D24-aUC4sjImahZW6gYCg",
@@ -40,7 +45,9 @@ var angu
     LoginComponent,
     RootComponent,
     PlayerListComponent,
-    PaginationComponent
+    PaginationComponent,
+    NavbarComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -60,9 +67,11 @@ var angu
     MatFormFieldModule, 
     MatInputModule, 
     MatGridListModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    BrowserModule,
+    MatProgressSpinnerModule
   ],
-  providers: [],
+  providers: [LoaderService, { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

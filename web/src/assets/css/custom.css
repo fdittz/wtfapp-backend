@@ -10,7 +10,7 @@ body {
 }
 
 .card {
-    background: #2B3E50;
+    background: #2B3E5077;
     border-radius: 5px;
     border: none;
     -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
@@ -93,4 +93,26 @@ code.large {
     font-size: 1.2em;
     color: #ccc;
     height: 5em;
+}
+.blink {
+    animation: blinker 1s linear infinite;
+  }
+  
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }
+
+.loading-blink {
+    animation: blink-animation 0.8s linear infinite;
+}
+@keyframes blink-animation {
+    to {
+        opacity: 0.3;
+    }
+}
+
+.br5 {
+    border-radius: 5px;
 }
