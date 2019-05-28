@@ -25,6 +25,34 @@ class UserService {
         return userRef.set(newData, { merge: true });;
     }
 
+    grantAdmin(login,adminUid) {
+        const selfRef = this.db.collection('users').doc(adminUid);
+        return selfRef.get()
+        .then(result => {
+            if (result.data().admin) {
+                this.db.collection('users').where("login", "==", login)
+                .then(result => {
+                    var userRef = result.docs[0];
+                    return userRef.set({admin: true, adminGivenBy: result.data().login}, { merge: true });
+                });
+            }
+        });
+    }
+
+    revokeAdmin(login,adminUid) {
+        const selfRef = this.db.collection('users').doc(adminUid);
+        return selfRef.get()
+        .then(result => {
+            if (result.data().admin) {
+                this.db.collection('users').where("login", "==", login)
+                .then(result => {
+                    var userRef = result.docs[0];
+                    return userRef.update({admin: FirebaseFirestore.FieldValue.delete(), adminGivenBy: FirebaseFirestore.FieldValue.delete()}, { merge: true });
+                });
+            }
+        });
+    }
+
     registerLogin(userUid, newLogin) {
         var nickRef = this.db.collection('logins');
         var nickDocRef = nickRef.doc(newLogin);
@@ -123,7 +151,6 @@ class UserService {
                 var hmac = CryptoJS.HmacSHA512(secret,userFound.salt);
                 var saltedHash = CryptoJS.enc.Base64.stringify(hmac);
                 if (saltedHash == userFound.secret) {
-                    console.log("succ");
                     return Promise.resolve("success");
                 }
                 else {
