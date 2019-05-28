@@ -23,7 +23,8 @@ export class ProfileComponent implements OnInit {
   showAlias: boolean;
   login: string;
   secret: string;
-
+  amIAdmin: boolean;
+  
   constructor(
     public auth: AuthService,
     private http: HttpClient,
@@ -34,7 +35,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     var self = this;
     this.editSecret = false;
-    this.showAlias = false;
+    this.showAlias = false;    
     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap["params"].login) {
         this.auth.user$.subscribe(userdata => {
@@ -45,7 +46,10 @@ export class ProfileComponent implements OnInit {
       }
       else
         this.getProfileData(paramMap["params"].login);
-    })
+    });
+    this.auth.user$.subscribe(userdata => {
+      this.amIAdmin = userdata.admin;
+    });
   }
 
   async getProfileData(login) {
@@ -61,6 +65,23 @@ export class ProfileComponent implements OnInit {
       }, resp => {
           this.msgError = resp.error.message;
       })
+  }
+
+  private async revokeAdmin() {
+
+  }
+
+  private async grantAdmin() {
+    return this.http.put(`/api/admin/grant/`, {login: this.player.login}, {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
+    }).subscribe(resp => {
+      if (resp["status"] == 200) {
+        this.getProfileData(this.player.login);        
+      }
+    }, resp => {
+        this.msgError = resp.error.message;
+        console.log(this.msgError);
+    })
   }
 
   private async updateSecret() {
