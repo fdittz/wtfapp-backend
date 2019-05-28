@@ -3,6 +3,7 @@ var router = express.Router();
 var admin = require('../util/firebaseadmin');
 var UserService = require("../services/UserService")
 var isUserAuthenticated  = require('../middleware/auth')
+var isAdmin  = require('../middleware/admin')
 
 const PAGE_SIZE = 10;
 
@@ -130,4 +131,18 @@ router.get('/:login', isUserAuthenticated, function(req, res, next) {
 
 });
 
+router.put('/admin/grant/:login', isAdmin, function(res, req, next) {
+	return UserService.grantAdmin(req.body.login,res.locals.auth.uid)
+	.then((user) => {
+		return res.status(200).json({admin: true});
+	})
+	.catch((err) => {
+		console.error(err);
+		return res.status(500).json({
+			status: 500,
+			message: "error"
+		});
+	});
+
+})
 module.exports = router;
