@@ -37,10 +37,13 @@ export class PlayerListComponent implements OnInit {
     })
   }
 
-  async getPlayerList() {
+  async getPlayerList(term:string = null) {
     var page = this.currentPage;
     if (!page)
       page = 1;
+    var url = `/api/users/list/${page}`;
+    if (term)
+      var url = `/api/users/list/${term}/${page}`;
     return this.http.get(`/api/users/list/${page}`, {
         headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
       }).subscribe(resp => {

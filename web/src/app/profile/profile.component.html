@@ -11,12 +11,13 @@
                     <h1 class="title">
                         {{player ? player.login : " "}} 
                         <div class="tags has-addons admin-tag">
-                            <span class="tag is-rounded">Admin</span>                            
-                            <span class="tag is-success is-rounded" *ngIf="player.admin">Yes</span>
-                            <span class="tag is-primary is-rounded" *ngIf="!player.admin">No</span>
+                            <span class="tag is-rounded">Admin</span>      
+                            <span class="tag is-success is-rounded" *ngIf="player?.role == 'master'" title="Admin rights granted by {{player?.adminGivenBy}}">Yes</span>                      
+                            <span class="tag is-success is-rounded" *ngIf="player?.role == 'admin'" title="Admin rights granted by {{player?.adminGivenBy}}">Yes</span>
+                            <span class="tag is-primary is-rounded" *ngIf="player?.role != 'admin' && player?.role != 'master'">No</span>
                         </div>
-                        <a *ngIf="!player.admin && amIAdmin" class="button is-success is-small" style="border-radius: 5px; margin-top: 8px; margin-left: 10px" (click)="grantAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Grant Admin Rights</a>
-                        <a *ngIf="player.admin && amIAdmin" class="button is-danger is-small" style="border-radius: 5px; margin-top: 8px; margin-left: 10px" (click)="revokeAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Revoke Admin Rights</a>
+                        <a *ngIf="!player?.role && (role == 'master' || role == 'admin')" class="button is-success is-small" style="border-radius: 5px; margin-top: 8px; margin-left: 10px" (click)="grantAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Grant Admin Rights</a>
+                        <a *ngIf="player?.role == 'admin' && role == 'master'" class="button is-danger is-small" style="border-radius: 5px; margin-top: 8px; margin-left: 10px" (click)="revokeAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Revoke Admin Rights</a>
                         <span class="loading-login" *ngIf="!player">&nbsp;</span>
                     </h1>
                     <h2 class="subtitle" *ngIf="player?.uid == auth?.uid">
