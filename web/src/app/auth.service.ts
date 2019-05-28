@@ -25,7 +25,6 @@ export class AuthService {
 
 	user$: Observable<User>;
 	uid: string;
-	admin: boolean;
 
 	constructor(
 		private afAuth: AngularFireAuth,
@@ -37,8 +36,7 @@ export class AuthService {
 			switchMap(user => {
 				if (user) {
 					this.uid = user.uid;
-					
-				//	this.admin = user.admin;
+
 					this.accessToken = user.getIdToken(true).then((idToken) => {
 						return Promise.resolve(idToken);
 					});
