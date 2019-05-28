@@ -23,7 +23,7 @@ export class ProfileComponent implements OnInit {
   showAlias: boolean;
   login: string;
   secret: string;
-  amIAdmin: boolean;
+  role: string;
   
   constructor(
     public auth: AuthService,
@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit {
         this.getProfileData(paramMap["params"].login);
     });
     this.auth.user$.subscribe(userdata => {
-      this.amIAdmin = userdata.admin;
+      this.role = userdata.role;
     });
   }
 
@@ -68,16 +68,22 @@ export class ProfileComponent implements OnInit {
   }
 
   private async revokeAdmin() {
+    return this.http.put(`/api/users/admin/revoke`, {login: this.player.login}, {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
+    }).subscribe(resp => {
+        this.player.role = null;   
+    }, resp => {
+        this.msgError = resp.error.message;
+        console.log(this.msgError);
+    })
 
   }
 
   private async grantAdmin() {
-    return this.http.put(`/api/admin/grant/`, {login: this.player.login}, {
+    return this.http.put(`/api/users/admin/grant`, {login: this.player.login}, {
       headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
     }).subscribe(resp => {
-      if (resp["status"] == 200) {
-        this.getProfileData(this.player.login);        
-      }
+       this.player.role = "admin"
     }, resp => {
         this.msgError = resp.error.message;
         console.log(this.msgError);

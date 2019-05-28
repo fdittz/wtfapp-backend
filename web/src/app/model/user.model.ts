@@ -5,5 +5,5 @@ export interface User {
   login?: string;
   secret?: string;
   salt?: string;
-  admin: boolean;
+  role?: string;
 }

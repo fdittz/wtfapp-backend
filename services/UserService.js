@@ -29,13 +29,13 @@ class UserService {
         const selfRef = this.db.collection('users').doc(adminUid);
         return selfRef.get()
         .then(result => {
-            if (result.data().admin) {
-                this.db.collection('users').where("login", "==", login)
-                .then(result => {
-                    var userRef = result.docs[0];
-                    return userRef.set({admin: true, adminGivenBy: result.data().login}, { merge: true });
-                });
-            }
+            return this.db.collection('users').where("login", "==", login).get()
+            .then(user => {
+                if (user.docs[0].data().role == "master") 
+                    return Promise.reject("Player is master")
+                var userRef = this.db.collection('users').doc(user.docs[0].data().uid);
+                return userRef.set({role: "admin", adminGivenBy: result.data().login}, { merge: true });
+            });
         });
     }
 
@@ -43,13 +43,15 @@ class UserService {
         const selfRef = this.db.collection('users').doc(adminUid);
         return selfRef.get()
         .then(result => {
-            if (result.data().admin) {
-                this.db.collection('users').where("login", "==", login)
-                .then(result => {
-                    var userRef = result.docs[0];
-                    return userRef.update({admin: FirebaseFirestore.FieldValue.delete(), adminGivenBy: FirebaseFirestore.FieldValue.delete()}, { merge: true });
-                });
-            }
+            if (result.data().role != "master") 
+                return Promise.reject("Need to be master to revoke admin permissions");
+            this.db.collection('users').where("login", "==", login).get()
+            .then(user => {
+                if (user.docs[0].data().role == "master") 
+                    return Promise.reject("Player is master")
+                var userRef = this.db.collection('users').doc(user.docs[0].data().uid);
+                return userRef.update({role: admin.firestore.FieldValue.delete(), adminGivenBy: admin.firestore.FieldValue.delete()}, { merge: true });
+            });
         });
     }
 
@@ -103,7 +105,7 @@ class UserService {
                    return userFound;
                 }
                 else
-                    return {name: userFound.name, login: userFound.login}
+                    return {name: userFound.name, login: userFound.login, role: userFound.role, adminGivenBy: userFound.adminGivenBy}
             }
             
         });

@@ -15,7 +15,7 @@ module.exports = isAdmin = (req,res,next) => {
             var adminUid = decodedToken.uid;
             const userRef = admin.firestore().collection('users').doc(adminUid);
             userRef.get().then(result => {
-                if (result.data().admin)
+                if (result.data().role == "admin" || result.data().role == "master")
                     next();
                 else
                     return res.status(401).json({
