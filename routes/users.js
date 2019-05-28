@@ -125,7 +125,7 @@ router.get('/:login', isUserAuthenticated, function(req, res, next) {
 		console.error(err);
 		return res.status(500).json({
 			status: 500,
-			message: "error"
+			message: err
 		});
 	});
 
@@ -140,7 +140,7 @@ router.put('/admin/grant', isAdmin, isUserAuthenticated, function(req, res, next
 		console.error(err);
 		return res.status(500).json({
 			status: 500,
-			message: "error"
+			message: err
 		});
 	});
 });
@@ -154,7 +154,7 @@ router.put('/admin/revoke', isAdmin, isUserAuthenticated, function(req, res, nex
 		console.error(err);
 		return res.status(500).json({
 			status: 500,
-			message: "error"
+			message: err
 		});
 	});
 });
