@@ -153,7 +153,7 @@ class UserService {
                 var hmac = CryptoJS.HmacSHA512(secret,userFound.salt);
                 var saltedHash = CryptoJS.enc.Base64.stringify(hmac);
                 if (saltedHash == userFound.secret) {
-                    return Promise.resolve("success");
+                    return Promise.resolve({login: userFound.login, admin: (userFound.role == "admin" || userFound.role == "master")});
                 }
                 else {
                     console.log("err pass: " + login);

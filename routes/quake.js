@@ -7,7 +7,7 @@ var isUserAuthenticated  = require('../middleware/auth')
 /* GET users listing. */
 router.post('/login', function(req, res, next) {
     UserService.login(req.body.login, req.body.secret).then(success => {
-        return res.status(200).send(req.body.login);
+        return res.status(200).send(success.login + ";" + success.admin);
     }, error => {
         return res.status(403).send("Invalid login/pass");
     });
