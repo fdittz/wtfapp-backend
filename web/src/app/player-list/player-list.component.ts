@@ -16,6 +16,7 @@ import { Location } from '@angular/common';
 })
 export class PlayerListComponent implements OnInit {
 
+  p: any;
   players: Array<User>;
   pages: number;
   currentPage: number;
