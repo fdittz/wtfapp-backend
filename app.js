@@ -16,6 +16,7 @@ app.use(cookieParser())
 app.use('/api/public', public);
 app.use('/api/users', users);
 app.use('/api/quake', quake);
+app.use(express.static('public'));
 
 
 module.exports = app;
