@@ -87,6 +87,14 @@ router.post('/registerlogin', isUserAuthenticated, function(req, res, next) {
 			message: 'login must be at least 4 characters long'
 		});
 	}
+	if (!req.body.login.match("[A-Za-z0-9_]+") || req.body.login.indexOf(" ") >= 0)
+    {
+        return res.status(400).json({
+			status:400,
+			message: "Invalid login"
+		});
+        return;
+    }
 	return UserService.registerLogin(res.locals.auth.uid, req.body.login)
 	.then(
 		(success) => {
