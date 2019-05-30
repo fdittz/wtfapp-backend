@@ -16,7 +16,7 @@ app.use(cookieParser())
 
 app.all('/*', function(req, res, next) {
     // Just send the index.html for other files to support HTML5Mode
-    res.sendFile('index.html', { root: __dirname });
+    res.sendFile('index.html', { root: public });
 });
 app.use('/api/public', public);
 app.use('/api/users', users);
