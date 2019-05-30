@@ -14,13 +14,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser())
 
-app.all('/*', function(req, res, next) {
-    // Just send the index.html for other files to support HTML5Mode
-    res.sendFile('index.html', { root: public });
-});
 app.use('/api/public', public);
 app.use('/api/users', users);
 app.use('/api/quake', quake);
 app.use(express.static('public'));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/index.js'));
+  });
 app.use(morgan('combined'))
 module.exports = app;
