@@ -20,11 +20,14 @@ export class FirstLoginComponent implements OnInit {
 
 
   ngOnInit() {
-    this.msgError = "TESTY"
-
   }
 
   async registerLogin() {
+      if (!this.login.match("[A-Za-z0-9_]+") || this.login.indexOf(" ") >= 0)
+      {
+        this.msgError = "Invalid login";
+        return;
+      }
       this.http.post(`/api/users/registerlogin`, {login: this.login}, {
           headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
         }).subscribe(resp => {
