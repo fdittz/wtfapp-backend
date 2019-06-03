@@ -56,6 +56,7 @@ class UserService {
     }
 
     registerLogin(userUid, newLogin) {
+        newLogin = newLogin.toLowerCase();
         var nickRef = this.db.collection('logins');
         var nickDocRef = nickRef.doc(newLogin);
         var userRef = this.db.collection('users').doc(userUid);
@@ -145,6 +146,7 @@ class UserService {
     }
 
     login(login, secret) {
+        login = login.toLowerCase();
         var userRef = this.db.collection('users');
         return userRef.where("login", "==", login).get()
         .then(result => {

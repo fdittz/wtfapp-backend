@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../dev');
 var debug = require('debug')('fortressone:server');
 var http = require('http');
 

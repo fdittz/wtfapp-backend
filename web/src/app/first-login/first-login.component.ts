@@ -28,6 +28,7 @@ export class FirstLoginComponent implements OnInit {
         this.msgError = "Invalid login";
         return;
       }
+      this.login = this.login.toLowerCase();
       this.http.post(`/api/users/registerlogin`, {login: this.login}, {
           headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
         }).subscribe(resp => {

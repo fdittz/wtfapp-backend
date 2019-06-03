@@ -1,18 +1,32 @@
 <nav class="navbar" role="navigation" aria-label="main navigation" *ngIf="auth.uid">
+        <div class="navbar-brand">
             
-    <div id="navbarBasicExample" class="navbar-menu">
-    <div class="navbar-start">
-        <a class="navbar-item" href="/profile">
-        Profile
-        </a>
+                <a role="button" class="navbar-burger" id="menuToggle" data-target="navMenu" aria-label="menu" aria-expanded="false" (click)="toggleMenu('menuToggle','navMenu')">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                      </a>
+                      
+        </div>
+    <div id="navMenu" class="navbar-menu" >
+        <div class="navbar-start">
+            <a class="navbar-item" href="/profile">
+            Profile
+            </a>
 
-        <a class="navbar-item" href="/playerlist">
-        Player List
-        </a>
+            <a class="navbar-item" href="/playerlist">
+            Player List
+            </a>
 
-    </div>
+            <a class="navbar-item" href="/demos">
+            Demos
+            </a>
+    
 
-    <div class="navbar-end">
-    </div>
+        </div>
+
+        <div class="navbar-end">
+            
+        </div>
     </div>
 </nav>
