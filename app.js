@@ -31,11 +31,17 @@ app.use(cookieParser())
 app.use('/api/public', public);
 app.use('/api/users', users);
 app.use('/api/quake', quake);
+app.get('/demos', function(req, res) {
+    res.redirect('http://tf.quadclub.com.br:27520/');
+});
 app.use(express.static('public'));
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/index.html'));
   });
 app.use(morgan('combined'))
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
 
 // Starting both http & https servers
 const httpServer = http.createServer(function (req,res) {
