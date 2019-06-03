@@ -36,12 +36,9 @@ app.get('/demos', function(req, res) {
 });
 app.use(express.static('public'));
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/index.html'));
+    res.sendFile(path.join(__dirname, 'public/index.html'));
   });
 app.use(morgan('combined'))
-
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
 
 // Starting both http & https servers
 const httpServer = http.createServer(function (req,res) {
@@ -59,4 +56,19 @@ httpsServer.listen(443, () => {
 	console.log('HTTPS Server running on port 443');
 });
 
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+  
+    if (isNaN(port)) {
+      // named pipe
+      return val;
+    }
+  
+    if (port >= 0) {
+      // port number
+      return port;
+    }
+  
+    return false;
+  }
 module.exports = app;
