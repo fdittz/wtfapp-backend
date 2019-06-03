@@ -7,22 +7,26 @@
                     <img class="is-rounded" src="{{player && player.uid == auth.uid ? player.photoURL : 'https://bulma.io/images/placeholders/128x128.png'}}"/>
                     </figure>
                 </div>
-                <div class="media-content">
-                    <h1 class="title">
-                        {{player ? player.login : " "}} 
+                <div class="media-content" style="max-width: 600px">
+                    <div style="max-width: 600px">                        
+                        <h1 class="title player-name ">
+                                {{player ? player.login : " "}} 
+                        </h1>
                         <div class="tags has-addons admin-tag">
                             <span class="tag is-rounded">Admin</span>      
                             <span class="tag is-success is-rounded" *ngIf="player?.role == 'master'" title="Admin rights granted by {{player?.adminGivenBy}}">Yes</span>                      
                             <span class="tag is-success is-rounded" *ngIf="player?.role == 'admin'" title="Admin rights granted by {{player?.adminGivenBy}}">Yes</span>
                             <span class="tag is-primary is-rounded" *ngIf="player?.role != 'admin' && player?.role != 'master'">No</span>
                         </div>
-                        <a *ngIf="!player?.role && (role == 'master' || role == 'admin')" class="button is-success is-small" style="border-radius: 5px; margin-top: 8px; margin-left: 10px" (click)="grantAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Grant Admin Rights</a>
-                        <a *ngIf="player?.role == 'admin' && role == 'master'" class="button is-danger is-small" style="border-radius: 5px; margin-top: 8px; margin-left: 10px" (click)="revokeAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Revoke Admin Rights</a>
+                        <a *ngIf="!player?.role && (role == 'master' || role == 'admin')" class="button is-success is-small admin-permission-button" (click)="grantAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Grant Admin Rights</a>
+                        <a *ngIf="player?.role == 'admin' && role == 'master'" class="button is-danger is-small admin-permission-button" (click)="revokeAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Revoke Admin Rights</a>
                         <span class="loading-login" *ngIf="!player">&nbsp;</span>
-                    </h1>
+                    </div>
+                    
                     <h2 class="subtitle" *ngIf="player?.uid == auth?.uid">
                         <button class="button mb mt" (click)="editSecret = true" data-target="modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>   
                     </h2>
+                   
                 </div>
                 
                 <div id="modal-secret" class="modal" style="display: block;" *ngIf="editSecret">
