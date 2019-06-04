@@ -1,4 +1,6 @@
 var admin = require('../util/firebaseadmin');
+const playerQueries = require('../elasticsearch/playerqueries')
+var esutil = require('../util/esutil');
 var CryptoJS = require('crypto-js');
 
 class UserService {
@@ -145,6 +147,20 @@ class UserService {
         });
     }
 
+    getUsersFilter(term, offset) {
+        var userRef = this.db.collection('users').orderBy("login").startAt(term).endAt(term+"\uf8ff").limit(offset);
+        return userRef.get()
+        .then(result => { 
+            if (result.docs.length) {
+                var users = [];
+                result.docs.forEach(user => {
+                    users.push({login: user.data().login, name: user.data().name});
+                })
+                return users;
+            }
+        });
+    }
+
     login(login, secret) {
         login = login.toLowerCase();
         var userRef = this.db.collection('users');
@@ -167,6 +183,30 @@ class UserService {
                 return Promise.reject("invalid login/pass");
             }            
         });
+    }
+
+    getStats(login) {
+        var matches = [];
+        var query = playerQueries.getMatches(login);
+        return esutil.sendQuery(query)
+        .then(res => {
+            var resultMatches = res.data.aggregations.unique_ids.buckets;            
+            return new Promise(function(resolve, reject) {                
+                matches = resultMatches.map(match => {
+                    query = playerQueries.getMatchDetails(login,match.key);
+                    return esutil.sendQuery(query).then( match => {
+                        return match.data.aggregations;
+                    })
+                })
+                resolve(matches);
+            })
+           
+
+        })
+        .catch(err => {
+            return Promise.reject();
+        })
+       
     }
 }
 

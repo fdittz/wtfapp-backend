@@ -25,6 +25,16 @@ router.get('/list/:page?', function(req, res, next) {
   })
 });
 
+router.get('/list/filter/:term?', function(req, res, next) {
+	return UserService.getUsersFilter(req.params.term, PAGE_SIZE)
+	.then((result) => {
+		console.log(result)
+		res.json(result);
+	});
+
+	
+  });
+
 router.get('/list/fetch/:firstUser?', function(req, res, next) {
 	  var firstUser = req.params.firstUser
 	  if (firstUser) {
@@ -166,4 +176,15 @@ router.put('/admin/revoke', isAdmin, isUserAuthenticated, function(req, res, nex
 		});
 	});
 });
+
+router.get('/profile/stats/:login', function(req, res, next) {
+	return UserService.getStats(req.params.login)
+	.then(function(data) {
+		Promise.all(data).then(function(results) {
+			return res.status(200).json(results)
+			
+		})
+		
+	})
+})
 module.exports = router;
