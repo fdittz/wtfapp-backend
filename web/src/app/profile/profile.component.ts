@@ -8,6 +8,7 @@ import { HttpHeaders } from '@angular/common/http';
 import * as CryptoJS from 'crypto-js';
 import { User  } from '../model/user.model';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-profile',
@@ -24,6 +25,7 @@ export class ProfileComponent implements OnInit {
   login: string;
   secret: string;
   role: string;
+  stats: any;
   
   constructor(
     public auth: AuthService,
@@ -44,8 +46,10 @@ export class ProfileComponent implements OnInit {
           }
         });
       }
-      else
+      else {
         this.getProfileData(paramMap["params"].login);
+        this.getStatsData(paramMap["params"].login);
+      }
     });
     this.auth.user$.subscribe(userdata => {
       this.role = userdata.role;
@@ -65,6 +69,17 @@ export class ProfileComponent implements OnInit {
       }, resp => {
           this.msgError = resp.error.message;
       })
+  }
+
+  async getStatsData(login) {
+    console.log("a")
+    return this.http.get(`/api/users/profile/stats/${login}`, {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
+    }).subscribe(resp => {
+      this.stats = resp;
+    }, resp => {
+        this.msgError = resp.error.message;
+    })
   }
 
   private async revokeAdmin() {
@@ -115,6 +130,10 @@ export class ProfileComponent implements OnInit {
         this.msgError = resp.error.message;
         console.log(this.msgError);
     })
-	}
+  }
+  
+  formatTime(time: string) {
+    return moment("2019-06-04T02:24:01.310Z").format("DD/MM/YYY HH:MM")
+  }
 
 }
