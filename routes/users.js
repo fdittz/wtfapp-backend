@@ -180,11 +180,10 @@ router.put('/admin/revoke', isAdmin, isUserAuthenticated, function(req, res, nex
 router.get('/profile/stats/:login', function(req, res, next) {
 	return UserService.getStats(req.params.login)
 	.then(function(data) {
-		Promise.all(data).then(function(results) {
-			return res.status(200).json(results)
-			
-		})
-		
+		return res.status(200).json(data);
+	})
+	.catch(err => {
+		return res.status(200).json([]);
 	})
 })
 module.exports = router;
