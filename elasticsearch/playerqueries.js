@@ -68,6 +68,11 @@ var player = {
                         "terms": {
                           "field": "map"
                         }
+                      },
+                      "demo": {
+                        "terms": {
+                          "field": "demo"
+                        }
                       }
                     }
                   },

@@ -108,3 +108,4 @@ typings/
 # next.js build output
 .next
 serviceAccountKey.json
+esaddress.js
