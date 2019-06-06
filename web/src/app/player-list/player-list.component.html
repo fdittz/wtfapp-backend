@@ -14,7 +14,7 @@
                 <span class="panel-icon">
                     <i class="fas fa-book" aria-hidden="true"></i>
                 </span>
-                {{player.login}}
+                {{player.login}} <span *ngIf="player.role == 'admin'" class="tag is-success is-rounded"  style="margin-left: 10px" title="Admin rights granted by {{player.adminGivenBy}}">Admin</span><span *ngIf="player.role == 'master'" class="tag is-warning is-rounded"  style="margin-left: 10px" title="Master">Master</span>
             </a>        
 
             <span  *ngIf="!players">
