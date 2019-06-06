@@ -140,7 +140,7 @@ class UserService {
             if (result.docs.length) {
                 var users = [];
                 result.docs.forEach(user => {
-                    users.push({login: user.data().login, name: user.data().name});
+                    users.push({login: user.data().login, name: user.data().name, role: user.data().role, adminGivenBy: user.data().adminGivenBy});
                 })
                 return users;
             }
@@ -271,7 +271,6 @@ class UserService {
             return new Promise(function(resolve, reject) {                
                 matches = resultMatches.map(match => {
                     query = playerQueries.getMatchDetails(login,match.key);
-                    console.log(match.key)
                     return esutil.sendQuery(query).then( match => {
                         return match.data.aggregations;
                     })
