@@ -213,7 +213,8 @@ class UserService {
                     var returnGame = {};
                     returnGame.startTime    = game.key.gameTimeStamp;
                     returnGame["map"]       = game.gameInfo.map.buckets[0].key;
-                    returnGame.demo         = game.gameInfo.demo.buckets[0].key;
+                    if (game.gameInfo.demo.buckets.length)
+                        returnGame.demo         = game.gameInfo.demo.buckets[0].key;
                     returnGame.numPlayers   = game.gameInfo.numPlayers.buckets[0].key;
                     returnGame.numTeams     = game.gameInfo.numTeams.buckets[0].key;
                     returnGame.player       = login;
