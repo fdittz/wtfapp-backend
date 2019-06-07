@@ -206,6 +206,7 @@ class UserService {
             })            
             var query = playerQueries.getMatchesByPlayer(login,matches)
            // console.log(query)
+           console.log(query);
             return esutil.sendQuery(query)
             .then( result => {
                 var games = result.data.aggregations.games.buckets;
