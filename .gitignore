@@ -110,3 +110,5 @@ typings/
 serviceAccountKey.json
 esaddress.js
 util/esaddress.js
+public/
+public.zip
