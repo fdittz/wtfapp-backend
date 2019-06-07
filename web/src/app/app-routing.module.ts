@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component'
 import { FirstLoginComponent } from './first-login/first-login.component'
 import { ProfileComponent } from './profile/profile.component'
 import { RootComponent } from './root/root.component'
+import { HomeComponent } from './home/home.component'
 import { PlayerListComponent } from './player-list/player-list.component';
 
 const routes: Routes = [
@@ -16,7 +17,8 @@ const routes: Routes = [
 	{ path: 'profile',	component: ProfileComponent,  canActivate: [AuthGuard, LoginGuard] },
 	{ path: 'profile/:login',	component: ProfileComponent,  canActivate: [AuthGuard, LoginGuard] },
 	{ path: 'playerlist',	component: PlayerListComponent,  canActivate: [AuthGuard, LoginGuard] },
-	{ path: 'playerlist/:page',	component: PlayerListComponent,  canActivate: [AuthGuard, LoginGuard] }
+	{ path: 'playerlist/:page',	component: PlayerListComponent,  canActivate: [AuthGuard, LoginGuard] },
+	{ path: 'home',	component: HomeComponent,  canActivate: [AuthGuard, LoginGuard] },
 ];
 
 @NgModule({

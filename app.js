@@ -9,8 +9,10 @@ var bodyParser = require('body-parser');
 var users = require('./routes/users');
 var public = require('./routes/public')
 var quake = require('./routes/quake')
+var servers = require('./routes/servers')
 var morgan  = require('morgan')
 const compress = require('compression');
+var winston = require('./config/winston');
 
 var app = express();
 
@@ -25,6 +27,7 @@ const credentials = {
 	ca: ca
 };
 app.use(compress())
+app.use(morgan('combined', { stream: winston.stream }))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser())
@@ -32,6 +35,7 @@ app.use(cookieParser())
 app.use('/api/public', public);
 app.use('/api/users', users);
 app.use('/api/quake', quake);
+app.use('/api/servers', servers);
 app.get('/demos', function(req, res) {
     res.redirect('http://tf.quadclub.com.br:27520/');
 });
@@ -39,7 +43,7 @@ app.use(express.static('public'));
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
   });
-app.use(morgan('combined'))
+
 
 // Starting both http & https servers
 const httpServer = http.createServer(function (req,res) {

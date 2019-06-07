@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "app-root-path": "^2.2.1",
     "axios": "^0.19.0",
     "body-parser": "~1.13.2",
     "compression": "^1.7.4",
@@ -14,8 +15,10 @@
     "express": "~4.13.1",
     "firebase-admin": "^7.4.0",
     "firebase-verify-token-middleware": "^1.1.0",
+    "gamedig": "^2.0.14",
     "google-gax": "^1.1.1",
     "morgan": "^1.9.1",
-    "ts-trueskill": "^2.4.5"
+    "ts-trueskill": "^2.4.5",
+    "winston": "^3.2.1"
   }
 }
