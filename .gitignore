@@ -109,3 +109,4 @@ typings/
 .next
 serviceAccountKey.json
 esaddress.js
+util/esaddress.js
