@@ -10,6 +10,7 @@ var users = require('./routes/users');
 var public = require('./routes/public')
 var quake = require('./routes/quake')
 var morgan  = require('morgan')
+const compress = require('compression');
 
 var app = express();
 
@@ -23,7 +24,7 @@ const credentials = {
 	cert: certificate,
 	ca: ca
 };
-
+app.use(compress())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser())
