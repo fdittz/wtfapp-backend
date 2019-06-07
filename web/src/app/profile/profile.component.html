@@ -99,7 +99,8 @@
                 <th>Team</th>
                 <th>Enemy</th>
                 <th>Result</th>  
-                <th>Stats (old)</th>              
+                <th>Stats (old)</th>
+                <th>Demo</th>                
               </tr>
             </thead>
             <tfoot>
@@ -110,6 +111,7 @@
                 <th>Enemy</th>
                 <th>Result</th>    
                 <th>Stats (old)</th>
+                <th>Demo</th>
               </tr>
             </tfoot>
             <tbody>
@@ -120,6 +122,7 @@
                 <td>{{match.enemies}}</td>
                 <td>{{match.result}}</td>    
                 <td><a href="http://tf.quadclub.com.br:27570/game/{{match.startTime}}" target="_blank">Stats(old)</a></td>
+                <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
               </tr>
             </tbody>
             </table>

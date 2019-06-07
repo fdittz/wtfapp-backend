@@ -1,22 +1,30 @@
 var player = {
     getMatches(login) {
         return `{
-            "size": 0,
-            "query" : {
-              "bool" : {
-                 "should" : [ 
-                    { "term" : { "player" : "${login}" } }
-                 ]
-              }
-            },
-            "aggs":{
-              "unique_ids": {
-                "terms": {
-                  "field": "gameTimeStamp"
+          "size": 0,
+          "query": {
+            "bool": {
+              "should": [
+                {
+                  "term": {
+                    "player": "caxa"
+                  }
                 }
+              ]
+            }
+          },
+          "aggs": {
+            "unique_ids": {
+              "terms": {
+                "field": "gameTimeStamp",
+                "order": {
+                  "_key": "desc"
+                },
+                "size": 10000
               }
             }
-          }`
+          }
+        }`
     },
     getMatchesByPlayer(login, timeStampArray) {        
         var matchTerms = []
@@ -44,7 +52,8 @@ var player = {
                 "composite": {
                   "sources": [
                     { "gameTimeStamp" : { "terms": { "field": "gameTimeStamp", "order": "desc"}}}
-                  ]
+                  ],
+                  "size": 10000
                 },
                 "aggs": {
                   "gameInfo": {
