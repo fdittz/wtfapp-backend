@@ -7,7 +7,7 @@ var player = {
               "should": [
                 {
                   "term": {
-                    "player": "caxa"
+                    "player": "${login}"
                   }
                 }
               ]
