@@ -72,7 +72,6 @@ export class ProfileComponent implements OnInit {
   }
 
   async getStatsData(login) {
-    console.log("a")
     return this.http.get(`/api/users/profile/stats/${login}`, {
       headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
     }).subscribe(resp => {

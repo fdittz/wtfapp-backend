@@ -25,6 +25,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoaderService } from './services/loader.service';
 import { LoaderInterceptor } from './interceptors/loader.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HomeComponent } from './home/home.component';
 
 const config = {
     apiKey: "AIzaSyD0YSSJ8To0e6D24-aUC4sjImahZW6gYCg",
@@ -46,7 +47,8 @@ const config = {
     PlayerListComponent,
     PaginationComponent,
     NavbarComponent,
-    LoaderComponent
+    LoaderComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
