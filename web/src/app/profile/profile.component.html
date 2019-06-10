@@ -90,7 +90,12 @@
 </div>
 <div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
     <section>
-        Win Rate: {{stats?.winRate}}
+        Win Rate: {{stats?.winRate}} 
+        <table class="table" style="background-color: transparent">
+            <tr>
+                <td style="height: 150px" *ngFor="let class of stats?.perClass"><img title="{{classesImg[class?.key].name}} {{class.timePlayed.value/60 | number:'1.0-0'}} minutes" src="{{classesImg[class?.key].image}}" [ngStyle]="{'height' : ((class.timePlayed.value / stats.perClass[0].timePlayed.value) *100)+ '%'}"/></td>
+            </tr>
+        </table>
         <table class="table">
             <thead>
               <tr>
@@ -125,7 +130,7 @@
                 <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
               </tr>
             </tbody>
-            </table>
+        </table>
     </section>
 </div>
 
