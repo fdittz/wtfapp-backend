@@ -10,6 +10,7 @@ var users = require('./routes/users');
 var public = require('./routes/public')
 var quake = require('./routes/quake')
 var servers = require('./routes/servers')
+var matches = require('./routes/matches');
 var morgan  = require('morgan')
 const compress = require('compression');
 var winston = require('./config/winston');
