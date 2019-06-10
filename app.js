@@ -36,6 +36,8 @@ app.use('/api/public', public);
 app.use('/api/users', users);
 app.use('/api/quake', quake);
 app.use('/api/servers', servers);
+app.use('/api/matches', matches);
+
 app.get('/demos', function(req, res) {
     res.redirect('http://tf.quadclub.com.br:27520/');
 });
