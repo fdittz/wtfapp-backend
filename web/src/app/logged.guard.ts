@@ -18,7 +18,8 @@ export class LoggedGuard implements CanActivate {
          tap(loggedIn => {				
               if (loggedIn) {
                 this.auth.user$.subscribe(userdata => {                  
-                  this.router.navigate([`/profile/${userdata.login}`]);
+                  //this.router.navigate([`/profile/${userdata.login}`]);
+                  this.router.navigate([`/home/`]);
                 })
                 return true;
               }

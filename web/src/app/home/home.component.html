@@ -1,2 +1,51 @@
 <div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
+    <section class="hero player-title no-bg is-small {{stats ? '' : 'loading-blink'}}">
+        <div class="hero-body player-title no-bg">
+            <div class="media">
+                <div class="media-content" style="max-width: 600px">
+                    <div style="max-width: 600px">                        
+                        <h1 class="title">
+                                Match List
+                        </h1>
+                    </div>
+                </div>               
+            </div>
+        </div>
+    </section>
+  </div>
+    <div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
+    <table class="table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Map</th>
+            <th>Teams</th>
+            <th>Winner</th>  
+            <th>Stats (old)</th>
+            <th>Demo</th>                
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th>Time</th>
+            <th>Map</th>
+            <th>Teams</th>
+            <th>Winner</th>  
+            <th>Stats (old)</th>
+            <th>Demo</th> 
+          </tr>
+        </tfoot>
+        <tbody>
+          <tr *ngFor="let match of stats; let i = index" class="{{match.winningTeam == 1 ? 'has-background-info' : (match.winningTeam == 2 ? 'has-background-danger' : (match.winningTeam == 3 ? 'has-background-warning' : (match.winningTeam == 2 ? 'has-background-success' : '')))}}">
+            <td>{{match.startTime | date: 'dd/MM/yyyy HH:mm'}}</td>
+            <td>{{match.map}}</td>
+            <td>
+              <span *ngFor="let team of match.teams"> {{team.name}}: {{team.players?.join(", ")}}<br></span>
+            </td>
+            <td>{{match.winningTeam ? match.teams[match.winningTeam-1].name : 'Draw'}}</td>    
+            <td><a href="http://tf.quadclub.com.br:27570/game/{{match.startTime}}" target="_blank">Stats(old)</a></td>
+            <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
+          </tr>
+        </tbody>
+    </table>
   </div>
