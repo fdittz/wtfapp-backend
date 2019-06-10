@@ -205,11 +205,20 @@ class UserService {
                 return match.key
             })            
             var query = playerQueries.getMatchesByPlayer(login,matches)
-           // console.log(query)
             return esutil.sendQuery(query)
             .then( result => {
                 var games = result.data.aggregations.games.buckets;
-                games = result.data.aggregations.games.buckets.map( game => {
+                games = result.data.aggregations.games.buckets
+                .filter( game => {
+                    if (!game.gameInfo.map.buckets.length ||
+                        !game.gameInfo.numPlayers.buckets.length ||
+                        !game.gameInfo.numTeams.buckets.length ||
+                        !game.result.winningTeam.buckets.length ||
+                        !game.player.timePlayed.perTeam.buckets.length)
+                        return false;
+                    return true;
+                })
+                .map( game => {
                     var returnGame = {};
                     returnGame.startTime    = game.key.gameTimeStamp;
                     returnGame["map"]       = game.gameInfo.map.buckets[0].key;
@@ -256,6 +265,16 @@ class UserService {
                 return stats;
             
             })
+        })
+        .then(stats => {
+            var query = playerQueries.getTimePlayedByClassAndTeam(login);
+            return esutil.sendQuery(query)
+            .then(result => {
+                stats.perTeam  = (result.data.aggregations.player.timePlayed.perTeam.buckets);
+                stats.perClass = (result.data.aggregations.player.timePlayed.perClass.buckets); 
+          
+                return stats;
+            });
         })
         .catch(err => {
             console.log(err)

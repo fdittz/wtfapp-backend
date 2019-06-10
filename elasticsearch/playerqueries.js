@@ -289,8 +289,83 @@ var player = {
                 }
               
             }
-          }`
-    }
+          }`        
+    },
+
+    getTimePlayedByClassAndTeam(login) {
+      return `
+      {
+        "size": 0,
+        "aggs": {
+          "player": {
+            "filter": {
+              "term": {
+                "player": "${login}"
+              }
+            },
+            "aggs": {
+              "timePlayed": {
+                "filter": {
+                  "term": {
+                    "type": "changeClass"
+                  }
+                },
+                "aggs": {
+                  "total": {
+                    "sum": {
+                      "field": "timePlayed"
+                    }
+                  },
+                  "perClass": {
+                    "terms": {
+                      "field": "previousClass",
+                      "size": "64"
+                    },
+                    "aggs": {
+                      "timePlayed": {
+                        "sum": {
+                          "field": "timePlayed"
+                        }
+                      },
+                      "timePlayed_sort": {
+                        "bucket_sort": {
+                          "sort": [
+                            {"timePlayed": {"order": "desc"}}
+                          ],
+                          "size": 10
+                        }
+                      }
+                    }
+                  },
+                  "perTeam": {
+                    "terms": {
+                      "field": "team",
+                      "size": "64"
+                    },
+                    "aggs": {
+                      "timePlayed": {
+                        "sum": {
+                          "field": "timePlayed"
+                        }
+                      },
+                      "timePlayed_sort": {
+                        "bucket_sort": {
+                          "sort": [
+                            {"timePlayed": {"order": "desc"}}
+                          ],
+                          "size": 10
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      `
+    } 
 }
 
 module.exports = player;

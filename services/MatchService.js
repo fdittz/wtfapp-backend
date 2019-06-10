@@ -6,9 +6,45 @@ class MatchService {
     getMatches() {
         var query = matchQueries.getMatches();
         return esutil.sendQuery(query)
-        .then(res => {
-            console.log(res)
-            return res;
+        .then(result => {
+            var games = result.data.aggregations.games.buckets;
+                games = result.data.aggregations.games.buckets
+                .filter( game => {
+                    if (!game.gameInfo.map.buckets.length ||
+                        !game.gameInfo.numPlayers.buckets.length ||
+                        !game.gameInfo.numTeams.buckets.length ||
+                        !game.result.winningTeam.buckets.length)
+                        return false;
+                    return true;
+                })
+                .map( game => {
+                    var returnGame = {};
+                    returnGame.startTime    = game.key.gameTimeStamp;
+                    returnGame["map"]       = game.gameInfo.map.buckets[0].key;
+                    if (game.gameInfo.demo.buckets.length)
+                        returnGame.demo         = game.gameInfo.demo.buckets[0].key;
+                    returnGame.numPlayers   = game.gameInfo.numPlayers.buckets[0].key;
+                    returnGame.numTeams     = game.gameInfo.numTeams.buckets[0].key;
+                    returnGame.winningTeam  = game.result.winningTeam.buckets[0].key;
+                    returnGame.teams = []
+                    for (var i = 1; i <= 4; i++) {
+                        if (game.result["team" + i +"Name"] && game.result["team" + i +"Name"].buckets.length)
+                            returnGame.teams.push({"name": game.result["team" + i +"Name"].buckets[0].key, "score": game.result["team" + i +"Score"]});
+                    }                    
+
+                    for (var i = 0; i < game.players.buckets.length; i++) {
+                        var player = game.players.buckets[i];                        
+                        if (player.timePlayed.perTeam.buckets[0] && player.timePlayed.perTeam.buckets[0].key != "") {
+                            var playerTeamNum = parseInt(player.timePlayed.perTeam.buckets[0].key) - 1;
+                            if (!returnGame.teams[playerTeamNum].players)
+                                returnGame.teams[playerTeamNum].players = [];
+                            returnGame.teams[playerTeamNum].players.push(player.key)
+                        }
+                    }
+                    return (returnGame);
+                })
+                return games
+            
            
         }).catch(err => {
             console.log(err);
@@ -30,6 +66,7 @@ class MatchService {
         var query = playerQueries.getMatches(login);
         return esutil.sendQuery(query)
         .then(res => {
+            console.log(res)
             if (!res.data.aggregations.unique_ids.buckets.length)
                 return stats
             var resultMatches = res.data.aggregations.unique_ids.buckets;
