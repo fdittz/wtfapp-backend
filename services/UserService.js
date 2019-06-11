@@ -272,6 +272,7 @@ class UserService {
             .then(result => {
                 stats.perTeam  = (result.data.aggregations.player.timePlayed.perTeam.buckets);
                 stats.perClass = (result.data.aggregations.player.timePlayed.perClass.buckets); 
+                stats.totalTime = (result.data.aggregations.player.timePlayed.total.value);
           
                 return stats;
             });
