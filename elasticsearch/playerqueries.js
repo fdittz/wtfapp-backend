@@ -297,6 +297,63 @@ var player = {
       {
         "size": 0,
         "aggs": {
+          "attacker": {
+            "filter": {
+              "term": {
+                "attacker": "${login}"
+              }
+            },
+            "aggs": {
+              "damage": {
+                "filter": {
+                  "term": {
+                    "type": "damage"
+                  }
+                },
+                "aggs": {
+                  "total": {
+                    "filter": {
+                      "term": {
+                        "kind": "enemy"
+                      }
+                    },
+                    "aggs": {
+                      "total": {
+                        "sum": {
+                          "field": "damage"
+                        }
+                      },
+                      "perClass": {
+                        "terms": {
+                          "field": "attackerClass",
+                          "size": "64"
+                        },
+                        "aggs": {
+                          "damage": {
+                            "sum": {
+                              "field": "damage"
+                            }
+                          },
+                          "damage_sort": {
+                            "bucket_sort": {
+                              "sort": [
+                                {
+                                  "damage": {
+                                    "order": "desc"
+                                  }
+                                }
+                              ],
+                              "size": 64
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
           "player": {
             "filter": {
               "term": {
