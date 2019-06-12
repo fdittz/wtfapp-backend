@@ -7,7 +7,7 @@
                 <ol class="breadcrumb float-sm-left">
                   <li class="breadcrumb-item"><a href="#">Profile</a></li>
                   <li class="breadcrumb-item active">{{player ? player.login : " "}}</li>
-                  <li *ngIf="player?.uid == auth?.uid"><button  class="btn btn-primary btn-sm ml-2" data-toggle="modal" data-target="#modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  </li>
+                  <li *ngIf="player?.uid == auth?.uid"><button  class="btn btn-primary btn-sm ml-2" (click)="secretSet = false; secret = ''" data-toggle="modal" data-target="#modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  </li>
                 </ol>
               </div><!-- /.col -->
             </div><!-- /.row -->
@@ -24,7 +24,7 @@
                 <div class="card card-widget widget-user">
                   <!-- Add the bg color to the header using any of the bg-* classes -->
                   <div class="widget-user-header bg-info-active">
-                    <h3 class="widget-user-username text-truncate">{{player ? player.login : " "}}                        
+                    <h3 class="widget-user-username text-truncate">{{player ? player.login : " "}}        
                         <div style="position: absolute; top: 0.5em; right: 0.5em;">   
                                 <span class="badge bg-warning font-weight-light" *ngIf="player?.role == 'master'">Master</span>
                                 <span class="badge bg-success font-weight-light" *ngIf="player?.role == 'admin'">Admin</span>
@@ -33,7 +33,7 @@
                                 <i class="fas fa-cog"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right text-center">
-                                <button *ngIf="player?.uid == auth?.uid" class="btn btn-primary btn-sm mt-2 mb-2" (click)="editSecret = true" data-target="modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  
+                                <button *ngIf="player?.uid == auth?.uid" class="btn btn-primary btn-sm mt-2 mb-2" data-target="modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  
                                 <button *ngIf="!player?.role && (role == 'master' || role == 'admin')" class="btn btn-success mt-2 mb-2" (click)="grantAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Grant Admin Rights</button>
                                 <button *ngIf="player?.role == 'admin' && role == 'master'" class="btn btn-danger mt-2 mb-2" (click)="revokeAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Revoke Admin Rights</button>
                             </div>
@@ -100,7 +100,7 @@
               <div class="col-md-9">
                 <div class="card">
                   <div class="card-header no-border">
-                    <h3 class="card-title">Match List</h3>
+                    <h3 class="card-title">Match List {{secretSet}}</h3>
                     <div class="card-tools">
                     </div>
                   </div>
@@ -148,25 +148,23 @@
 
 
 
-        <div class="modal show" id="modal-secret" tabindex="-1" role="dialog" data-backdrop="static" [ngStyle]="{'display' : !editSecret ? 'block' : ''}">
+            <div class="modal" id="modal-secret" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content" *ngIf="!secretSet">
                     <div class="modal-header">
                       <h5 class="modal-title" *ngIf="player?.secret">New Secret</h5>
                       <h5 class="modal-title" *ngIf="!player?.secret">You don't have a Secret</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" *ngIf="player?.secret">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
                     <div class="modal-body">
                         <p *ngIf="player?.secret">The "secret" is the "password" you use to login in-game. The secret is not encrypted, so don't repeat any password or use anything that might be sensitive</p>
                         <p *ngIf="!player?.secret"><b>You need a secret to login in-game</b><br>The "secret" is the "password" you use to login in-game. The secret is not encrypted, so don't repeat any password or use anything that might be sensitive</p>
-                        <input class="form-control form-control-lg" type="text"  [(ngModel)]="secret" placeholder="Click and type your new secret">
-                        <input class="input is-large input-secret" type="text"  [(ngModel)]="secret" placeholder="Click and type your new secret">
+                        <input class="form-control form-control-lg" type="text"  [(ngModel)]="secret" placeholder="Click and type your new secret">                       
                     </div>
-                    <div class="modal-footer">      
-                            <a class="button is-primary" id="secretBtn" (click)="updateSecret()">Set new Secret</a>                      
-                      <button type="button" class="btn btn-primary" (click)="updateSecret()">Set New Secret</button>
+                    <div class="modal-footer">
+                      <button type="button" id="secretBtn" class="btn btn-primary" (click)="updateSecret()">Set New Secret</button>
                     </div>
                   </div>
 
@@ -176,23 +174,22 @@
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            </div>
-                            <div class="modal-body text-center">
-                                    <p>To login, while in game, type <br><kbd>cmd login &#60;login&#62; &#60;your-new-secret&#62;</kbd></p>
+                        </div>
+                        <div class="modal-body text-center">
+                            <p>To login, while in game, type <br><kbd>cmd login &#60;login&#62; &#60;your-new-secret&#62;</kbd></p>
 
-                                    <p>You can paste the following command into your <kbd>autoexec.cfg</kbd> inside your <kbd>fortress/</kbd> folder.<br>
-                                        The server should log you in automatically, or you just have to type <kbd>/login</kbd> in your console to log in.<br> Use it at your own risk.<br/><br/></p>
-                                        <div class="field" *ngIf="showAlias">
-                                                <code class="large"><br>alias login "cmd login {{player.login}} {{secret}}"<br>set login "{{player.login}} {{secret}}"<br><br></code>
-                                            </div>
-    
-                                            <div class="field" *ngIf="!showAlias" style="cursor: pointer" (click)="showAlias = true">
-                                                <code class="large"><i class="far fa-eye" style="font-size: 2em"></i><br> click to view<br></code>
-                                            </div>
+                            <p>You can paste the following command into your <kbd>autoexec.cfg</kbd> inside your <kbd>fortress/</kbd> folder.<br>
+                                The server should log you in automatically, or you just have to type <kbd>/login</kbd> in your console to log in.<br> Use it at your own risk.<br/><br/></p>
+                            <div class="field" *ngIf="showAlias">
+                                <code class="large"><br>alias login "cmd login {{player.login}} {{secret}}"<br>set login "{{player.login}} {{secret}}"<br><br></code>
                             </div>
-                            <div class="modal-footer">       
-                                    <a class="button is-primary" id="secretBtn" (click)="updateSecret()">Set new Secret</a>                       
-                            <button type="button" class="btn btn-primary" (click)="updateSecret()">Set New Secret</button>
+
+                            <div class="field" *ngIf="!showAlias" style="cursor: pointer" (click)="showAlias = true">
+                                <code class="large"><i class="far fa-eye" style="font-size: 2em"></i><br> click to view<br></code>
+                            </div>
+                        </div>
+                        <div class="modal-footer">       
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                   </div>
                 </div>
