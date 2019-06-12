@@ -19,7 +19,6 @@ export class ProfileComponent implements OnInit {
 
   msgError: String;
   player: User;
-  editSecret: boolean;
   secretSet: boolean;
   showAlias: boolean;
   login: string;
@@ -47,7 +46,6 @@ export class ProfileComponent implements OnInit {
     this.classesImg[9] = {name: "Engineer", image: "https://wiki.megateamfortress.com/images/thumb/d/d8/Engineer.png/300px-Engineer.png"}; 
 
     var self = this;
-    this.editSecret = false;
     this.showAlias = false;    
     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap["params"].login) {
@@ -75,7 +73,7 @@ export class ProfileComponent implements OnInit {
         this.player = <User>resp;
         if (this.auth.uid == this.player.uid && !this.player.secret) {
           if (!this.player.secret)
-            this.editSecret = true;
+            $("#modal-secret")["modal"]("show")
         }
       }, resp => {
           this.msgError = resp.error.message;
