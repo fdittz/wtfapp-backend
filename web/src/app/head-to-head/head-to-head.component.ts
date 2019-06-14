@@ -18,7 +18,7 @@ export class HeadToHeadComponent implements OnInit {
   msgError: string;
   player1: User;
   player2: User;
-  stats: Array<any>;
+  stats: any;
   constructor(public auth: AuthService,
     private http: HttpClient,
     private location: Location,
