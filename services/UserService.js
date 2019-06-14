@@ -185,6 +185,31 @@ class UserService {
         });
     }
 
+    formatMatch(match) {
+        var returnGame = {};
+        returnGame.startTime    = match.key.gameTimeStamp;
+        returnGame["map"]       = match.gameInfo.map.buckets[0].key;
+        if (match.gameInfo.demo.buckets.length)
+            returnGame.demo         = match.gameInfo.demo.buckets[0].key;
+        returnGame.numPlayers   = match.gameInfo.numPlayers.buckets[0].key;
+        returnGame.numTeams     = match.gameInfo.numTeams.buckets[0].key;
+        returnGame.winningTeam  = match.result.winningTeam.buckets[0].key;
+        returnGame.playerTeam   = match.player.timePlayed.perTeam.buckets[0].key;
+        returnGame.result       = returnGame.winningTeam == 0 ? "draw" : (returnGame.winningTeam == returnGame.playerTeam ? "victory" : "defeat");
+        returnGame.teamMates    = []
+        returnGame.enemies      = []
+        for (var i = 0; i < match.players.buckets.length; i++) {
+            var player = match.players.buckets[i];
+            if (player.timePlayed.perTeam.buckets[0] && player.timePlayed.perTeam.buckets[0].key != "") {
+                if (player.timePlayed.perTeam.buckets[0].key == returnGame.playerTeam)
+                    returnGame.teamMates.push(player.key);
+                else
+                    returnGame.enemies.push(player.key);
+            }
+        }
+        return (returnGame);
+
+    }
     getStats(login) {
         var matches = [];
         var stats = {
@@ -218,30 +243,8 @@ class UserService {
                         return false;
                     return true;
                 })
-                .map( game => {
-                    var returnGame = {};
-                    returnGame.startTime    = game.key.gameTimeStamp;
-                    returnGame["map"]       = game.gameInfo.map.buckets[0].key;
-                    if (game.gameInfo.demo.buckets.length)
-                        returnGame.demo         = game.gameInfo.demo.buckets[0].key;
-                    returnGame.numPlayers   = game.gameInfo.numPlayers.buckets[0].key;
-                    returnGame.numTeams     = game.gameInfo.numTeams.buckets[0].key;
-                    returnGame.player       = login;
-                    returnGame.winningTeam  = game.result.winningTeam.buckets[0].key;
-                    returnGame.playerTeam   = game.player.timePlayed.perTeam.buckets[0].key;
-                    returnGame.result       = returnGame.winningTeam == 0 ? "draw" : (returnGame.winningTeam == returnGame.playerTeam ? "victory" : "defeat");
-                    returnGame.teamMates    = []
-                    returnGame.enemies      = []
-                    for (var i = 0; i < game.players.buckets.length; i++) {
-                        var player = game.players.buckets[i];
-                        if (player.timePlayed.perTeam.buckets[0] && player.timePlayed.perTeam.buckets[0].key != "") {
-                            if (player.timePlayed.perTeam.buckets[0].key == returnGame.playerTeam)
-                                returnGame.teamMates.push(player.key);
-                            else
-                                returnGame.enemies.push(player.key);
-                        }
-                    }
-                    return (returnGame);
+                .map( match => {
+                    return this.formatMatch(match, login);
                 })
                 var victories = 0;
                 var defeats = 0;
@@ -335,6 +338,83 @@ class UserService {
             return Promise.reject();
         })
        
+    }
+
+    getHeadToHeadStats(login1, login2) {
+        console.log("TESTY")
+        var matches = [];
+        var stats = {
+            matches: [],
+            victories: 0,
+            defeats: 0,
+            draws: 0,
+            numMatches: 0,
+        }
+        var query = playerQueries.getMatches(login1);
+        return esutil.sendQuery(query)
+        .then(res => {
+            if (!res.data.aggregations.unique_ids.buckets.length)
+                return []
+            var resultMatches = res.data.aggregations.unique_ids.buckets;
+            matches = resultMatches.map(match => {
+                return match.key
+            })
+            return matches;
+        })
+        .then(matches => {
+            var query = playerQueries.getMatchesByPlayerAndMatchList(login2, matches);
+            return esutil.sendQuery(query)
+            .then(res => {
+                if (!res.data.aggregations.byOtherPlayer.unique_ids.buckets.length)
+                    return []
+                var resultMatches = res.data.aggregations.byOtherPlayer.unique_ids.buckets;
+                matches = resultMatches.map(match => {
+                    return match.key
+                })
+                return matches;                
+            })
+        })
+        .then(matches => {
+            var query = playerQueries.getMatchesByPlayer(login1,matches)
+            return esutil.sendQuery(query)
+            .then( result => {
+
+                var games = result.data.aggregations.games.buckets;
+                games = result.data.aggregations.games.buckets
+                .filter( game => {
+                    if (!game.gameInfo.map.buckets.length ||
+                        !game.gameInfo.numPlayers.buckets.length ||
+                        !game.gameInfo.numTeams.buckets.length ||
+                        !game.result.winningTeam.buckets.length ||
+                        !game.player.timePlayed.perTeam.buckets.length)
+                        return false;
+                    return true;
+                })
+                .map( match => {
+                    return this.formatMatch(match);
+                })
+                .filter( match => {
+                    return (match.enemies.indexOf(login2) > -1) 
+                })
+                return games
+            })
+        })
+        .then(matches => {
+            matches.forEach(match => {
+                if (match.result == "victory")
+                    stats.victories++;
+                else if (match.result == "defeat")
+                    stats.defeats++;
+                else
+                    stats.draws++;
+            })
+            stats.matches = matches;
+                
+            return stats;
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 }
 

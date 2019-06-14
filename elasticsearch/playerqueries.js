@@ -26,6 +26,7 @@ var player = {
           }
         }`
     },
+    
     getMatchesByPlayer(login, timeStampArray) {        
         var matchTerms = []
         timeStampArray.forEach(element => {
@@ -491,7 +492,52 @@ var player = {
         }
       }
       `
-    } 
+    },
+
+    getMatchesByPlayerAndMatchList(login, timeStampArray) {
+      var matchTerms = []
+      timeStampArray.forEach(element => {
+          matchTerms.push(`{
+                              "term": {
+                              "gameTimeStamp": "${element}"
+                              }
+                          }`)
+      });
+      matchTerms = matchTerms.join(",")
+      return `
+      {
+        "size": 0,
+        "query": {
+          "bool": {
+            "should": [
+              ${matchTerms}
+            ],
+            "minimum_should_match": 1
+          }
+        },
+        "aggs": {
+          "byOtherPlayer": {
+            "filter": {
+              "term": {
+                "player": "${login}"
+              }
+            },
+            "aggs": {
+              "unique_ids": {
+                "terms": {
+                  "field": "gameTimeStamp",
+                  "order": {
+                    "_key": "desc"
+                  },
+                  "size": 10000
+                }
+              }
+            }
+          }
+        }
+      }`
+    
+    }
 }
 
 module.exports = player;
