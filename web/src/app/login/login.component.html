@@ -1,23 +1,23 @@
 <section class="section no-bg">
-  <div class="container vert-center">
-      <div class="card login has-text-centered">
-          <div class="card-content">
-              <div class="has-text-centered">
-                  <div style="background: url(assets/img/quadclub.png); width: 127px; height: 127px; border-radius: 50%;margin: 0 auto 1em">
-                  </div>
-              </div>
-              <div class="media-content has-text-centered">
-                  <p class="title is-4">Quad Club</p>
-                  <p class="subtitle is-6">Brazlian Team Fortress</p>
-              </div>
-              <div class="content">
-              <div class="card-button">
-                  <a class="button is-danger" (click)="googleSignIn()"><i class="fab fa-google"></i>&nbsp;&nbsp;&nbsp;&nbsp; Login with Google</a>   
-              </div>                    
-              </div>
-          </div>
+  
+
+  <div class="login-box">
+      <div class="login-logo" style="font-family: 'BebasNeueRegular'">
+        <b>Q U A D C L U B</b>
       </div>
-  </div>
+      <!-- /.login-logo -->
+      <div class="card">
+        <div class="card-body login-card-body">
+          <p class="login-box-msg">Brazlian Team Fortress</p>
+          <div class="social-auth-links text-center mb-3">
+            <a href="#" class="btn btn-block btn-danger" (click)="googleSignIn()">
+              <i class="fab fa-google mr-2"></i> Login with Google
+            </a>
+          </div>
+        </div>
+        <!-- /.login-card-body -->
+      </div>
+    </div>
 </section>
 
 

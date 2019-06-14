@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
+      $("body").addClass("hold-transition").addClass("login-page");
     }
 
 }

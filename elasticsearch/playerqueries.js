@@ -304,47 +304,108 @@ var player = {
               }
             },
             "aggs": {
-              "damage": {
-                "filter": {
-                  "term": {
-                    "type": "damage"
-                  }
+              "perClass": {
+                "terms": {
+                  "field": "attackerClass",
+                  "size": "64"
                 },
                 "aggs": {
-                  "total": {
+                  "enemy": {
                     "filter": {
                       "term": {
                         "kind": "enemy"
                       }
                     },
                     "aggs": {
-                      "total": {
+                      "damage": {
                         "sum": {
                           "field": "damage"
                         }
                       },
-                      "perClass": {
-                        "terms": {
-                          "field": "attackerClass",
-                          "size": "64"
-                        },
-                        "aggs": {
-                          "damage": {
-                            "sum": {
-                              "field": "damage"
-                            }
-                          },
-                          "damage_sort": {
-                            "bucket_sort": {
-                              "sort": [
-                                {
-                                  "damage": {
-                                    "order": "desc"
-                                  }
-                                }
-                              ],
-                              "size": 64
-                            }
+                      "kills": {
+                        "filter": {
+                          "term": {
+                            "type": "kill"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "team": {
+                    "filter": {
+                      "term": {
+                        "kind": "team"
+                      }
+                    },
+                    "aggs": {
+                      "damage": {
+                        "sum": {
+                          "field": "damage"
+                        }
+                      },
+                      "kills": {
+                        "filter": {
+                          "term": {
+                            "type": "kill"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "target": {
+            "filter": {
+              "term": {
+                "target": "${login}"
+              }
+            },
+            "aggs": {
+              "perClass": {
+                "terms": {
+                  "field": "attackerClass",
+                  "size": "64"
+                },
+                "aggs": {
+                  "enemy": {
+                    "filter": {
+                      "term": {
+                        "kind": "enemy"
+                      }
+                    },
+                    "aggs": {
+                      "damage": {
+                        "sum": {
+                          "field": "damage"
+                        }
+                      },
+                      "kills": {
+                        "filter": {
+                          "term": {
+                            "type": "kill"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "team": {
+                    "filter": {
+                      "term": {
+                        "kind": "team"
+                      }
+                    },
+                    "aggs": {
+                      "damage": {
+                        "sum": {
+                          "field": "damage"
+                        }
+                      },
+                      "kills": {
+                        "filter": {
+                          "term": {
+                            "type": "kill"
                           }
                         }
                       }
@@ -387,7 +448,11 @@ var player = {
                       "timePlayed_sort": {
                         "bucket_sort": {
                           "sort": [
-                            {"timePlayed": {"order": "desc"}}
+                            {
+                              "timePlayed": {
+                                "order": "desc"
+                              }
+                            }
                           ],
                           "size": 10
                         }
@@ -408,7 +473,11 @@ var player = {
                       "timePlayed_sort": {
                         "bucket_sort": {
                           "sort": [
-                            {"timePlayed": {"order": "desc"}}
+                            {
+                              "timePlayed": {
+                                "order": "desc"
+                              }
+                            }
                           ],
                           "size": 10
                         }
