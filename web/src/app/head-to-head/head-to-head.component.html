@@ -4,8 +4,9 @@
       <div class="row mb-2">
         <div class="col-sm-12">
           <ol class="breadcrumb float-sm-left">
-            <li class="breadcrumb-item"><a href="#">Profile</a></li>
-            <li *ngIf="player" class="breadcrumb-item active">{{player ? player.login : " "}}</li>
+            <li class="breadcrumb-item"><a href="#">Head to head</a></li>
+            <li *ngIf="player1" class="breadcrumb-item active">{{player1.login}}</li>
+            <li *ngIf="player2" class="breadcrumb-item active">{{player2.login}}</li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
