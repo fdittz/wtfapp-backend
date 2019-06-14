@@ -1,6 +1,6 @@
-<app-navbar></app-navbar>
-<app-side-bar></app-side-bar>
+<app-navbar *ngIf="auth.uid"></app-navbar>
+<app-side-bar *ngIf="auth.uid"></app-side-bar>
 <app-loader></app-loader>
-<div class="content-wrapper">
-<router-outlet></router-outlet>
+<div class="{{auth.uid ? 'content-wrapper' : 'login-box'}}">
+    <router-outlet></router-outlet>
 </div>
