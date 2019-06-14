@@ -26,9 +26,9 @@
                   <div class="widget-user-header bg-info-active">
                     <h3 class="widget-user-username text-truncate">{{player ? player.login : " "}}        
                         <div style="position: absolute; top: 0.5em; right: 0.5em;">   
-                                <span class="badge bg-warning font-weight-light" *ngIf="player?.role == 'master'">Master</span>
-                                <span class="badge bg-success font-weight-light" *ngIf="player?.role == 'admin'">Admin</span>
-                                <span class="badge bg-info font-weight-light" *ngIf="player?.role != 'admin' && player?.role != 'master'">Player</span>                         
+                                <span class="badge bg-warning font-weight-light badge-pill" *ngIf="player?.role == 'master'">Master</span>
+                                <span class="badge bg-success font-weight-light badge-pill" *ngIf="player?.role == 'admin'">Admin</span>
+                                <span class="badge bg-info font-weight-light badge-pill" *ngIf="player?.role != 'admin' && player?.role != 'master'">Player</span>                         
                             <button type="button" class="btn btn-tool" data-toggle="dropdown" title="Contacts" data-widget="chat-pane-toggle">
                                 <i class="fas fa-cog"></i>
                             </button>
@@ -43,7 +43,7 @@
                     <h5 class="widget-user-desc"></h5>
                   </div>
                   <div class="widget-user-image">
-                    <img class="img-circle elevation-2" src="{{player && player.uid == auth.uid ? player.photoURL : 'https://bulma.io/images/placeholders/128x128.png'}}" alt="User Avatar">
+                    <img class="img-circle elevation-2" src="{{player && player?.uid == auth.uid ? player?.photoURL : 'https://bulma.io/images/placeholders/128x128.png'}}" alt="User Avatar">
                   </div>
                   <div class="card-footer">
                     <div class="row">
@@ -118,7 +118,7 @@
                     </div>
                   </div>
                   <div class="card-body p-0">
-                    <table class="table table-striped table-valign-middle">
+                    <table class="table table-striped table-sm table-valign-middle">
                       <thead>
                       <tr>
                         <th>Time</th>

@@ -35,7 +35,7 @@
                           <table class="table table-hover">
                             <tbody>
                             <tr *ngFor="let player of players | paginate: { itemsPerPage: perPage, currentPage: currentPage, totalItems: numPlayers }">
-                              <td><a href="/profile/{{player.login}}">{{player.login}}</a></td>                              
+                              <td><a href="/profile/{{player.login}}">{{player.login}}</a> <span *ngIf="player.role == 'admin'" class="badge bg-success badge-pill"  style="margin-left: 10px" title="Admin rights granted by {{player.adminGivenBy}}">Admin</span><span *ngIf="player.role == 'master'" class="badge bg-warning badge-pill"  style="margin-left: 10px" title="Master">Master</span></td>                              
                             </tr>
                           </tbody></table>
                         </div>
