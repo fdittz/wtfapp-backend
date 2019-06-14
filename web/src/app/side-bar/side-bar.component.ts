@@ -8,14 +8,12 @@ import { AuthService } from '../auth.service';
 })
 export class SideBarComponent implements OnInit {
 
-  login: string;
+  user: any;
   constructor(public auth: AuthService) { }
 
   ngOnInit() {
     this.auth.user$.subscribe(userdata => {
-      if (userdata.login) {
-        this.login = userdata.login;
-      }
+      this.user = userdata;
     });
   }
 
