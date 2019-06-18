@@ -85,7 +85,7 @@
                                   <span *ngIf="match.result == 'defeat'" class="badge bg-danger">{{player2.login}}</span>
                                   <span *ngIf="match.result == 'draw'" class="badge bg-gray">Draw</span>
                                 </td>    
-                                <td><a href="http://tf.quadclub.com.br:27570/game/{{match.startTime}}" target="_blank">Stats(old)</a></td>
+                                <td><a href="/match/{{match.startTime}}" target="_blank">Stats</a></td>
                                 <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
                             </tr>
          
