@@ -18,7 +18,7 @@ import * as moment from 'moment';
 export class MatchComponent implements OnInit {
 
   msgError: String;
-  stats: any;
+  match: any;
   classesImg = [];
 
   constructor(
@@ -51,7 +51,7 @@ export class MatchComponent implements OnInit {
     return this.http.get(`/api/matches/${matchId}`, {
       headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
     }).subscribe(resp => {
-        this.stats = resp;
+        this.match = resp;
     }, resp => {
         this.msgError = resp.error.message;
     })
