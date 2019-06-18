@@ -29,7 +29,7 @@ class MatchService {
                     returnGame.teams = []
                     for (var i = 1; i <= 4; i++) {
                         if (game.result["team" + i +"Name"] && game.result["team" + i +"Name"].buckets.length)
-                            returnGame.teams.push({"name": game.result["team" + i +"Name"].buckets[0].key, "score": game.result["team" + i +"Score"]});
+                            returnGame.teams.push({"name": game.result["team" + i +"Name"].buckets[0].key, "score": game.result["team" + i +"Score"], "number": i});
                     }                    
 
                     for (var i = 0; i < game.players.buckets.length; i++) {
@@ -41,6 +41,7 @@ class MatchService {
                             returnGame.teams[playerTeamNum].players.push(player.key)
                         }
                     }
+                    console.log(returnGame)
                     return (returnGame);
                 })
                 return games

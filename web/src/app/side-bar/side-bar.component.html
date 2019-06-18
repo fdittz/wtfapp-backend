@@ -1,67 +1,67 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="/home" class="brand-link text-center">
-      <img src="assets/img/quadclub.png" style="height: 96px; opacity: .8" alt="AdminLTE Logo" class=""
-          ><br>
-      <span class="brand-text font-weight-light" style="font-family: 'BebasNeueRegular'; font-size: 1.5em">Q U A D C L U B</span>
-    </a>
+  <!-- Brand Logo -->
+  <a href="/home" class="brand-link text-center">
+    <img src="assets/img/quadclub.png" style="height: 96px; opacity: .8" alt="AdminLTE Logo" class=""
+        ><br>
+    <span class="brand-text font-weight-light" style="font-family: 'BebasNeueRegular'; font-size: 1.5em">Q U A D C L U B</span>
+  </a>
 
-    <!-- Sidebar -->
-    <div class="sidebar"  *ngIf="auth.uid">
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="{{user?.photoURL}}" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-          <a href="/profile" class="d-block">{{user?.login}}</a>
-        </div>
+  <!-- Sidebar -->
+  <div class="sidebar"  *ngIf="auth.uid">
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="image">
+        <img src="{{user?.photoURL}}" class="img-circle elevation-2" alt="User Image">
       </div>
-
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-                with font-awesome or any other icon font library -->
-          <li class="nav-item">
-            <a href="/home" class="nav-link">
-              <i class="nav-icon fas fa-home"></i>
-              <p>Home</p>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a href="/profile" class="nav-link">
-              <i class="nav-icon fas fa-user-circle"></i>
-              <p>Profile</p>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a href="/playerlist" class="nav-link">
-              <i class="nav-icon fas fa-users"></i>
-              <p>Player List</p>
-            </a>
-          </li>
-
-          <li class="nav-item">
-              <a href="/headtohead" class="nav-link">
-                <i class="nav-icon fas fa-chess"></i>
-                <p>Head to head</p>
-              </a>
-            </li>
-
-          <li class="nav-item">
-            <a href="/demos" class="nav-link">
-              <i class="nav-icon fas fa-video"></i>
-              <p>Demos</p>
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
+      <div class="info">
+        <a href="/profile" class="d-block">{{user?.login}}</a>
+      </div>
     </div>
-    <!-- /.sidebar -->
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class
+              with font-awesome or any other icon font library -->
+        <li class="nav-item">
+          <a href="/home" class="nav-link">
+            <i class="nav-icon fas fa-home"></i>
+            <p>Home</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="/profile" class="nav-link">
+            <i class="nav-icon fas fa-user-circle"></i>
+            <p>Profile</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="/playerlist" class="nav-link">
+            <i class="nav-icon fas fa-users"></i>
+            <p>Player List</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/headtohead" class="nav-link">
+              <i class="nav-icon fas fa-chess"></i>
+              <p>Head to head</p>
+            </a>
+          </li>
+
+        <li class="nav-item">
+          <a href="/demos" class="nav-link">
+            <i class="nav-icon fas fa-video"></i>
+            <p>Demos</p>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
 </aside>
   

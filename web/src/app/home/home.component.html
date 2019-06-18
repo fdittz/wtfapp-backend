@@ -1,5 +1,6 @@
 <!-- Content Header (Page header) -->
-<div class="content-header">
+<section class="header">
+  <div class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-12">
@@ -11,9 +12,24 @@
     </div><!-- /.container-fluid -->
   </div>
   <!-- /.content-header -->
+</section>
 
 <section class="content">
     <div class="container-fluid">
+      <div class="row">
+
+        <div class="col-md-4" *ngFor="let rank of fragRank; let i = index">
+            <div class="small-box {{classesImg[i+1].css}}">
+                <a href="#" class="small-box-footer text-left pl-1 pr-1">
+                    {{rank.name}}               
+                </a>
+                <div class="inner">
+                    <span *ngFor="let player of rank.players"><b>{{player.login}}:</b> {{player.per10min | number: '1.0-2' }}<br/></span>
+                </div>
+            </div>
+
+      </div>
+      </div>
       <div class="row">
       <div class="col-12">
         <div class="card">
@@ -35,14 +51,25 @@
                 </tr>
                 </thead>
                 <tbody>
-                      <tr *ngFor="let match of stats; let i = index" class="{{match.result == 'defeat' ? 'has-background-danger' : (match.result == 'victory' ? 'has-background-success' : '')}}">
-                          <td>{{match.startTime | date: 'dd/MM/yyyy HH:mm'}}</td>
-                          <td>{{match.map}}</td>
-                          <td><span *ngFor="let team of match.teams"> {{team.name}}: {{team.players?.join(", ")}}<br></span></td>
-                          <td>{{match.winningTeam ? match.teams[match.winningTeam-1].name : 'Draw'}}</td>  
-                          <td><a href="/match/{{match.startTime}}" target="_blank">Stats</a></td>
-                          <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
-                      </tr>
+                  <tr *ngFor="let match of stats; let i = index" class="{{match.result == 'defeat' ? 'has-background-danger' : (match.result == 'victory' ? 'has-background-success' : '')}}">
+                      <td>{{match.startTime | date: 'dd/MM/yyyy HH:mm'}}</td>
+                      <td><b>{{match.map | uppercase}}</b></td>
+                      <td><span *ngFor="let team of match.teams" class="{{team.number == 1 ? 'text-primary': (team.number == 2 ? 'text-danger': (team.number == 3 ? 'text-warning': (team.number == 4 ? 'text-success': '')))}}">
+                            <b>{{team.name | uppercase}}</b>: 
+                            <span *ngFor="let player of team.players; let i = index">{{i != 0 ? "," : ""}} {{player}}</span>
+                            <br>
+                          </span>
+                      </td>
+                      <td>
+                          <span *ngIf="match.winningTeam == 1" class="badge bg-primary">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
+                          <span *ngIf="match.winningTeam == 2" class="badge bg-danger">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
+                          <span *ngIf="match.winningTeam == 3" class="badge bg-warning">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
+                          <span *ngIf="match.winningTeam == 4" class="badge bg-success">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
+                          <span *ngIf="!match.winningTeam" class="badge bg-secondary">DRAW</span>                            
+                      </td>  
+                      <td><a href="/match/{{match.startTime}}" target="_blank">Stats</a></td>
+                      <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
+                  </tr>
                 </tbody>
               </table>
             </div>

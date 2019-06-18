@@ -186,7 +186,6 @@ router.get('/profile/stats/:login', function(req, res, next) {
 		return res.status(200).json([]);
 	})
 })
-module.exports = router;
 
 router.get('/headtohead/:login1/:login2?', function(req, res, next) {
 	return UserService.getHeadToHeadStats(req.params.login1, req.params.login2)
@@ -197,3 +196,15 @@ router.get('/headtohead/:login1/:login2?', function(req, res, next) {
 		return res.status(200).json([]);
 	})
 });
+
+router.get('/top/fraggers', function(req, res, next) {
+	return UserService.getTopFraggers()
+	.then(function(data) {
+		return res.status(200).json(data);
+	})
+	.catch(err => {
+		return res.status(200).json([]);
+	})
+});
+
+module.exports = router;
