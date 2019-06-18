@@ -132,6 +132,36 @@ class MatchService {
         })
     
     }
+
+    getMatchDetails(matchId) { 
+        var game = {
+            gameTimeStamp: matchId,
+            map: "",
+            players: []
+
+        }
+        var query = matchQueries.getMatchDetails(matchId);
+          return esutil.sendQuery(query)
+        .then(res => {
+            game.map = (res.data.aggregations.byGame.game.data.hits.hits[0]._source.map);
+            game.players = res.data.aggregations.byGame.player.buckets.map(player => {
+                var returnPlayer = {};
+                returnPlayer.perClass = player.timePlayed.perClass.buckets.map(perClassTime => {
+                    console.log({key: perClassTime.key, timePlayed: perClassTime.timePlayed.value})
+                    return ({key: perClassTime.key, timePlayed: perClassTime.timePlayed.value});
+                })
+                returnPlayer.frags = player.playerkills.enemy.doc_count;
+                returnPlayer.deaths = player.playerdeaths.enemy.doc_count;
+                returnPlayer.teamKills = player.playerkills.team.doc_count;
+                returnPlayer.teamDeaths = player.playerdeaths.team.doc_count;
+                returnPlayer.damageDone = player.damageDone.enemy.sumdmg;
+                returnPlayer.damageTaken = player.damageTaken.
+                console.log(returnPlayer) ;
+    
+            })
+            
+        });
+    }
 }
 
 module.exports = new MatchService();

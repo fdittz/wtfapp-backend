@@ -84,7 +84,7 @@
                   <!-- /.card-header -->
                   <div class="card-body">                      
                     <span *ngFor="let class of stats?.perClass">
-                    <h6><b>{{classesImg[class?.key].name}}</b> <span class="float-sm-right">{{class.timePlayed.value/60 | number:'1.0-0'}} minutes</span></h6>
+                    <h6><b>{{classesImg[class?.key].name}}</b> <span class="float-sm-right">{{class.timePlayed/60 | number:'1.0-0'}} minutes</span></h6>
                     <div class="progress mb-3">                  
                       <div class="progress-bar bg-dark" role="progressbar" style="width: 80%" [ngStyle]="{'width' : ((class.timePlayed.value / stats.totalTime) *100)+ '%'}">
                       </div>
@@ -98,13 +98,13 @@
                 <div class="small-box {{classesImg[class?.key].css}}" *ngFor="let class of stats?.perClass">
                     <a href="#" class="small-box-footer text-left pl-1 pr-1">
                         {{classesImg[class?.key].name}}
-                        <span class="float-right">{{class.timePlayed.value/60 | number:'1.0-0'}} min</span>
+                        <span class="float-right">{{class.timePlayed/60 | number:'1.0-0'}} min</span>
                     </a>
                     <div class="inner">
-                        <b>Frags:</b> {{class.frags/(class.timePlayed.value/600) | number: '1.0-2'}}/10min<br/>
-                        <b>Damage:</b> {{class.damageDone/(class.timePlayed.value/600) | number: '1.0-2'}}/10min<br/>
-                        <b>Deaths:</b> {{class.deaths/(class.timePlayed.value/600) | number: '1.0-2'}}/10min<br/>
-                        <b>Team Kills:</b> {{class.teamKills/(class.timePlayed.value/600) | number: '1.0-2'}}/10min<br/>
+                        <b>Frags:</b> {{class.frags/(class.timePlayed/600) | number: '1.0-2'}}/10min<br/>
+                        <b>Damage:</b> {{class.damageDone/(class.timePlayed/600) | number: '1.0-2'}}/10min<br/>
+                        <b>Deaths:</b> {{class.deaths/(class.timePlayed/600) | number: '1.0-2'}}/10min<br/>
+                        <b>Team Kills:</b> {{class.teamKills/(class.timePlayed/600) | number: '1.0-2'}}/10min<br/>
                     </div>
                 </div>
 
@@ -113,7 +113,7 @@
               <div class="col-md-9">
                 <div class="card">
                   <div class="card-header no-border">
-                    <h3 class="card-title">Match List {{secretSet}}</h3>
+                    <h3 class="card-title">Match List</h3>
                     <div class="card-tools">
                     </div>
                   </div>
