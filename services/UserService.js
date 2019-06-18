@@ -272,48 +272,31 @@ class UserService {
         .then(stats => {
             var query = playerQueries.getTimePlayedByClassAndTeam(login);
             return esutil.sendQuery(query)
-            .then(result => {
+            .then(result => {     
                 stats.perTeam  = (result.data.aggregations.player.timePlayed.perTeam.buckets);
-                stats.perClass = (result.data.aggregations.player.timePlayed.perClass.buckets); 
+                stats.perClass = (result.data.aggregations.player.perClass.buckets);                 
                 stats.totalTime = (result.data.aggregations.player.timePlayed.total.value);
-                //console.log(result.data.aggregations.attacker.perClass.buckets[0].enemy.kills.doc_count)
-                //console.log(result.data.aggregations.attacker.perClass.buckets[0].enemy.damage.value)
-                //console.log(result.data.aggregations.attacker.perClass.buckets[0].team.kills.doc_count)
-                //console.log(result.data.aggregations.attacker.perClass.buckets[0].team.damage.value)
-                
-                //console.log(result.data.aggregations.target.perClass.buckets[0].enemy.kills.doc_count)
-                //console.log(result.data.aggregations.target.perClass.buckets[0].enemy.damage.value)
-                //console.log(result.data.aggregations.target.perClass.buckets[0].team.kills.doc_count)
-                //console.log(result.data.aggregations.target.perClass.buckets[0].team.damage.value)
-                result.data.aggregations.attacker.perClass.buckets.forEach(classStats => {
-                    stats.perClass.forEach(targetClass => {
-                        if (classStats.key == targetClass.key) {
-                            targetClass.frags = classStats.enemy.kills.doc_count;
-                            targetClass.damageDone = classStats.enemy.damage.value;
-                            targetClass.teamKills = classStats.team.kills.doc_count;
-                            targetClass.teamDamage = classStats.team.damage.value;
-                        }
-                    })
-                })
-                result.data.aggregations.target.perClass.buckets.forEach(classStats => {
-                    stats.perClass.forEach(targetClass => {
-                        if (classStats.key == targetClass.key) {
-                            targetClass.deaths = classStats.enemy.kills.doc_count;
-                            targetClass.damageTaken = classStats.enemy.damage.value;
-                            targetClass.teamDeaths = classStats.team.kills.doc_count;
-                            targetClass.teamDamageTaken = classStats.team.damage.value;
-                        }
-                    })
-                })
-                //console.log(stats.perClass)
+                stats.perClass = result.data.aggregations.player.perClass.buckets.map(classStats => {
+                    return {
+                        key :               classStats.key,
+                        frags:              classStats.kills.enemy.doc_count,
+                        damageDone:         classStats.damageDone.enemy.damage.value,
+                        teamKills:          classStats.kills.team.doc_count,
+                        teamDamage:         classStats.damageDone.team.damage.value,
+                        deaths:             classStats.deaths.enemy.doc_count,
+                        damageTaken:        classStats.damageTaken.enemy.damage.value,
+                        teamDeaths:         classStats.deaths.team.doc_count,
+                        teamDamageTaken:    classStats.damageTaken.team.damage.value,
+                        timePlayed:         classStats.timePlayed.total.value
+                    }
+                });
                 return stats;
             });
         })
         .catch(err => {
             console.log(err)
             return Promise.reject();
-        })
-       
+        })       
     }
 
     getOldStats(login) {

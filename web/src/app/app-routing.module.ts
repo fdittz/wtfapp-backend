@@ -10,6 +10,7 @@ import { RootComponent } from './root/root.component'
 import { HomeComponent } from './home/home.component'
 import { PlayerListComponent } from './player-list/player-list.component';
 import { HeadToHeadComponent} from './head-to-head/head-to-head.component';
+import { MatchComponent } from './match/match.component';
 
 const routes: Routes = [
 	{ path: '', component: RootComponent, canActivate: [LoggedGuard] },
@@ -21,6 +22,7 @@ const routes: Routes = [
 	{ path: 'playerlist/:page',	component: PlayerListComponent,  canActivate: [AuthGuard, LoginGuard] },
 	{ path: 'headtohead',	component: HeadToHeadComponent,  canActivate: [AuthGuard, LoginGuard] },
 	{ path: 'headtohead/:login1/:login2',	component: HeadToHeadComponent,  canActivate: [AuthGuard, LoginGuard] },
+	{ path: 'match/:matchId',	component: MatchComponent,  canActivate: [AuthGuard, LoginGuard] },
 	{ path: 'home',	component: HomeComponent,  canActivate: [AuthGuard, LoginGuard] },
 ];
 

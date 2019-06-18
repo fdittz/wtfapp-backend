@@ -1,0 +1,106 @@
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+              <div class="row mb-2">
+                <div class="col-sm-12">
+                  <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="#">Match</a></li>
+                    <li class="breadcrumb-item active">{{match ? match.gameTimeStamp : " "}}</li>                    
+                  </ol>
+                </div><!-- /.col -->
+              </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-9">
+                  <!-- Widget: user widget style 1 -->
+                  <div class="card card-widget widget-user">
+                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                    <div class="widget-user-header bg-info-active">
+                      <h3 class="widget-user-username text-truncate">TESTE{{player ? player.login : " "}}        
+                          <div style="position: absolute; top: 0.5em; right: 0.5em;">   
+                                  <span class="badge bg-warning font-weight-light badge-pill" *ngIf="player?.role == 'master'">Master</span>
+                                  <span class="badge bg-success font-weight-light badge-pill" *ngIf="player?.role == 'admin'">Admin</span>
+                                  <span class="badge bg-info font-weight-light badge-pill" *ngIf="player?.role != 'admin' && player?.role != 'master'">Player</span>                         
+                              <button type="button" class="btn btn-tool" data-toggle="dropdown" title="Contacts" data-widget="chat-pane-toggle">
+                                  <i class="fas fa-cog"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right text-center">
+                                  <button *ngIf="player?.uid == auth?.uid" class="btn btn-primary btn-sm mt-2 mb-2" data-target="modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  
+                                  <button *ngIf="!player?.role && (role == 'master' || role == 'admin')" class="btn btn-success mt-2 mb-2" (click)="grantAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Grant Admin Rights</button>
+                                  <button *ngIf="player?.role == 'admin' && role == 'master'" class="btn btn-danger mt-2 mb-2" (click)="revokeAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Revoke Admin Rights</button>
+                              </div>
+                          </div>
+                      </h3>
+                      
+                      <h5 class="widget-user-desc"></h5>
+                    </div>
+                    <div class="widget-user-image">
+                      <img class="img-circle elevation-2" src="{{player && player?.uid == auth.uid ? player?.photoURL : 'https://bulma.io/images/placeholders/128x128.png'}}" alt="User Avatar">
+                    </div>
+                    <div class="card-footer">
+                      <div class="row">
+                        <div class="col-sm-4 border-right">
+                          <div class="description-block">
+                            <h5 class="description-header">{{stats?.winRate}}</h5>
+                            <span class="description-text">WIN RATE</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-4 border-right">
+                          <div class="description-block">
+                            <h5 class="description-header">{{stats?.matches?.length ? stats?.matches?.length : 0}}</h5>
+                            <span class="description-text">MATCHES</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-4">
+                          <div class="description-block">
+                            <h5 class="description-header">{{(stats?.perClass ? classesImg[stats?.perClass[0].key].name : '') | uppercase}}</h5>
+                            <span class="description-text">MAIN CLASS</span>
+                          </div>
+                          <!-- /.description-block -->
+                        </div>
+                        <!-- /.col -->
+                      </div>
+                      <!-- /.row -->
+                      <div class="row">
+                          <div class="col-sm-4 border-right">
+                            <div class="description-block">
+                              <h5 class="description-header">{{stats?.winRate}}</h5>
+                              <span class="description-text">WIN RATE</span>
+                            </div>
+                            <!-- /.description-block -->
+                          </div>
+                          <!-- /.col -->
+                          <div class="col-sm-4 border-right">
+                            <div class="description-block">
+                              <h5 class="description-header">{{stats?.matches?.length ? stats?.matches?.length : 0}}</h5>
+                              <span class="description-text">MATCHES</span>
+                            </div>
+                            <!-- /.description-block -->
+                          </div>
+                          <!-- /.col -->
+                          <div class="col-sm-4">
+                            <div class="description-block">
+                              <h5 class="description-header">{{(stats?.perClass ? classesImg[stats?.perClass[0].key].name : '') | uppercase}}</h5>
+                              <span class="description-text">MAIN CLASS</span>
+                            </div>
+                            <!-- /.description-block -->
+                          </div>
+                          <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </section>

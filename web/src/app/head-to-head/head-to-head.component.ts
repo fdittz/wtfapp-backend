@@ -46,24 +46,16 @@ export class HeadToHeadComponent implements OnInit {
     this.stats = [];
     this.player1 = null;
     this.player2 = null;
-    var player1login;
-    var player2login;
-      player1login = this.player1login 
-      player2login = this.player2login
+    this.player1login = this.player1login.toLowerCase();
+    this.player2login = this.player2login.toLowerCase();
 
-    Promise.all([this.getProfileData(player1login), this.getProfileData(player2login)])
+    Promise.all([this.getProfileData(this.player1login), this.getProfileData(this.player2login)])
     .then( players => {
       this.player1 = <User>players[0];
       this.player2 = <User>players[1];
       this.location.replaceState(`/headtohead/${this.player1.login}/${this.player2.login}`);
       this.getStatsData(this.player1.login, this.player2.login);
-    })
-    /* this.getProfileData(player1login)
-    .then((player1) => {
-      this.player1 = <User>player1;
-      this.getProfileData()
-    }) */
-   
+    });  
   }
 
   async getStatsData(login1, login2) {
@@ -82,13 +74,13 @@ export class HeadToHeadComponent implements OnInit {
     var ctx = pieChartCanvas.getContext('2d')
     var pieData        = {
       labels: [
-          this.player1.login,
-          this.player2.login
+          this.player2.login,
+          this.player1.login
       ],
       datasets: [
         {
-          data: [this.stats["victories"],this.stats["defeats"]],
-          backgroundColor : ['#007bff', '#dc3545']
+          data: [this.stats["defeats"], this.stats["victories"]],
+          backgroundColor : ['#dc3545', '#007bff']
         }
       ]
     }

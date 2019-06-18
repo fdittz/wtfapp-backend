@@ -26,7 +26,7 @@ var player = {
           }
         }`
     },
-    
+
     getMatchesByPlayer(login, timeStampArray) {        
         var matchTerms = []
         timeStampArray.forEach(element => {
@@ -298,124 +298,6 @@ var player = {
       {
         "size": 0,
         "aggs": {
-          "attacker": {
-            "filter": {
-              "term": {
-                "attacker": "${login}"
-              }
-            },
-            "aggs": {
-              "perClass": {
-                "terms": {
-                  "field": "attackerClass",
-                  "size": "64"
-                },
-                "aggs": {
-                  "enemy": {
-                    "filter": {
-                      "term": {
-                        "kind": "enemy"
-                      }
-                    },
-                    "aggs": {
-                      "damage": {
-                        "sum": {
-                          "field": "damage"
-                        }
-                      },
-                      "kills": {
-                        "filter": {
-                          "term": {
-                            "type": "kill"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "team": {
-                    "filter": {
-                      "term": {
-                        "kind": "team"
-                      }
-                    },
-                    "aggs": {
-                      "damage": {
-                        "sum": {
-                          "field": "damage"
-                        }
-                      },
-                      "kills": {
-                        "filter": {
-                          "term": {
-                            "type": "kill"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "target": {
-            "filter": {
-              "term": {
-                "target": "${login}"
-              }
-            },
-            "aggs": {
-              "perClass": {
-                "terms": {
-                  "field": "attackerClass",
-                  "size": "64"
-                },
-                "aggs": {
-                  "enemy": {
-                    "filter": {
-                      "term": {
-                        "kind": "enemy"
-                      }
-                    },
-                    "aggs": {
-                      "damage": {
-                        "sum": {
-                          "field": "damage"
-                        }
-                      },
-                      "kills": {
-                        "filter": {
-                          "term": {
-                            "type": "kill"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "team": {
-                    "filter": {
-                      "term": {
-                        "kind": "team"
-                      }
-                    },
-                    "aggs": {
-                      "damage": {
-                        "sum": {
-                          "field": "damage"
-                        }
-                      },
-                      "kills": {
-                        "filter": {
-                          "term": {
-                            "type": "kill"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
           "player": {
             "filter": {
               "term": {
@@ -433,31 +315,6 @@ var player = {
                   "total": {
                     "sum": {
                       "field": "timePlayed"
-                    }
-                  },
-                  "perClass": {
-                    "terms": {
-                      "field": "previousClass",
-                      "size": "64"
-                    },
-                    "aggs": {
-                      "timePlayed": {
-                        "sum": {
-                          "field": "timePlayed"
-                        }
-                      },
-                      "timePlayed_sort": {
-                        "bucket_sort": {
-                          "sort": [
-                            {
-                              "timePlayed": {
-                                "order": "desc"
-                              }
-                            }
-                          ],
-                          "size": 10
-                        }
-                      }
                     }
                   },
                   "perTeam": {
@@ -483,6 +340,160 @@ var player = {
                           "size": 10
                         }
                       }
+                    }
+                  }
+                }
+              },
+              "perClass": {
+                "terms": {
+                  "field": "playerClass",
+                  "size": "64"
+                },
+                "aggs": {
+                  "damageDone": {
+                    "filter": {
+                      "term": {
+                        "type": "damageDone"
+                      }
+                    },
+                    "aggs": {
+                      "enemy": {
+                        "filter": {
+                          "term": {
+                            "kind": "enemy"
+                          }
+                        },
+                        "aggs": {
+                          "damage": {
+                            "sum": {
+                              "field": "damage"
+                            }
+                          }
+                        }
+                      },
+                      "team": {
+                        "filter": {
+                          "term": {
+                            "kind": "team"
+                          }
+                        },
+                        "aggs": {
+                          "damage": {
+                            "sum": {
+                              "field": "damage"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "kills": {
+                    "filter": {
+                      "term": {
+                        "type": "kill"
+                      }
+                    },
+                    "aggs": {
+                      "enemy": {
+                        "filter": {
+                          "term": {
+                            "kind": "enemy"
+                          }
+                        }
+                      },
+                      "team": {
+                        "filter": {
+                          "term": {
+                            "kind": "team"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "damageTaken": {
+                    "filter": {
+                      "term": {
+                        "type": "damageTaken"
+                      }
+                    },
+                    "aggs": {
+                      "enemy": {
+                        "filter": {
+                          "term": {
+                            "kind": "enemy"
+                          }
+                        },
+                        "aggs": {
+                          "damage": {
+                            "sum": {
+                              "field": "damage"
+                            }
+                          }
+                        }
+                      },
+                      "team": {
+                        "filter": {
+                          "term": {
+                            "kind": "team"
+                          }
+                        },
+                        "aggs": {
+                          "damage": {
+                            "sum": {
+                              "field": "damage"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "deaths": {
+                    "filter": {
+                      "term": {
+                        "type": "death"
+                      }
+                    },
+                    "aggs": {
+                      "enemy": {
+                        "filter": {
+                          "term": {
+                            "kind": "enemy"
+                          }
+                        }
+                      },
+                      "team": {
+                        "filter": {
+                          "term": {
+                            "kind": "team"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "timePlayed": {
+                    "filter": {
+                      "term": {
+                        "type": "changeClass"
+                      }
+                    },
+                    "aggs": {
+                      "total": {
+                        "sum": {
+                          "field": "timePlayed"
+                        }
+                      }
+                    }
+                  },
+                  "timePlayed_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "timePlayed>total": {
+                            "order": "desc"
+                          }
+                        }
+                      ],
+                      "size": 10
                     }
                   }
                 }
