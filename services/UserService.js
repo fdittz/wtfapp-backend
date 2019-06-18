@@ -230,6 +230,7 @@ class UserService {
                 return match.key
             })            
             var query = playerQueries.getMatchesByPlayer(login,matches)
+            console.log(query)
             return esutil.sendQuery(query)
             .then( result => {
                 var games = result.data.aggregations.games.buckets;
@@ -397,6 +398,50 @@ class UserService {
         })
         .catch(err => {
             console.log(err);
+        })
+    }
+
+    getTopFraggers() {
+        var classes = [];
+        var query = playerQueries.getTopFraggers();
+        return esutil.sendQuery(query)
+        .then(res => {
+            return Promise.resolve(res.data.aggregations.all_matching_docs.buckets.all);
+        })
+        .then(result => {
+            classes.push({name: "Scout",  players: result.scout.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Sniper",  players: result.sniper.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Soldier", players: result.soldier.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Demoman", players: result.demoman.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Medic",   players: result.medic.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "HWGuy",   players: result.hwguy.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Pyro",    players: result.pyro.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Spy",     players: result.spy.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Engineer",players: result.engineer.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            return classes
+        })
+
+        
+        .catch(err => {
+            return Promise.reject();
         })
     }
 }
