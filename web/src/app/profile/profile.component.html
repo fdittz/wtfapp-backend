@@ -137,11 +137,9 @@
                                 <td>{{match.teamMates}}</td>
                                 <td>{{match.enemies}}</td>
                                 <td><span class="badge {{match.result == 'defeat' ? 'bg-danger' : (match.result == 'victory' ? 'bg-success' : 'bg-secondary')}}">{{match.result}}</span></td>    
-                                <td><a href="http://tf.quadclub.com.br:27570/game/{{match.startTime}}" target="_blank">Stats(old)</a></td>
+                                <td><a href="/match/{{match.startTime}}" target="_blank">Stats</a></td>
                                 <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
                             </tr>
-         
-    
                       </tbody>
                     </table>
                   </div>

@@ -361,9 +361,46 @@ var matches = {
                           }
                         },
                         "aggs": {
-                          "sumdmg": {
-                            "sum": {
-                              "field": "damage"
+                          "enemy": {
+                            "filter": {
+                              "term": {
+                                "kind": "enemy"
+                              }
+                            },
+                            "aggs": {
+                              "sumdmg": {
+                                "sum": {
+                                  "field": "damage"
+                                }
+                              }
+                            }
+                          },
+                          "self": {
+                            "filter": {
+                              "term": {
+                                "kind": "self"
+                              }
+                            },
+                            "aggs": {
+                              "sumdmg": {
+                                "sum": {
+                                  "field": "damage"
+                                }
+                              }
+                            }
+                          },
+                          "team": {
+                            "filter": {
+                              "term": {
+                                "kind": "team"
+                              }
+                            },
+                            "aggs": {
+                              "sumdmg": {
+                                "sum": {
+                                  "field": "damage"
+                                }
+                              }
                             }
                           }
                         }
