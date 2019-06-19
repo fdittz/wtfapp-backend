@@ -230,7 +230,6 @@ class UserService {
                 return match.key
             })            
             var query = playerQueries.getMatchesByPlayer(login,matches)
-            console.log(query)
             return esutil.sendQuery(query)
             .then( result => {
                 var games = result.data.aggregations.games.buckets;
@@ -325,7 +324,6 @@ class UserService {
     }
 
     getHeadToHeadStats(login1, login2) {
-        console.log("TESTY")
         var matches = [];
         var stats = {
             matches: [],
