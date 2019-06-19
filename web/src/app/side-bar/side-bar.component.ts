@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { auth } from 'firebase/app';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -9,12 +10,20 @@ import { AuthService } from '../auth.service';
 export class SideBarComponent implements OnInit {
 
   user: any;
-  constructor(public auth: AuthService) { }
+  userLoaded: boolean;
+  constructor(public auth: AuthService) { 
+    this.userLoaded = false;
+  }
 
   ngOnInit() {
     this.auth.user$.subscribe(userdata => {
       this.user = userdata;
+      this.userLoaded = true;
     });
+  }
+
+  async googleSignIn() {
+    return this.auth.socialSignIn(new auth.GoogleAuthProvider());
   }
 
 }

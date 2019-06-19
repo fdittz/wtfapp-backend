@@ -8,16 +8,20 @@
   </a>
 
   <!-- Sidebar -->
-  <div class="sidebar"  *ngIf="auth.uid">
+  <div class="sidebar">
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image">
+      <div class="image" *ngIf="user?.login">
         <img src="{{user?.photoURL}}" class="img-circle elevation-2" alt="User Image">
       </div>
-      <div class="info">
-        <a href="/profile" class="d-block">{{user?.login}}</a>
+      <div class="info" *ngIf="user?.login">
+        <a href="/profile" class="d-block">{{user?.login}}</a>        
       </div>
+      <button *ngIf="!user?.login && userLoaded" class="btn btn-block btn-danger" (click)="googleSignIn()">
+          <i class="fab fa-google mr-2"></i> Login with Google
+      </button>
     </div>
+    
 
     <!-- Sidebar Menu -->
     <nav class="mt-2">
@@ -31,7 +35,7 @@
           </a>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="auth.uid">
           <a href="/profile" class="nav-link">
             <i class="nav-icon fas fa-user-circle"></i>
             <p>Profile</p>
