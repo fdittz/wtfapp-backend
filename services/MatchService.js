@@ -41,7 +41,6 @@ class MatchService {
                             returnGame.teams[playerTeamNum].players.push(player.key)
                         }
                     }
-                    console.log(returnGame)
                     return (returnGame);
                 })
                 return games
@@ -67,7 +66,6 @@ class MatchService {
         var query = playerQueries.getMatches(login);
         return esutil.sendQuery(query)
         .then(res => {
-            console.log(res)
             if (!res.data.aggregations.unique_ids.buckets.length)
                 return stats
             var resultMatches = res.data.aggregations.unique_ids.buckets;
