@@ -13,9 +13,9 @@ import { HeadToHeadComponent} from './head-to-head/head-to-head.component';
 import { MatchComponent } from './match/match.component';
 
 const routes: Routes = [
-	{ path: '', component: HomeComponent/*, canActivate: [LoggedGuard]*/ },
+	{ path: '', component: HomeComponent, canActivate: [ /*AuthGuard,*/  LoginGuard]},
 	{ path: 'login', component: LoginComponent },
-	{ path: 'first',	component: FirstLoginComponent,  canActivate: [/*AuthGuard,*/ LoginGuard] },
+	{ path: 'first',	component: FirstLoginComponent,  canActivate: [AuthGuard] },
 	{ path: 'profile',	component: ProfileComponent,  canActivate: [ AuthGuard, LoginGuard] },
 	{ path: 'profile/:login',	component: ProfileComponent,  canActivate: [/* AuthGuard,*/ LoginGuard] },
 	{ path: 'playerlist',	component: PlayerListComponent,  canActivate: [/* AuthGuard,*/ LoginGuard] },

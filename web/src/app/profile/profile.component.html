@@ -67,7 +67,7 @@
               <!-- /.col -->
               <div class="col-sm-4">
                 <div class="description-block">
-                  <h5 class="description-header">{{(stats?.perClass ? classesImg[stats?.perClass[0].key].name : '') | uppercase}}</h5>
+                  <h5 class="description-header">{{(stats?.perClass.length ? classesImg[stats?.perClass[0].key].name : 'NONE') | uppercase}}</h5>
                   <span class="description-text">MAIN CLASS</span>
                 </div>
                 <!-- /.description-block -->
