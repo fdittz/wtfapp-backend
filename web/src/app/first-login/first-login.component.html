@@ -1,26 +1,25 @@
 
-
-<section class="section no-bg">
-        <div class="container vert-center">
-            <div class="card has-text-centered  center-div">
-                <div class="card-content">
-                    <div class="media-content has-text-centered">
-                        <p class="title is-4">No Login set</p>
-                        <p class="subtitle is-6">You must set a Login to continue.</p>
-                        <p class="subtitle is-6 has-text-danger">{{msgError}}</p>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row vert-center">
+            <div class="col-sm-4 col-12" style="margin: 0 auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">No Login set</h3>
                     </div>
-                    <div class="content">
-                        <div class="field">
-                            <div class="control is-large">
-                                <input class="input is-large input-secret" [(ngModel)]="login" placeholder="Login (max 12 chars)" name="login" id="login" maxlength="12" style="font-size: 3.5em; text-align: center" #input (input)="input.value=$event.target.value.toLowerCase()" >
-                            </div>
-                        </div>
-
-                        <div class="card-button">
-                            <a class="button is-primary" (click)="registerLogin()">Set Login</a>   
-                        </div>                    
+                    <div class="card-body">
+                        <p class="subtitle is-6">You must set a Login to continue.</p>
+                        <p class="subtitle is-6 text-danger">{{msgError}}</p>
+                        <input class="form-control form-control-lg" [(ngModel)]="login" placeholder="Login (max 12 chars)" name="login" id="login" maxlength="12" style="text-align: center" #input (input)="input.value=$event.target.value.toLowerCase()" >
+                         
+                    </div>
+                    <div class="card-footer clearfix text-right">
+                            <button class="btn btn-primary" (click)="registerLogin()">Set Login</button>  
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </section>
+
+

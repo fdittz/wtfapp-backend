@@ -94,7 +94,7 @@ router.post('/registerlogin', isUserAuthenticated, function(req, res, next) {
 	if (req.body.login.length < 3) {
 		return res.status(400).json({
 			status:400,
-			message: 'login must be at least 4 characters long'
+			message: 'login must be at least 3 characters long'
 		});
 	}
 	if (!req.body.login.match("[A-Za-z0-9_]+") || req.body.login.indexOf(" ") >= 0)
@@ -126,7 +126,7 @@ router.get('/:login', isUserAuthenticated, function(req, res, next) {
 	if (req.params.login.length < 3) {
 		return res.status(400).json({
 			status:400,
-			message: 'login must be at least 4 characters long'
+			message: 'login must be at least 3 characters long'
 		});
 	}
 	return UserService.getUserProfile(res.locals.auth.uid, req.params.login)

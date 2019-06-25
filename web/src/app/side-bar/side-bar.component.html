@@ -17,7 +17,11 @@
       <div class="info" *ngIf="user?.login">
         <a href="/profile" class="d-block">{{user?.login}}</a>        
       </div>
-      <button *ngIf="!user?.login && userLoaded" class="btn btn-block btn-danger" (click)="googleSignIn()">
+
+      <div class="info" *ngIf="user && !user.login && userLoaded">
+          <a href="/profile" class="d-block">No Login Set</a>        
+        </div>
+      <button *ngIf="!user && userLoaded" class="btn btn-block btn-danger" (click)="googleSignIn()">
           <i class="fab fa-google mr-2"></i> Login with Google
       </button>
     </div>
