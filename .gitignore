@@ -107,6 +107,8 @@ typings/
 
 # next.js build output
 .next
+**/app.config.ts
+app.config.ts
 serviceAccountKey.json
 esaddress.js
 util/esaddress.js
