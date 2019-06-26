@@ -5,7 +5,7 @@ var UserService = require("../services/UserService")
 var isUserAuthenticated  = require('../middleware/auth')
 var isAdmin  = require('../middleware/admin')
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 25;
 
 /* GET users listing. */
 router.get('/list/:page?', function(req, res, next) {
