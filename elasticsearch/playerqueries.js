@@ -1297,6 +1297,20 @@ var player = {
           }
         }
       }`;
+    },
+    
+    getPlayers() {
+      return `{
+        "size": 0,
+        "aggs": {
+          "players": {
+            "terms": {
+              "field": "player",
+              "size": "10000"
+            }
+          }
+        }
+      }`
     }
 }
 

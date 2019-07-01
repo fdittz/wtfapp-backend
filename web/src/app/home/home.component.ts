@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
   stats: any;
   servers: any;
   fragRank: any;
+  rankings: any;
   classesImg = [];
   constructor(public auth: AuthService,
     private http: HttpClient) { }
@@ -30,6 +31,7 @@ export class HomeComponent implements OnInit {
     this.classesImg[9] = {name: "Engineer", image: "https://wiki.megateamfortress.com/images/thumb/d/d8/Engineer.png/300px-Engineer.png", css: "bg-yellow"}; 
     this.getMatches();
     this.getFragRanks();
+    this.getRankings();
     //this.getServers();
   }
 
@@ -48,6 +50,16 @@ export class HomeComponent implements OnInit {
       headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
     }).subscribe(resp => {
       this.servers = resp;
+    }, resp => {
+        this.msgError = resp.error.message;
+    })
+  }
+
+  async getRankings() {
+    return this.http.get(`/api/users/usr/ranks`, {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
+    }).subscribe(resp => {
+      this.rankings = resp;
     }, resp => {
         this.msgError = resp.error.message;
     })

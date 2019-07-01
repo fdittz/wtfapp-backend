@@ -1,7 +1,9 @@
 var admin = require('../util/firebaseadmin');
 const playerQueries = require('../elasticsearch/playerqueries')
+const matchQueries = require('../elasticsearch/matchqueries')
 var esutil = require('../util/esutil');
 var CryptoJS = require('crypto-js');
+var trueskill = require("ts-trueskill");
 
 class UserService {
 
@@ -441,6 +443,91 @@ class UserService {
         .catch(err => {
             return Promise.reject();
         })
+    }
+
+    setUserRating(login, mu, sigma) {
+        var userLogin = this.db.collection('users');
+        return userLogin.where("login", "==", login).get()
+        .then(result => {
+            var userRef = this.db.collection('users').doc(result.docs[0].data().uid);
+		    return userRef.set({mu: mu, sigma: sigma}, { merge: true }) 
+        });
+    }
+    
+    
+    setRatings() {
+        return esutil.sendQuery(matchQueries.getMatchRankings())
+        .then(qResult => {
+            var matches = qResult.data.aggregations.games.buckets;
+            return esutil.sendQuery(playerQueries.getPlayers()).then(result => {
+                var players = result.data.aggregations.players.buckets.filter(pl => {
+                    if (pl.key == '' || pl.key == "world")
+                        return false
+                    return true
+                })
+                .map(pl => {
+                    return {"login": pl.key, "rating": new trueskill.Rating(2000)}
+                });
+
+                var getPlayer = function(login) {
+                   
+                        for (var player of players) {
+                          if (player.login == login)
+                            return player;
+                        }
+                      
+                }
+                for (var match of matches) {
+                    if (match.result.winningTeam.buckets.length) {
+                      var winningTeam = match.result.winningTeam.buckets[0].key;
+                      if (match.players.buckets.length && winningTeam > 0) {
+                        var winners = [];
+                        var losers = [];
+                        for (var player of match.players.buckets) {
+                          if (player.timePlayed.perTeam.buckets.length) {
+                              if (player.timePlayed.perTeam.buckets[0].key == winningTeam) { 
+                                winners.push(player.key);
+                              }
+                              else
+                                losers.push(player.key);
+                          }
+                        }
+                
+                        var winRatings = [];
+                        var loseRatings = [];
+                        winners.forEach(winner => {
+                          winRatings.push(getPlayer(winner).rating);
+                        })
+                        losers.forEach(loser => {
+                            loseRatings.push(getPlayer(loser).rating);
+                        })
+                    
+                
+                        // q is quality of the match with the players at their current rating
+                        const q = trueskill.rate([winRatings, loseRatings]);
+                        
+                        for (var i = 0; i < q[0].length; i++) {
+                          getPlayer(winners[i]).rating = q[0][i];
+                        }
+                        for (var i = 0; i < q[1].length; i++) {
+                          getPlayer(losers[i]).rating = q[1][i];
+                        }    
+                
+                        //console.log("Winners: " + winners + " / Losers: " + losers);
+                      }
+                    }
+                  }
+                  players = players.sort(function(a, b){
+                    return b.rating.mu - a.rating.mu;
+                  });
+                  return players.map(player => {
+                      return {"login": player.login, "mu": Math.ceil(player.rating.mu)}
+                      //this.setUserRating(player.login, player.rating.mu, player.rating.sigma)
+                  })
+            })
+        })
+        
+
     }
 }
 

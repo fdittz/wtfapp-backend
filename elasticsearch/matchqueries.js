@@ -500,6 +500,80 @@ var matches = {
             }
           }`
 
+    },
+
+    getMatchRankings() {
+      return `{
+        "size": 0,
+        "aggs": {
+          "games": {
+            "composite": {
+              "sources": [
+                {
+                  "gameTimeStamp": {
+                    "terms": {
+                      "field": "gameTimeStamp",
+                      "order": "desc"
+                    }
+                  }
+                }
+              ],
+              "size": 10000
+            },
+            "aggs": {
+              "players": {
+                "terms": {
+                  "field": "player",
+                  "size": 64
+                },
+                "aggs": {
+                  "timePlayed": {
+                    "filter": {
+                      "term": {
+                        "type": "changeClass"
+                      }
+                    },
+                    "aggs": {
+                      "total": {
+                        "sum": {
+                          "field": "timePlayed"
+                        }
+                      },
+                      "perTeam": {
+                        "terms": {
+                          "field": "team",
+                          "size": "64"
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "result": {
+                "filter": {
+                  "term": {
+                    "type": "teamScores"
+                  }
+                },
+                "aggs": {
+                  "winningTeam": {
+                    "terms": {
+                      "field": "winningTeam"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }`;
     }
 
 

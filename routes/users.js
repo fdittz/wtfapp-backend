@@ -207,4 +207,17 @@ router.get('/top/fraggers', function(req, res, next) {
 	})
 });
 
+router.get('/usr/ranks', function(req, res, next) {
+	
+	return UserService.setRatings()
+	.then(function(data) {
+		return res.status(200).json(data);
+	})
+	.catch(err => {
+		return res.status(200).json([]);
+	 })
+});
+
+
+
 module.exports = router;
