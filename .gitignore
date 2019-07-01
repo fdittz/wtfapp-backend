@@ -114,4 +114,7 @@ esaddress.js
 util/esaddress.js
 public/
 public.zip
+<<<<<<< HEAD
 package-lock.json
+=======
+>>>>>>> 96d3097d8c5b140f55e21bde8d83c04c77d19e5b
