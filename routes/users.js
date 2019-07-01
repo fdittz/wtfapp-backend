@@ -5,7 +5,7 @@ var UserService = require("../services/UserService")
 var isUserAuthenticated  = require('../middleware/auth')
 var isAdmin  = require('../middleware/admin')
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 25;
 
 /* GET users listing. */
 router.get('/list/:page?', function(req, res, next) {
@@ -94,7 +94,7 @@ router.post('/registerlogin', isUserAuthenticated, function(req, res, next) {
 	if (req.body.login.length < 3) {
 		return res.status(400).json({
 			status:400,
-			message: 'login must be at least 4 characters long'
+			message: 'login must be at least 3 characters long'
 		});
 	}
 	if (!req.body.login.match("[A-Za-z0-9_]+") || req.body.login.indexOf(" ") >= 0)
@@ -126,7 +126,7 @@ router.get('/:login', isUserAuthenticated, function(req, res, next) {
 	if (req.params.login.length < 3) {
 		return res.status(400).json({
 			status:400,
-			message: 'login must be at least 4 characters long'
+			message: 'login must be at least 3 characters long'
 		});
 	}
 	return UserService.getUserProfile(res.locals.auth.uid, req.params.login)
@@ -186,4 +186,38 @@ router.get('/profile/stats/:login', function(req, res, next) {
 		return res.status(200).json([]);
 	})
 })
+
+router.get('/headtohead/:login1/:login2?', function(req, res, next) {
+	return UserService.getHeadToHeadStats(req.params.login1, req.params.login2)
+	.then(function(data) {
+		return res.status(200).json(data);
+	})
+	.catch(err => {
+		return res.status(200).json([]);
+	})
+});
+
+router.get('/top/fraggers', function(req, res, next) {
+	return UserService.getTopFraggers()
+	.then(function(data) {
+		return res.status(200).json(data);
+	})
+	.catch(err => {
+		return res.status(200).json([]);
+	})
+});
+
+router.get('/usr/ranks', function(req, res, next) {
+	
+	return UserService.setRatings()
+	.then(function(data) {
+		return res.status(200).json(data);
+	})
+	.catch(err => {
+		return res.status(200).json([]);
+	 })
+});
+
+
+
 module.exports = router;

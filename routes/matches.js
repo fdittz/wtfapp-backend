@@ -18,4 +18,15 @@ router.get('/', function(req, res, next) {
 	})
 })
 
+router.get('/:matchId', function(req, res, next) {
+	return MatchService.getMatchDetails(req.params.matchId)
+	.then(function(data) {
+		return res.status(200).json(data);
+	})
+	.catch(err => {
+        console.log(err)
+		return res.status(200).json([]);
+	})
+})
+
 module.exports = router;

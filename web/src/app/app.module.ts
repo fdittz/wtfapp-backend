@@ -26,15 +26,12 @@ import { LoaderService } from './services/loader.service';
 import { LoaderInterceptor } from './interceptors/loader.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
+import { SideBarComponent } from './side-bar/side-bar.component';
+import { HeadToHeadComponent } from './head-to-head/head-to-head.component';
+import { MatchComponent } from './match/match.component';
+import { MinutesSecondsPipe} from './util/minutes-seconds.pipe'
+import { Config } from './app.config.js'
 
-const config = {
-    apiKey: "AIzaSyD0YSSJ8To0e6D24-aUC4sjImahZW6gYCg",
-    authDomain: "quadclub-4e319.firebaseapp.com",
-    databaseURL: "https://quadclub-4e319.firebaseio.com",
-    projectId: "quadclub-4e319",
-    storageBucket: "quadclub-4e319.appspot.com",
-    messagingSenderId: "55669892839"
-  };
 
 
 @NgModule({
@@ -48,12 +45,16 @@ const config = {
     PaginationComponent,
     NavbarComponent,
     LoaderComponent,
-    HomeComponent
+    HomeComponent,
+    SideBarComponent,
+    HeadToHeadComponent,
+    MatchComponent,
+    MinutesSecondsPipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AngularFireModule.initializeApp(config),
+    AngularFireModule.initializeApp(Config.getConfig()),
     AngularFirestoreModule,
     AngularFireAuthModule,
     BrowserAnimationsModule,

@@ -3,6 +3,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, UrlTr
 
 import { AuthService} from './auth.service'
 import { Observable } from 'rxjs';
+import { of } from 'rxjs'
 import { tap, map, take } from 'rxjs/operators';
 
 @Injectable({
@@ -13,21 +14,14 @@ export class LoginGuard implements CanActivate{
 
 	 canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
 
-	    return this.auth.user$.pipe(
-	        take(1),
-	        map(user => !!user), // <-- map to boolean
-	        tap(loggedIn => {
-            this.auth.user$.subscribe(userdata => {
-              if (!userdata.login) {
-                this.auth.redirectUrl = state.url;
-                this.router.navigate(['/first']);
-              }
-/*               else {                
-                this.router.navigate([`/profile/${userdata.login}`]);
-              } */
-            })
-	        })
-	    );
+      return this.auth.user$.pipe(
+        map(user => {   
+          if (user && !user.login) {
+            this.auth.redirectUrl = state.url;
+            this.router.navigate(['/first']);
+          }
+          return true;
+        })
+      )
 	}
-  
 }

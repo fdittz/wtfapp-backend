@@ -1,136 +1,203 @@
-<div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
-    <section class="hero player-title no-bg is-small {{player ? '' : 'loading-blink'}}">
-        <div class="hero-body player-title no-bg">
-            <div class="media">
-                <div class="media-left">
-                    <figure class="image is-96x96">
-                    <img class="is-rounded" src="{{player && player.uid == auth.uid ? player.photoURL : 'https://bulma.io/images/placeholders/128x128.png'}}"/>
-                    </figure>
-                </div>
-                <div class="media-content" style="max-width: 600px">
-                    <div style="max-width: 600px">                        
-                        <h1 class="title player-name ">
-                                {{player ? player.login : " "}} 
-                        </h1>
-                        <div class="tags has-addons admin-tag">
-                            <span class="tag is-rounded">Admin</span>      
-                            <span class="tag is-success is-rounded" *ngIf="player?.role == 'master'" title="Admin rights granted by {{player?.adminGivenBy}}">Yes</span>                      
-                            <span class="tag is-success is-rounded" *ngIf="player?.role == 'admin'" title="Admin rights granted by {{player?.adminGivenBy}}">Yes</span>
-                            <span class="tag is-primary is-rounded" *ngIf="player?.role != 'admin' && player?.role != 'master'">No</span>
-                        </div>
-                        <a *ngIf="!player?.role && (role == 'master' || role == 'admin')" class="button is-success is-small admin-permission-button" (click)="grantAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Grant Admin Rights</a>
-                        <a *ngIf="player?.role == 'admin' && role == 'master'" class="button is-danger is-small admin-permission-button" (click)="revokeAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Revoke Admin Rights</a>
-                        <span class="loading-login" *ngIf="!player">&nbsp;</span>
+
+<!-- Content Header (Page header) -->
+<section class="header">
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-12">
+          <ol class="breadcrumb float-sm-left">
+            <li class="breadcrumb-item"><a href="#">Profile</a></li>
+            <li class="breadcrumb-item active">{{player ? player.login : " "}}</li>
+            <li *ngIf="player?.uid == auth?.uid"><button  class="btn btn-primary btn-sm ml-2" (click)="secretSet = false; secret = ''" data-toggle="modal" data-target="#modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  </li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+</section>
+<!-- /.content-header -->
+    
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3">
+        <!-- Widget: user widget style 1 -->
+        <div class="card card-widget widget-user">
+          <!-- Add the bg color to the header using any of the bg-* classes -->
+          <div class="widget-user-header bg-info-active">
+            <h3 class="widget-user-username text-truncate">{{player ? player.login : " "}}        
+                <div style="position: absolute; top: 0.5em; right: 0.5em;">   
+                        <span class="badge bg-warning font-weight-light badge-pill" *ngIf="player?.role == 'master'">Master</span>
+                        <span class="badge bg-success font-weight-light badge-pill" *ngIf="player?.role == 'admin'">Admin</span>
+                        <span class="badge bg-info font-weight-light badge-pill" *ngIf="player?.role != 'admin' && player?.role != 'master'">Player</span>                         
+                    <button type="button" class="btn btn-tool" data-toggle="dropdown" title="Contacts" data-widget="chat-pane-toggle">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right text-center">
+                        <button *ngIf="player?.uid == auth?.uid" class="btn btn-primary btn-sm mt-2 mb-2" data-target="modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  
+                        <button *ngIf="!player?.role && (role == 'master' || role == 'admin')" class="btn btn-success mt-2 mb-2" (click)="grantAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Grant Admin Rights</button>
+                        <button *ngIf="player?.role == 'admin' && role == 'master'" class="btn btn-danger mt-2 mb-2" (click)="revokeAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Revoke Admin Rights</button>
                     </div>
-                    
-                    <h2 class="subtitle" *ngIf="player?.uid == auth?.uid">
-                        <button class="button mb mt" (click)="editSecret = true" data-target="modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>   
-                    </h2>
-                   
-                </div>               
-                <div id="modal-secret" class="modal" style="display: block;" *ngIf="editSecret">
-                    <div class="modal-background"></div>
-                    <div class="modal-content" style="top: 20vh">
-                        <!-- Any other Bulma elements you want -->
-
-                        
-                        <div class="card has-text-centered">
-                            <div class="card-content" *ngIf="!secretSet">
-                                <div class="media-content has-text-centered" *ngIf="player.secret">
-                                    <p class="title is-4">New Secret</p>
-                                    <p class="subtitle is-6">The "secret" is the "password" you use to login in-game. The secret is not encrypted, so don't repeat any password or use anything that might be sensitive</p>
-                                </div>
-                                <div class="media-content has-text-centered" *ngIf="!player.secret">
-                                    <p class="title is-4">You don't have a Secret</p>
-                                    <p class="subtitle is-6"><b>You need a secret to login in-game</b><br>The "secret" is the "password" you use to login in-game. The secret is not encrypted, so don't repeat any password or use anything that might be sensitive</p>
-                                </div>
-                                <div class="content">
-                                    <div class="field">
-                                        <div class="control is-large">
-                                            <input class="input is-large input-secret" type="text"  [(ngModel)]="secret" placeholder="Click and type your new secret">
-                                        </div>
-                                    </div>
-
-                                    <div class="card-button">
-                                        <a class="button is-primary" id="secretBtn" (click)="updateSecret()">Set new Secret</a>   
-                                    </div>                    
-                                </div>
-                            </div>
-
-                            <div class="card-content" *ngIf="secretSet">
-                                <div class="media-content has-text-centered">
-                                    <p class="title is-4">Secret set</p>
-                                    <p class="subtitle is-6">To login, while in game, type> <br><code>cmd login &#60;login&#62; &#60;your-new-secret&#62;</code></p>
-
-                                    <p class="subtitle is-6">You can paste the following command into your <code>autoexec.cfg</code> inside your <code>fortress/</code> folder,
-                                        then you just have to type <code>/login</code> in your console to log in.<br> Use it at your own risk.<br/><br/></p>
-                                </div>
-                                <div class="content">
-                                    <div class="field" *ngIf="showAlias">
-                                        <code class="large"><br>alias login "cmd login {{player.login}} {{secret}}"<br><br></code>
-                                    </div>
-
-                                    <div class="field" *ngIf="!showAlias" style="cursor: pointer" (click)="showAlias = true">
-                                        <code class="large"><i class="far fa-eye" style="font-size: 2em"></i><br> click to view<br></code>
-                                    </div>
-              
-                                </div>
-                            </div>
-
-                        </div>
-
-
-
-                    </div>
-                    <button class="modal-close is-large" *ngIf="player.secret" aria-label="close" (click)="editSecret = false; secretSet = false; showAlias = false; secret = ''"></button>
                 </div>
+            </h3>
+            
+            <h5 class="widget-user-desc"></h5>
+          </div>
+          <div class="widget-user-image">
+            <img class="img-circle elevation-2" src="{{player && player?.uid == auth.uid ? player?.photoURL : 'https://bulma.io/images/placeholders/128x128.png'}}" alt="User Avatar">
+          </div>
+          <div class="card-footer">
+            <div class="row">
+              <div class="col-sm-4 border-right">
+                <div class="description-block">
+                  <h5 class="description-header">{{stats?.winRate}}</h5>
+                  <span class="description-text">WIN RATE</span>
+                </div>
+                <!-- /.description-block -->
+              </div>
+              <!-- /.col -->
+              <div class="col-sm-4 border-right">
+                <div class="description-block">
+                  <h5 class="description-header">{{stats?.matches?.length ? stats?.matches?.length : 0}}</h5>
+                  <span class="description-text">MATCHES</span>
+                </div>
+                <!-- /.description-block -->
+              </div>
+              <!-- /.col -->
+              <div class="col-sm-4">
+                <div class="description-block">
+                  <h5 class="description-header">{{(stats?.perClass.length ? classesImg[stats?.perClass[0].key].name : 'NONE') | uppercase}}</h5>
+                  <span class="description-text">MAIN CLASS</span>
+                </div>
+                <!-- /.description-block -->
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+          </div>
+        </div>
+        <!-- /.widget-user -->
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Time Played</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">                      
+            <span *ngFor="let class of stats?.perClass">
+            <h6><b>{{classesImg[class?.key].name}}</b> <span class="float-sm-right">{{class.timePlayed/60 | number:'1.0-0'}} minutes</span></h6>
+            <div class="progress mb-3">                  
+              <div class="progress-bar bg-dark" role="progressbar" [ngStyle]="{'width' : ((class.timePlayed.value / stats.totalTime) *100)+ '%'}">
+              </div>
+            </div>
+            </span>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+        
+        <div class="small-box {{classesImg[class?.key].css}}" *ngFor="let class of stats?.perClass">
+            <a href="#" class="small-box-footer text-left pl-1 pr-1">
+                {{classesImg[class?.key].name}}
+                <span class="float-right">{{class.timePlayed/60 | number:'1.0-0'}} min</span>
+            </a>
+            <div class="inner">
+                <b>Frags:</b> {{class.frags/(class.timePlayed/600) | number: '1.0-2'}}/10min<br/>
+                <b>Damage:</b> {{class.damageDone/(class.timePlayed/600) | number: '1.0-2'}}/10min<br/>
+                <b>Deaths:</b> {{class.deaths/(class.timePlayed/600) | number: '1.0-2'}}/10min<br/>
+                <b>Team Kills:</b> {{class.teamKills/(class.timePlayed/600) | number: '1.0-2'}}/10min<br/>
             </div>
         </div>
-    </section>
-</div>
-<div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
-    <section>
-        Win Rate: {{stats?.winRate}} 
-        <table class="table" style="background-color: transparent">
-            <tr>
-                <td style="height: 150px" *ngFor="let class of stats?.perClass"><img title="{{classesImg[class?.key].name}} {{class.timePlayed.value/60 | number:'1.0-0'}} minutes" src="{{classesImg[class?.key].image}}" [ngStyle]="{'height' : ((class.timePlayed.value / stats.perClass[0].timePlayed.value) *100)+ '%'}"/></td>
-            </tr>
-        </table>
-        <table class="table">
-            <thead>
+
+      </div>
+
+      <div class="col-md-9">
+        <div class="card">
+          <div class="card-header no-border">
+            <h3 class="card-title">Match List</h3>
+            <div class="card-tools">
+            </div>
+          </div>
+          <div class="card-body p-0 table-responsive">
+            <table class="table table-striped table-sm table-valign-middle">
+              <thead>
               <tr>
                 <th>Time</th>
                 <th>Map</th>
                 <th>Team</th>
                 <th>Enemy</th>
-                <th>Result</th>  
-                <th>Stats (old)</th>
-                <th>Demo</th>                
-              </tr>
-            </thead>
-            <tfoot>
-              <tr>
-                <th>Time</th>
-                <th>Map</th>
-                <th>Team</th>
-                <th>Enemy</th>
-                <th>Result</th>    
-                <th>Stats (old)</th>
+                <th>Result</th>
+                <th>Stats</th>
                 <th>Demo</th>
               </tr>
-            </tfoot>
-            <tbody>
-              <tr *ngFor="let match of stats?.matches; let i = index" class="{{match.result == 'defeat' ? 'has-background-danger' : (match.result == 'victory' ? 'has-background-success' : '')}}">
-                <td>{{match.startTime | date: 'dd/MM/yyyy HH:mm'}}</td>
-                <td>{{match.map}}</td>
-                <td>{{match.teamMates}}</td>
-                <td>{{match.enemies}}</td>
-                <td>{{match.result}}</td>    
-                <td><a href="http://tf.quadclub.com.br:27570/game/{{match.startTime}}" target="_blank">Stats(old)</a></td>
-                <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
-              </tr>
-            </tbody>
-        </table>
-    </section>
-</div>
+              </thead>
+              <tbody>
+                    <tr *ngFor="let match of stats?.matches; let i = index" class="{{match.result == 'defeat' ? 'has-background-danger' : (match.result == 'victory' ? 'has-background-success' : '')}}">
+                        <td>{{match.startTime | date: 'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{match.map}}</td>
+                        <td>{{match.teamMates}}</td>
+                        <td>{{match.enemies}}</td>
+                        <td><span class="badge {{match.result == 'defeat' ? 'bg-danger' : (match.result == 'victory' ? 'bg-success' : 'bg-secondary')}}">{{match.result}}</span></td>    
+                        <td><a href="/match/{{match.startTime}}" target="_blank">Stats</a></td>
+                        <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
+                    </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.row -->
+    <!-- Main row -->
+    <!-- /.row (main row) -->
+  </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
 
+<div class="modal" id="modal-secret" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" *ngIf="!secretSet">
+      <div class="modal-header">
+        <h5 class="modal-title" *ngIf="player?.secret">New Secret</h5>
+        <h5 class="modal-title" *ngIf="!player?.secret">You don't have a Secret</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" *ngIf="player?.secret">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <p *ngIf="player?.secret">The "secret" is the "password" you use to login in-game. The secret is not encrypted, so don't repeat any password or use anything that might be sensitive</p>
+          <p *ngIf="!player?.secret"><b>You need a secret to login in-game</b><br>The "secret" is the "password" you use to login in-game. The secret is not encrypted, so don't repeat any password or use anything that might be sensitive</p>
+          <input class="form-control form-control-lg" type="text"  [(ngModel)]="secret" placeholder="Click and type your new secret">                       
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="secretBtn" class="btn btn-primary" (click)="updateSecret()">Set New Secret</button>
+      </div>
+    </div>
+
+    <div class="modal-content" *ngIf="secretSet">
+          <div class="modal-header">
+              <h5 class="modal-title">Secret set</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body text-center">
+              <p>To login, while in game, type <br><kbd>cmd login &#60;login&#62; &#60;your-new-secret&#62;</kbd></p>
+
+              <p>You can paste the following command into your <kbd>autoexec.cfg</kbd> inside your <kbd>fortress/</kbd> folder.<br>
+                  The server should log you in automatically, or you just have to type <kbd>/login</kbd> in your console to log in.<br> Use it at your own risk.<br/><br/></p>
+              <div class="field" *ngIf="showAlias">
+                  <code class="large"><br>alias login "cmd login {{player.login}} {{secret}}"<br>set login "{{player.login}} {{secret}}"<br><br></code>
+              </div>
+
+              <div class="field" *ngIf="!showAlias" style="cursor: pointer" (click)="showAlias = true">
+                  <code class="large"><i class="far fa-eye" style="font-size: 2em"></i><br> click to view<br></code>
+              </div>
+          </div>
+          <div class="modal-footer">       
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+    </div>
+  </div>
+</div>

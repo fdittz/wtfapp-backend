@@ -1,0 +1,163 @@
+<!-- Content Header (Page header) -->
+<section class="header">
+  <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-12">
+            <ol class="breadcrumb float-sm-left">
+              <li class="breadcrumb-item"><a href="#">Match</a></li>
+              <li class="breadcrumb-item active">{{match?.gameTimeStamp | date: 'dd/MM/yyyy HH:mm'}}</li>                    
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+        <div class="row">
+            <h1 class="m-0 text-dark" style="font-family: 'BebasNeueRegular'; font-size: 4rem">{{match.map | uppercase}}</h1>
+        </div>
+      </div><!-- /.container-fluid -->
+  </div>
+</section>
+<!-- /.content-header -->
+      
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-9">
+          <!-- Widget: user widget style 1 -->
+          <div class="card card-widget widget-user" *ngFor="let player of match?.players">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="card-header bg-info-active">
+              <h3 style="font-family: 'BebasNeueRegular'; font-size: 2rem" class="card-title text-truncate {{player.team == 1 ? 'text-primary' : 
+                                                              (player.team == 2 ? 'text-danger': 
+                                                                (player.team == 3 ? 'text-warning': 
+                                                                  (player.team == 4 ? 'text-success': '')
+                                                                )
+                                                              )                                                                    
+                                                            }}">{{player ? player.login : " "}}
+                <div style="position: absolute; top: 0.5em; right: 0.5em;">                           
+                  <a style='font-size: 1rem; font-family: "Source Sans Pro",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"' href="/profile/{{player?.login}}">[View Profile]</a>
+                </div>  
+              </h3>
+              <div class="row">
+                <div class="col-2 col-lg-1" *ngFor="let class of player.perClass">
+                  <img style="width: 100%" src="{{classesImg[class?.key].image}}"/><br>
+                  <div class="text-center" style="font-size: 0.9rem">{{class.timePlayed | minutesSeconds}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="row">
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                    <h5 class="description-header">{{player?.frags/player?.deaths | number: '1.0-2'}}</h5>
+                    <span class="description-text">FRAGS/DEATHS</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                    <h5 class="description-header">{{player?.frags}}</h5>
+                    <span class="description-text">FRAGS</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4">
+                  <div class="description-block">
+                    <h5 class="description-header">{{player?.deaths}}</h5>
+                    <span class="description-text">DEATHS</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+              <div class="row">
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                    <h5 class="description-header">{{player?.teamKills}}</h5>
+                    <span class="description-text">TEAM KILLS</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                    <h5 class="description-header">{{player?.damageDone}}</h5>
+                    <span class="description-text">DAMAGE DONE</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4">
+                  <div class="description-block">
+                    <h5 class="description-header">{{player?.damageTaken}}</h5>
+                    <span class="description-text">DAMAGE TAKEN</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+              <div class="row">
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                    <h5 class="description-header">{{player?.goals}}</h5>
+                    <span class="description-text">GOAL CAPS</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                    <h5 class="description-header">{{player?.fumbles}}</h5>
+                    <span class="description-text">GOAL TOUCHES</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4">
+                  <div class="description-block">
+                    <h5 class="description-header"></h5>
+                    <span class="description-text"></span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+            </div>
+          </div>
+      </div>
+      <div class="col-md-3">
+        
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Goals</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">                      
+                <span *ngFor="let player of match?.goals">
+                <h6><b>{{player.login}}</b> <span class="float-sm-right">{{player.goals}}</span></h6>                        
+                </span>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Touches</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">                      
+                  <span *ngFor="let player of match?.fumbles">
+                  <h6><b>{{player.login}}</b> <span class="float-sm-right">{{player.fumbles}}</span></h6>                        
+                  </span>
+                </div>
+                <!-- /.card-body -->
+            </div>
+      
+      </div>
+    </div>
+  </div>
+</section>

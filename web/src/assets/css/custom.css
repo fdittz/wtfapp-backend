@@ -1,21 +1,10 @@
 body {
-    background-color: black;
-    background-image: url(/assets/img/conback.jpg);
-    min-height: 100vh;
-    background-repeat: no-repeat
+    background-repeat: no-repeat;
+    height: 100%;
 }
 
 .no-bg {
     background: transparent!important;
-}
-
-.card {
-    background: #2B3E5077;
-    border-radius: 5px;
-    border: none;
-    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
-    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
-    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);
 }
 
 .login {
@@ -62,7 +51,6 @@ body {
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #fff!important;
     opacity: 0.2; /* Firefox */
     font-weight: 100;
     font-style: italic;
@@ -70,14 +58,12 @@ body {
 }
   
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color: #fff!important;
     opacity: 0.2; /* Firefox */
     font-weight: 100;
     font-style: italic
  }
   
 ::-ms-input-placeholder { /* Microsoft Edge */
-    color: #fff!important;
     opacity: 0.2; /* Firefox */
     font-weight: 100;
     font-style: italic
@@ -115,4 +101,19 @@ code.large {
 
 .br5 {
     border-radius: 5px;
+}
+.badge-group .badge {
+    border-radius: 30px;
+}
+.badge-group .badge:not(:last-child) {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.badge-group .badge:not(:first-child) {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+a.page-link {
+    cursor: pointer;
 }

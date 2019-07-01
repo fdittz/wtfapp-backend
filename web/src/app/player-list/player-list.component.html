@@ -1,45 +1,52 @@
-<section class="section no-bg">
-    <div class="column is-9 center-div card">
-        <nav class="panel">
-            <div class="panel-block {{players ? '' : 'loading-blink'}}">
-                <p class="control has-icons-left">
-                    <input class="input is-small is-rounded" type="text" placeholder="search">
-                    <span class="icon is-small is-left">
-                        <i class="fas fa-search" aria-hidden="true"></i>
-                    </span>
-                </p>
-            </div>
-            
-            <a class="panel-block is-active" *ngFor="let player of players | paginate: { itemsPerPage: perPage, currentPage: currentPage, totalItems: numPlayers }" href="/profile/{{player.login}}">
-                <span class="panel-icon">
-                    <i class="fas fa-book" aria-hidden="true"></i>
-                </span>
-                {{player.login}} <span *ngIf="player.role == 'admin'" class="tag is-success is-rounded"  style="margin-left: 10px" title="Admin rights granted by {{player.adminGivenBy}}">Admin</span><span *ngIf="player.role == 'master'" class="tag is-warning is-rounded"  style="margin-left: 10px" title="Master">Master</span>
-            </a>        
+<!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-12">
+              <ol class="breadcrumb float-sm-left">
+                <li class="breadcrumb-item"><a href="#">Player List</a></li>
+                
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
 
-            <span  *ngIf="!players">
-                <a class="panel-block is-active loading-blink" *ngFor="let dummy of ' '.repeat(10).split('')">
-                    <span class="panel-icon">
-                        <i class="fas fa-book" aria-hidden="true"></i>
-                    </span>
-                    <span class="loading-playerlogin"></span>
-                </a>  
-            </span>
-        </nav>
-        <div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
-            <pagination (pageChange)="pageChanged($event); p = $event"></pagination>
-        </div>
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+            <div class="row">
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-header">                                   
+                          <div class="card-tools">
+                           <!-- <div class="input-group input-group-sm" style="width: 150px;">
+                              <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+          
+                              <div class="input-group-append">
+                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                              </div>
+                            </div>-->
+                          </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0">
+                          <table class="table table-hover">
+                            <tbody>
+                            <tr *ngFor="let player of players | paginate: { itemsPerPage: perPage, currentPage: currentPage, totalItems: numPlayers }">
+                              <td><a href="/profile/{{player.login}}">{{player.login}}</a> <span *ngIf="player.role == 'admin'" class="badge bg-success badge-pill"  style="margin-left: 10px" title="Admin rights granted by {{player.adminGivenBy}}">Admin</span><span *ngIf="player.role == 'master'" class="badge bg-warning badge-pill"  style="margin-left: 10px" title="Master">Master</span></td>                              
+                            </tr>
+                          </tbody></table>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer clearfix text-center">
+                            <pagination (pageChange)="pageChanged($event); p = $event"></pagination>
+                        </div>
+                      </div>
+                      <!-- /.card -->
+                    </div>
+                  </div>
     </div>
-   
+    
 </section>
-    <!--<nav class="pagination is-centered" role="navigation" aria-label="pagination">
-        <ul class="pagination-list">
-          <li *ngFor="let dummy of ' '.repeat(pages).split(''), let x = index"><a class="pagination-link" [ngClass]="currentPage == x+1 ? 'is-current' : ''">{{x+1}}</a></li>
-          <li><span class="pagination-ellipsis">&hellip;</span></li>
-          <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
-          <li><a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a></li>
-          <li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
-          <li><span class="pagination-ellipsis">&hellip;</span></li>
-          <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
-        </ul>
-      </nav>-->

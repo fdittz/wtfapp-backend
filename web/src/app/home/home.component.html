@@ -1,51 +1,104 @@
-<div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
-    <section class="hero player-title no-bg is-small {{stats ? '' : 'loading-blink'}}">
-        <div class="hero-body player-title no-bg">
-            <div class="media">
-                <div class="media-content" style="max-width: 600px">
-                    <div style="max-width: 600px">                        
-                        <h1 class="title">
-                                Match List
-                        </h1>
-                    </div>
-                </div>               
+<!-- Content Header (Page header) -->
+<section class="header">
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-12">
+          <ol class="breadcrumb float-sm-left">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+      <div class="row">      
+      <div class="col-9">
+        <div class="card">
+            <div class="card-header no-border">
+              <h3 class="card-title">Match List</h3>
+              <div class="card-tools">
+              </div>
             </div>
+            <div class="card-body p-0 table-responsive">
+              <table class="table table-striped table-sm table-valign-middle">
+                <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Map</th>
+                  <th>Teams</th>
+                  <th>Winner</th>
+                  <th>Stats</th>
+                  <th>Demo</th>
+                </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let match of stats; let i = index" class="{{match.result == 'defeat' ? 'has-background-danger' : (match.result == 'victory' ? 'has-background-success' : '')}}">
+                      <td>{{match.startTime | date: 'dd/MM/yyyy HH:mm'}}</td>
+                      <td><b>{{match.map | uppercase}}</b></td>
+                      <td><span *ngFor="let team of match.teams" class="{{team.number == 1 ? 'text-primary': (team.number == 2 ? 'text-danger': (team.number == 3 ? 'text-warning': (team.number == 4 ? 'text-success': '')))}}">
+                            <b>{{team.name | uppercase}}</b>: 
+                            <span *ngFor="let player of team.players; let i = index">{{i != 0 ? "," : ""}} {{player}}</span>
+                            <br>
+                          </span>
+                      </td>
+                      <td>
+                          <span *ngIf="match.winningTeam == 1" class="badge bg-primary">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
+                          <span *ngIf="match.winningTeam == 2" class="badge bg-danger">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
+                          <span *ngIf="match.winningTeam == 3" class="badge bg-warning">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
+                          <span *ngIf="match.winningTeam == 4" class="badge bg-success">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
+                          <span *ngIf="!match.winningTeam" class="badge bg-secondary">DRAW</span>                            
+                      </td>  
+                      <td><a href="/match/{{match.startTime}}" target="_blank">Stats</a></td>
+                      <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </div>
+      <div class="col-3">
+          <div class="card">
+              <div class="card-header no-border">
+                <h3 class="card-title">Rankings</h3>
+                <div class="card-tools">
+                </div>
+              </div>
+              <div class="card-body p-0">
+                  <table class="table table-striped table-sm table-valign-middle">
+                    <tbody>
+                      <tr *ngFor="let player of rankings; let i = index">
+                        <td style="padding-left: 0.5rem!important; max-width: 25px">#{{i+1}}</td><td style="font-family: 'BebasNeueRegular'">{{player.login}}</td><td style="text-align: right">{{player.mu}}</td>
+                      </tr>
+                    </tbody>
+                      
+                  </table>
+              </div>
+          </div>
+      </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-12">
+          <h1 class="m-0 text-dark">Frags/10min</h1>
         </div>
-    </section>
+      </div>
+      <div class="row">        
+        <ng-template ngFor let-i="index" let-rank [ngForOf]="fragRank">
+          <div class="col-md-4" *ngIf="rank.players.length">
+            <div class="small-box {{classesImg[i+1].css}}"  style="min-height: 306px;">
+                <a href="#" class="small-box-footer text-left pl-1 pr-1">
+                    {{rank.name}}               
+                </a>
+                <div class="inner">
+                    <span *ngFor="let player of rank.players"><b>{{player.login}}:</b> {{player.per10min | number: '1.0-2' }}<br/></span>
+                </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
   </div>
-    <div class="column is-9 center-div" style="display: flex; align-items: center; justify-items: center">
-    <table class="table">
-        <thead>
-          <tr>
-            <th>Time</th>
-            <th>Map</th>
-            <th>Teams</th>
-            <th>Winner</th>  
-            <th>Stats (old)</th>
-            <th>Demo</th>                
-          </tr>
-        </thead>
-        <tfoot>
-          <tr>
-            <th>Time</th>
-            <th>Map</th>
-            <th>Teams</th>
-            <th>Winner</th>  
-            <th>Stats (old)</th>
-            <th>Demo</th> 
-          </tr>
-        </tfoot>
-        <tbody>
-          <tr *ngFor="let match of stats; let i = index" class="{{match.winningTeam == 1 ? 'has-background-info' : (match.winningTeam == 2 ? 'has-background-danger' : (match.winningTeam == 3 ? 'has-background-warning' : (match.winningTeam == 2 ? 'has-background-success' : '')))}}">
-            <td>{{match.startTime | date: 'dd/MM/yyyy HH:mm'}}</td>
-            <td>{{match.map}}</td>
-            <td>
-              <span *ngFor="let team of match.teams"> {{team.name}}: {{team.players?.join(", ")}}<br></span>
-            </td>
-            <td>{{match.winningTeam ? match.teams[match.winningTeam-1].name : 'Draw'}}</td>    
-            <td><a href="http://tf.quadclub.com.br:27570/game/{{match.startTime}}" target="_blank">Stats(old)</a></td>
-            <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
-          </tr>
-        </tbody>
-    </table>
-  </div>
+</section>

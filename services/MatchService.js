@@ -29,7 +29,7 @@ class MatchService {
                     returnGame.teams = []
                     for (var i = 1; i <= 4; i++) {
                         if (game.result["team" + i +"Name"] && game.result["team" + i +"Name"].buckets.length)
-                            returnGame.teams.push({"name": game.result["team" + i +"Name"].buckets[0].key, "score": game.result["team" + i +"Score"]});
+                            returnGame.teams.push({"name": game.result["team" + i +"Name"].buckets[0].key, "score": game.result["team" + i +"Score"], "number": i});
                     }                    
 
                     for (var i = 0; i < game.players.buckets.length; i++) {
@@ -66,7 +66,6 @@ class MatchService {
         var query = playerQueries.getMatches(login);
         return esutil.sendQuery(query)
         .then(res => {
-            console.log(res)
             if (!res.data.aggregations.unique_ids.buckets.length)
                 return stats
             var resultMatches = res.data.aggregations.unique_ids.buckets;
@@ -131,6 +130,51 @@ class MatchService {
             return Promise.reject();
         })
     
+    }
+
+    getMatchDetails(matchId) { 
+        var match = {
+            gameTimeStamp: matchId,
+            map: "",
+            players: []
+
+        }
+        var query = matchQueries.getMatchDetails(matchId);
+          return esutil.sendQuery(query)
+        .then(res => {
+            match.map = (res.data.aggregations.byGame.game.data.hits.hits[0]._source.map);
+            match.players = res.data.aggregations.byGame.player.buckets.map(player => {
+                var returnPlayer = {};
+                returnPlayer.perClass = player.timePlayed.perClass.buckets.map(perClassTime => {
+                    return ({key: perClassTime.key, timePlayed: perClassTime.timePlayed.value});
+                })
+                returnPlayer.frags = player.playerkills.enemy.doc_count;
+                returnPlayer.deaths = player.playerdeaths.enemy.doc_count;
+                returnPlayer.teamKills = player.playerkills.team.doc_count;
+                returnPlayer.teamDeaths = player.playerdeaths.team.doc_count;
+                returnPlayer.damageDone = player.damageDone.enemy.sumdmg.value;
+                returnPlayer.damageTaken = player.damageTaken.enemy.sumdmg.value;
+                returnPlayer.fumbles = player.fumbles.doc_count;
+                returnPlayer.goals = player.goals.doc_count;
+                returnPlayer.login = player.key;
+                if (player.timePlayed.perTeam.buckets && player.timePlayed.perTeam.buckets.length)
+                    returnPlayer.team = player.timePlayed.perTeam.buckets[0].key
+                return returnPlayer
+            }).filter(player => {
+                return ((player.login.length > 0) && (player.login != 'world')) 
+            })
+            match.goals = res.data.aggregations.byGame.goals.byPlayer.buckets.map(player => {
+                return ({login: player.key, goals: player.doc_count});
+            }).sort(function(a, b){
+                return b.goals-a.goals
+            })
+            match.fumbles = res.data.aggregations.byGame.fumbles.byPlayer.buckets.map(player => {
+                return ({login: player.key, fumbles: player.doc_count});
+            }).sort(function(a, b){
+                return b.fumbles-a.fumbles
+            })
+            return match
+        });
     }
 }
 

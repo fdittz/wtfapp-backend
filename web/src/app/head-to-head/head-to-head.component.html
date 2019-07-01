@@ -1,0 +1,102 @@
+<!-- Content Header (Page header) -->
+<section class="header">
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-12">
+          <ol class="breadcrumb float-sm-left">
+            <li class="breadcrumb-item"><a href="#">Head to head</a></li>
+            <li *ngIf="player1" class="breadcrumb-item active">{{player1.login}}</li>
+            <li *ngIf="player2" class="breadcrumb-item active">{{player2.login}}</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card p-2">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="form-group">
+                <input type="text" class="form-control" id="player1login" [(ngModel)]="player1login" placeholder="Player 1 login">
+              </div>
+            </div>
+            <div class="col-md-2 text-center">
+                <div class="form-group">
+                    <button class="btn btn-primary" style="width: 100%" (click)="headToHead()">go</button>
+                </div>
+            </div>
+            <div class="col-md-5">
+              <div class="form-group">
+                <input type="text" class="form-control" id="player2login" [(ngModel)]="player2login" placeholder="Player 2 login">
+              </div>
+            </div>
+          </div> 
+          <div class="row" *ngIf="player1 && player2">
+            <div class="col-md-5">
+                <h1 style="font-family: 'BebasNeueRegular'; font-size: 3.5rem; font-weight: bold; letter-spacing: 1rem;" class="text-primary">{{player1.login}}</h1>
+                <div class="widget-user-image d-flex justify-content-center">
+                  <img class="img-circle elevation-2" src="{{player1 && player1?.uid == auth.uid ? player1?.photoURL : 'https://bulma.io/images/placeholders/128x128.png'}}" alt="User Avatar">
+                </div>
+            </div>
+            <div class="col-md-2 text-center">
+                <canvas id="pieChart" style=""></canvas>
+            </div>
+            <div class="col-md-5">
+                <h1 style="font-family: 'BebasNeueRegular'; font-size: 3.5rem; font-weight: bold; letter-spacing: 1rem;" class="text-right text-danger">{{player2.login}}</h1>
+                <div class="widget-user-image d-flex justify-content-center">
+                  <img class="img-circle elevation-2" src="{{player2 && player2?.uid == auth.uid ? player2?.photoURL : 'https://bulma.io/images/placeholders/128x128.png'}}" alt="User Avatar">
+                </div>
+            </div>
+          </div>                           
+        </div>
+
+        <div class="col-md-12" *ngIf="stats?.matches">
+          <div class="card">
+            <div class="card-header no-border">
+              <h3 class="card-title">Match List</h3>
+              <div class="card-tools">
+              </div>
+            </div>
+            <div class="card-body p-0 table-responsive">
+              <table class="table table-striped table-sm table-valign-middle">
+                <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Map</th>
+                  <th>{{player1.login}}'s team</th>
+                  <th>{{player2.login}}'s team</th>
+                  <th>Winner</th>
+                  <th>Stats</th>
+                  <th>Demo</th>
+                </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let match of stats?.matches; let i = index" class="{{match.result == 'defeat' ? 'has-background-danger' : (match.result == 'victory' ? 'has-background-success' : '')}}">
+                    <td>{{match.startTime | date: 'dd/MM/yyyy HH:mm'}}</td>
+                    <td>{{match.map}}</td>
+                    <td>{{match.teamMates}}</td>
+                    <td>{{match.enemies}}</td>
+                    <td>
+                      <span *ngIf="match.result == 'victory'" class="badge bg-primary">{{player1.login}}</span>
+                      <span *ngIf="match.result == 'defeat'" class="badge bg-danger">{{player2.login}}</span>
+                      <span *ngIf="match.result == 'draw'" class="badge bg-gray">Draw</span>
+                    </td>    
+                    <td><a href="/match/{{match.startTime}}" target="_blank">Stats</a></td>
+                    <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>  
+<!-- /.widget-user -->
