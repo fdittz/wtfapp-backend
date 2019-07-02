@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../auth.service';
+import { PaginationComponent } from '../pagination/pagination.component'
 
 @Component({
   selector: 'app-home',
@@ -13,9 +14,12 @@ export class HomeComponent implements OnInit {
   msgError: string;
   stats: any;
   servers: any;
-  fragRank: any;
+  classRank: any;
   rankings: any;
   classesImg = [];
+  currentRank: string;
+  ranks = [];
+  p: number = 1;
   constructor(public auth: AuthService,
     private http: HttpClient) { }
 
@@ -30,8 +34,9 @@ export class HomeComponent implements OnInit {
     this.classesImg[8] = {name: "Spy", image: "https://wiki.megateamfortress.com/images/thumb/3/36/Spy.png/300px-Spy.png", css: "bg-black"};
     this.classesImg[9] = {name: "Engineer", image: "https://wiki.megateamfortress.com/images/thumb/d/d8/Engineer.png/300px-Engineer.png", css: "bg-yellow"}; 
     this.getMatches();
-    this.getFragRanks();
     this.getRankings();
+    this.ranks = [this.getFragRanks()];
+    this.ranks[Math.floor(Math.random() * this.ranks.length)];
     //this.getServers();
   }
 
@@ -64,12 +69,25 @@ export class HomeComponent implements OnInit {
         this.msgError = resp.error.message;
     })
   }
+  
 
   async getFragRanks() {
     return this.http.get(`/api/users/top/fraggers`, {
       headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
     }).subscribe(resp => {
-      this.fragRank = resp;
+      this.classRank = resp;
+      this.currentRank = "Frags/10min"
+    }, resp => {
+        this.msgError = resp.error.message;
+    })
+  }
+
+  async getDamageRanks() {
+    return this.http.get(`/api/users/top/damage`, {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
+    }).subscribe(resp => {
+      this.classRank = resp;
+      this.currentRank = "Damage/10min"
     }, resp => {
         this.msgError = resp.error.message;
     })

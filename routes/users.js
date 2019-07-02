@@ -207,6 +207,17 @@ router.get('/top/fraggers', function(req, res, next) {
 	})
 });
 
+router.get('/top/damage', function(req, res, next) {
+	return UserService.getTopDamage()
+	.then(function(data) {
+		return res.status(200).json(data);
+	})
+	.catch(err => {
+		return res.status(200).json([]);
+	})
+});
+
+
 router.get('/usr/ranks', function(req, res, next) {
 	
 	return UserService.setRatings()

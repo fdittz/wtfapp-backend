@@ -84,6 +84,9 @@ export class ProfileComponent implements OnInit {
     return this.http.get(`/api/users/profile/stats/${login}`, {
       headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
     }).subscribe(resp => {
+      resp["perClass"] = resp["perClass"].filter(thisClass => {
+        return thisClass.key != 0;
+      })
       this.stats = resp;
     }, resp => {
         this.msgError = resp.error.message;

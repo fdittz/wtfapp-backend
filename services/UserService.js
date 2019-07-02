@@ -438,8 +438,48 @@ class UserService {
             })});
             return classes
         })
+        .catch(err => {
+            return Promise.reject();
+        })
+    }
 
-        
+    getTopDamage() {
+        var classes = [];
+        var query = playerQueries.getTopDamage();
+        return esutil.sendQuery(query)
+        .then(res => {
+            return Promise.resolve(res.data.aggregations.all_matching_docs.buckets.all);
+        })
+        .then(result => {
+            classes.push({name: "Scout",  players: result.scout.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Sniper",  players: result.sniper.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Soldier", players: result.soldier.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Demoman", players: result.demoman.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Medic",   players: result.medic.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "HWGuy",   players: result.hwguy.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Pyro",    players: result.pyro.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Spy",     players: result.spy.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            classes.push({name: "Engineer",players: result.engineer.buckets.map(player => {
+                return {login: player.key, per10min: player.per10min.value};
+            })});
+            return classes
+        })
         .catch(err => {
             return Promise.reject();
         })
@@ -466,7 +506,7 @@ class UserService {
                     return true
                 })
                 .map(pl => {
-                    return {"login": pl.key, "rating": new trueskill.Rating(2000)}
+                    return {"login": pl.key, "rating": new trueskill.Rating(2000), "games": 0}
                 });
 
                 var getPlayer = function(login) {
@@ -477,7 +517,11 @@ class UserService {
                         }
                       
                 }
+<<<<<<< HEAD
+                matches = matches.reverse();
+=======
 		matches = matches.reverse();
+>>>>>>> 1babcc7ea7a7fefcda3aa008b7cf367ab64d707b
                 for (var match of matches) {
                     if (match.result.winningTeam.buckets.length) {
                       var winningTeam = match.result.winningTeam.buckets[0].key;
@@ -509,22 +553,31 @@ class UserService {
                         
                         for (var i = 0; i < q[0].length; i++) {
                           getPlayer(winners[i]).rating = q[0][i];
+                          getPlayer(winners[i]).games++;
                         }
                         for (var i = 0; i < q[1].length; i++) {
                           getPlayer(losers[i]).rating = q[1][i];
+                          getPlayer(losers[i]).games++;
                         }    
                 
                         //console.log("Winners: " + winners + " / Losers: " + losers);
                       }
                     }
                   }
+                  var maxMatches = (players.reduce((max, player) => max > player.games ? max : player.games, null));
+                  var minMatches = maxMatches/10 < 10 ? Math.floor(maxMatches/10) : 10;
+                  console.log(minMatches)
                   players = players.sort(function(a, b){
                     return b.rating.mu - a.rating.mu;
-                  });
-                  return players.map(player => {
-                      return {"login": player.login, "mu": Math.ceil(player.rating.mu)}
+                  })                  
+                  .map(player => {
+                      return {"login": player.login, "mu": Math.ceil(player.rating.mu), "sigma": player.rating.sigma, "games": player.games}
                       //this.setUserRating(player.login, player.rating.mu, player.rating.sigma)
                   })
+                  .filter(player => {
+                      return player.games >= minMatches
+                  })
+                  return {minMatches: minMatches, players: players}
             })
         })
         
