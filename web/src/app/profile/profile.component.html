@@ -88,7 +88,7 @@
             <span *ngFor="let class of stats?.perClass">
             <h6><b>{{classesImg[class?.key].name}}</b> <span class="float-sm-right">{{class.timePlayed/60 | number:'1.0-0'}} minutes</span></h6>
             <div class="progress mb-3">                  
-              <div class="progress-bar bg-dark" role="progressbar" [ngStyle]="{'width' : ((class.timePlayed.value / stats.totalTime) *100)+ '%'}">
+              <div class="progress-bar bg-dark" role="progressbar" [ngStyle]="{'width' : ((class.timePlayed / stats.totalTime) *100) + '%'}">
               </div>
             </div>
             </span>
