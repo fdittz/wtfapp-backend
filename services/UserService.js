@@ -477,6 +477,7 @@ class UserService {
                         }
                       
                 }
+		matches = matches.reverse();
                 for (var match of matches) {
                     if (match.result.winningTeam.buckets.length) {
                       var winningTeam = match.result.winningTeam.buckets[0].key;
