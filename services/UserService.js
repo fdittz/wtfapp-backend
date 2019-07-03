@@ -509,8 +509,7 @@ class UserService {
                     return {"login": pl.key, "rating": new trueskill.Rating(2000), "games": 0}
                 });
 
-                var getPlayer = function(login) {
-                   
+                var getPlayer = function(login) {                   
                         for (var player of players) {
                           if (player.login == login)
                             return player;
@@ -562,12 +561,11 @@ class UserService {
                   }
                   var maxMatches = (players.reduce((max, player) => max > player.games ? max : player.games, null));
                   var minMatches = maxMatches/10 < 10 ? Math.floor(maxMatches/10) : 10;
-                  console.log(minMatches)
                   players = players.sort(function(a, b){
                     return b.rating.mu - a.rating.mu;
                   })                  
                   .map(player => {
-                      return {"login": player.login, "mu": Math.ceil(player.rating.mu), "sigma": player.rating.sigma, "games": player.games}
+                      return {"login": player.login, "mu": Math.round(player.rating.mu), "sigma": player.rating.sigma, "games": player.games}
                       //this.setUserRating(player.login, player.rating.mu, player.rating.sigma)
                   })
                   .filter(player => {
