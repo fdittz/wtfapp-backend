@@ -505,8 +505,8 @@ class UserService {
                         return false
                     return true
                 })
-                .map(pl => {
-                    return {"login": pl.key, "rating": new trueskill.Rating(2000), "games": 0}
+                .map(pl => {                    
+                    return {"login": pl.key, "rating": new trueskill.Rating(2000, 666), "games": 0}
                 });
 
                 var getPlayer = function(login) {                   

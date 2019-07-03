@@ -4,6 +4,7 @@ import { AuthService } from '../auth.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { User  } from '../model/user.model';
+import {Location} from '@angular/common';
 import * as trueskill from 'ts-trueskill';
 
 @Component({
@@ -19,8 +20,10 @@ export class ResultSimComponent implements OnInit {
   team1win: any;
   team2win: any;
   current: any;
+  quality: any;
   constructor(public auth: AuthService,
     private http: HttpClient,
+    private location: Location,
     private route: ActivatedRoute,) {
 
   }
@@ -77,6 +80,8 @@ export class ResultSimComponent implements OnInit {
 
       if (team1.length > 1 && team2.length > 1)
       {
+        this.quality = trueskill.quality([team1, team2]);
+        //this.quality = trueskill.quality([[new trueskill.Rating(2000,666), new trueskill.Rating(2000,666)], [new trueskill.Rating(2000,666), new trueskill.Rating(2000,666)]]);
         var result1 = trueskill.rate([team1,team2]);
         this.current = {
           team1: this.team1.map((login, index) => {
@@ -105,14 +110,14 @@ export class ResultSimComponent implements OnInit {
             return {login: login, mu: Math.round(result2[0][index].mu)};
           }),
         }
-        console.log(this.current.team1)
+        
+        this.location.replaceState(`/simulator/${this.team1[0]}/${this.team1[1]}/${this.team2[0]}/${this.team2[1]}`);
 
       }
     }
     catch (e) {
       this.msgError = "One or more players not found"
     }
-    
   }
 
 }
