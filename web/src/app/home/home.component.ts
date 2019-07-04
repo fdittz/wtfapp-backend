@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../auth.service';
 import { PaginationComponent } from '../pagination/pagination.component'
+import * as moment from "moment"
 
 @Component({
   selector: 'app-home',
@@ -13,6 +14,7 @@ export class HomeComponent implements OnInit {
 
   msgError: string;
   stats: any;
+  matches: any;  
   servers: any;
   classRank: any;
   rankings: any;
@@ -20,6 +22,7 @@ export class HomeComponent implements OnInit {
   currentRank: string;
   ranks = [];
   p: number = 1;
+  matchTerms: string;
   constructor(public auth: AuthService,
     private http: HttpClient) { }
 
@@ -45,6 +48,7 @@ export class HomeComponent implements OnInit {
       headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
     }).subscribe(resp => {
       this.stats = resp;
+      this.matches = this.stats;
     }, resp => {
         this.msgError = resp.error.message;
     })
@@ -92,4 +96,23 @@ export class HomeComponent implements OnInit {
         this.msgError = resp.error.message;
     })
   }
+
+  searchMatches(event) {
+      console.log(event)
+      this.matches = this.stats.filter(match => {
+        if (event.length > 2) {
+            var terms = event.split(" ");
+            for (var term of terms) {              
+              if (!((JSON.stringify(match).indexOf(term) >= 0) || (moment(match.startTime).format("DD/MM/YYYY HH:MM").indexOf(term) >= 0)))
+                return false;
+            }
+            return true;
+          }
+        else
+          return true;
+      })
+  }
 }
+
+/*
+{"startTime":"2019-06-17T19:59:09.236Z","map":"wellgl1","demo":"2019-06-17_16-58_[wellgl1]_tdf_kaue_vs_wos_caxa.mvd","numPlayers":4,"numTeams":2,"winningTeam":1,"teams":[{"name":"blue","score":{"doc_count_error_upper_bound":0,"sum_other_doc_count":0,"buckets":[{"key":10,"doc_count":1}]},"number":1,"players":["tdf","kaue"]},{"name":"red","score":{"doc_count_error_upper_bound":0,"sum_other_doc_count":0,"buckets":[{"key":0,"doc_count":1}]},"number":2,"players":["caxa","wos"]}]}*/

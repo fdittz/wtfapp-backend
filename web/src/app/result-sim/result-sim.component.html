@@ -1,0 +1,152 @@
+<!-- Content Header (Page header) -->
+<section class="header">
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-12">
+            <ol class="breadcrumb float-sm-left">
+              <li class="breadcrumb-item"><a href="#">Result simulator</a></li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+  </section>
+  
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card p-2">
+            <div class="row">
+              <div class="col-md-5">
+                <h3 style="font-family: 'BebasNeueRegular'" class="text-primary">Team 1</h3>
+                <div class="form-group">                  
+                  <input type="text" class="form-control" [(ngModel)]="team1[0]" placeholder="Player 1">
+                  <input type="text" class="form-control" [(ngModel)]="team1[1]" placeholder="Player 2">
+                </div>
+              </div>
+              <div class="col-md-2 text-center">
+                <br><br><br>
+                  <div class="form-group">
+                      <button class="btn btn-primary" style="width: 100%" (click)="simulate()">go</button>
+                  </div>
+              </div>
+              <div class="col-md-5">
+                <h3 style="font-family: 'BebasNeueRegular'" class="text-danger">Team 2</h3>
+                <div class="form-group">
+                  <input type="text" class="form-control" [(ngModel)]="team2[0]" placeholder="Player 1">
+                  <input type="text" class="form-control" [(ngModel)]="team2[1]" placeholder="Player 2">
+                </div>
+              </div>
+            </div> 
+          </div>
+        </div>
+      </div>
+      <!--<div class="row">
+        <div class="col-md-12 text-center" *ngIf="quality">
+            <h4>Match Quality: {{quality}}</h4>
+        </div>
+      </div>-->  
+    </div>
+  </section>  
+
+  <section class="content" *ngIf="msgError">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card p-2">
+              <div class="row">
+                <div class="col-md-12 text-center">
+                  <h2 style="font-family: 'BebasNeueRegular'" class="text-danger">{{msgError}}</h2>
+                </div>
+              </div> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="content" *ngIf="msgError">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card p-2">
+                <div class="row">
+                  <div class="col-md-12 text-center">
+                    <h2 style="font-family: 'BebasNeueRegular'" class="text-danger">{{msgError}}</h2>
+                  </div>
+                </div> 
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    
+      <section class="content" *ngIf="current && team1win && team2win">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12 col-md-4">
+                <div class="card p-2">
+                  <div class="row">
+                    <div class="col-12">
+                      <h3 style="font-family: 'BebasNeueRegular'" class="text-secondary">Current Ranks</h3>
+                      <table class="table table-striped table-sm table-valign-middle">
+                          <tbody>
+                            <tr *ngFor="let player of current.team1" style="font-family: 'BebasNeueRegular';" class="text-primary">
+                              <td><a href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}}</td>
+                            </tr>
+                            <tr *ngFor="let player of current.team2" style="font-family: 'BebasNeueRegular';" class="text-danger">
+                                <td><a style="color: inherit" href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}}</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                    </div>
+                  </div> 
+                </div>
+              </div>
+
+              <div class="col-12 col-md-4">
+                  <div class="card p-2">
+                    <div class="row">
+                      <div class="col-12">
+                        <h3 style="font-family: 'BebasNeueRegular'" class="text-primary">Team 1 Victory</h3>
+                        <table class="table table-striped table-sm table-valign-middle">
+                            <tbody>
+                              <tr *ngFor="let player of team1win.team1" style="font-family: 'BebasNeueRegular';" class="text-primary">
+                                <td><a href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}} ({{player.diff > 0 ? '+':''}}{{player.diff}})</td>
+                              </tr>
+                              <tr *ngFor="let player of team1win.team2" style="font-family: 'BebasNeueRegular';" class="text-danger">
+                                  <td><a style="color: inherit" href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}} ({{player.diff > 0 ? '+':''}}{{player.diff}})</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                      </div>
+                    </div> 
+                  </div>
+                </div>
+
+              <div class="col-12 col-md-4">
+                  <div class="card p-2">
+                    <div class="row">   
+                      <div class="col-12">
+                        <h3 style="font-family: 'BebasNeueRegular'" class="text-danger">Team 2 Victory</h3>
+                        <table class="table table-striped table-sm table-valign-middle">
+                            <tbody>
+                              <tr *ngFor="let player of team2win.team2" style="font-family: 'BebasNeueRegular';" class="text-danger">
+                                  <td><a style="color: inherit" href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}} ({{player.diff > 0 ? '+':''}}{{player.diff}})</td>
+                              </tr>
+                              <tr *ngFor="let player of team2win.team1" style="font-family: 'BebasNeueRegular';" class="text-primary">
+                                <td><a href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}} ({{player.diff > 0 ? '+':''}}{{player.diff}})</td>
+                              </tr>
+                            </tbody>
+                        </table>
+                      </div>
+                    </div> 
+                  </div>
+              </div>
+
+            </div>
+          </div>
+      </section>  
+  <!-- /.widget-user -->
