@@ -94,20 +94,20 @@ export class ResultSimComponent implements OnInit {
 
         this.team1win = {
           team1: this.team1.map((login, index) => {
-            return {login: login, mu: Math.round(result1[0][index].mu)};
+            return {login: login, mu: Math.round(result1[0][index].mu), diff: Math.round(result1[0][index].mu) - this.current.team1[index].mu};
           }),
           team2: this.team2.map((login, index) => {
-            return {login: login, mu: Math.round(result1[1][index].mu)};
+            return {login: login, mu: Math.round(result1[1][index].mu), diff: Math.round(result1[1][index].mu) - this.current.team2[index].mu};
           }),
         }
 
         var result2 = trueskill.rate([team2,team1]);
         this.team2win = {
           team1: this.team1.map((login, index) => {
-            return {login: login, mu: Math.round(result2[1][index].mu)};
+            return {login: login, mu: Math.round(result2[1][index].mu), diff: Math.round(result2[1][index].mu) - this.current.team1[index].mu};
           }),
           team2: this.team2.map((login, index) => {
-            return {login: login, mu: Math.round(result2[0][index].mu)};
+            return {login: login, mu: Math.round(result2[0][index].mu), diff: Math.round(result2[0][index].mu) - this.current.team2[index].mu};
           }),
         }
         

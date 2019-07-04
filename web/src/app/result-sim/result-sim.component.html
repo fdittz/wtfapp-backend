@@ -114,10 +114,10 @@
                         <table class="table table-striped table-sm table-valign-middle">
                             <tbody>
                               <tr *ngFor="let player of team1win.team1" style="font-family: 'BebasNeueRegular';" class="text-primary">
-                                <td><a href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}}</td>
+                                <td><a href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}} ({{player.diff > 0 ? '+':''}}{{player.diff}})</td>
                               </tr>
                               <tr *ngFor="let player of team1win.team2" style="font-family: 'BebasNeueRegular';" class="text-danger">
-                                  <td><a style="color: inherit" href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}}</td>
+                                  <td><a style="color: inherit" href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}} ({{player.diff > 0 ? '+':''}}{{player.diff}})</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -134,10 +134,10 @@
                         <table class="table table-striped table-sm table-valign-middle">
                             <tbody>
                               <tr *ngFor="let player of team2win.team2" style="font-family: 'BebasNeueRegular';" class="text-danger">
-                                  <td><a style="color: inherit" href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}}</td>
+                                  <td><a style="color: inherit" href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}} ({{player.diff > 0 ? '+':''}}{{player.diff}})</td>
                               </tr>
                               <tr *ngFor="let player of team2win.team1" style="font-family: 'BebasNeueRegular';" class="text-primary">
-                                <td><a href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}}</td>
+                                <td><a href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.mu}} ({{player.diff > 0 ? '+':''}}{{player.diff}})</td>
                               </tr>
                             </tbody>
                         </table>
