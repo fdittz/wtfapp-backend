@@ -4,6 +4,7 @@ const matchQueries = require('../elasticsearch/matchqueries')
 var esutil = require('../util/esutil');
 var CryptoJS = require('crypto-js');
 var trueskill = require("ts-trueskill");
+var env = new trueskill.TrueSkill();
 
 class UserService {
 
@@ -505,8 +506,8 @@ class UserService {
                         return false
                     return true
                 })
-                .map(pl => {                    
-                    return {"login": pl.key, "rating": new trueskill.Rating(2000, 666), "games": 0}
+                .map(pl => {    
+                    return {"login": pl.key, "rating": env.createRating(), "games": 0}
                 });
 
                 var getPlayer = function(login) {                   
@@ -561,16 +562,17 @@ class UserService {
                   }
                   var maxMatches = (players.reduce((max, player) => max > player.games ? max : player.games, null));
                   var minMatches = maxMatches/10 < 10 ? Math.floor(maxMatches/10) : 10;
-                  players = players.sort(function(a, b){
-                    return b.rating.mu - a.rating.mu;
-                  })                  
+                  players = players              
                   .map(player => {
-                      return {"login": player.login, "mu": Math.round(player.rating.mu), "sigma": player.rating.sigma, "games": player.games}
+                        return {"login": player.login, points: Math.round((player.rating.mu - (player.rating.sigma))*100), "mu": player.rating.mu, "sigma": player.rating.sigma, "beta": player.rating.beta, "tau": player.rating.tau, "games": player.games}
                       //this.setUserRating(player.login, player.rating.mu, player.rating.sigma)
                   })
                   .filter(player => {
                       return player.games >= minMatches
                   })
+                  .sort(function(a, b){
+                    return b.points - a.points;
+                  })    
                   return {minMatches: minMatches, players: players}
             })
         })

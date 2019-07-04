@@ -69,6 +69,11 @@ export class HomeComponent implements OnInit {
       headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
     }).subscribe(resp => {
       this.rankings = resp;
+      this.rankings.players = this.rankings.players.map(player => {
+        player.mu = Math.round(player.mu*100);
+        return player;
+      });
+      console.log(this.rankings)
     }, resp => {
         this.msgError = resp.error.message;
     })
