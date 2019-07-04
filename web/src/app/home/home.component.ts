@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit {
   currentRank: string;
   ranks = [];
   p: number = 1;
+  matchTerms: string;
   constructor(public auth: AuthService,
     private http: HttpClient) { }
 
