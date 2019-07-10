@@ -558,6 +558,13 @@ class UserService {
                 
                         //console.log("Winners: " + winners + " / Losers: " + losers);
                       }
+                      else {
+                        for (var player of match.players.buckets) {
+                            if (player.timePlayed.perTeam.buckets.length) {
+                                getPlayer(player.key).games++;
+                            }
+                        }
+                      }
                     }
                   }
                   var maxMatches = (players.reduce((max, player) => max > player.games ? max : player.games, null));
