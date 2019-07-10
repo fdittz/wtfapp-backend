@@ -1,1 +1,1 @@
-module.exports = "http://192.168.189.142:9200"
+module.exports = "http://vison.andi.com.br:9200"
