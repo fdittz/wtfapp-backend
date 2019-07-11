@@ -102,6 +102,28 @@ export class HomeComponent implements OnInit {
     })
   }
 
+  async getGoalRanks() {
+    return this.http.get(`/api/users/top/goals`, {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
+    }).subscribe(resp => {
+      this.classRank = resp;
+      this.currentRank = "Goals/10min"
+    }, resp => {
+        this.msgError = resp.error.message;
+    })
+  }
+
+  async getFumbleRanks() {
+    return this.http.get(`/api/users/top/fumbles`, {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
+    }).subscribe(resp => {
+      this.classRank = resp;
+      this.currentRank = "Touches/10min"
+    }, resp => {
+        this.msgError = resp.error.message;
+    })
+  }
+
   searchMatches(event) {
       console.log(event)
       this.matches = this.stats.filter(match => {

@@ -217,6 +217,26 @@ router.get('/top/damage', function(req, res, next) {
 	})
 });
 
+router.get('/top/goals', function(req, res, next) {
+	return UserService.getTopGoals()
+	.then(function(data) {
+		return res.status(200).json(data);
+	})
+	.catch(err => {
+		return res.status(200).json([]);
+	})
+});
+
+router.get('/top/fumbles', function(req, res, next) {
+	return UserService.getTopFumbles()
+	.then(function(data) {
+		return res.status(200).json(data);
+	})
+	.catch(err => {
+		return res.status(200).json([]);
+	})
+});
+
 
 router.get('/usr/ranks', function(req, res, next) {
 	
