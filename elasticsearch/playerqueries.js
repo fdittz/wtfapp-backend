@@ -2320,7 +2320,1759 @@ var player = {
           }
         }
       }`
+    },
+
+    getTopGoals() {
+      return `{
+        "size": 0,
+        "aggs": {
+          "all_matching_docs": {
+            "filters": {
+              "filters": {
+                "all": {
+                  "match_all": {}
+                }
+              }
+            },
+            "aggs": {
+              "scout": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 1
+                      }
+                    },
+                    "aggs": {
+                      "goals": {
+                        "filter": {
+                          "term": {
+                            "type": "goal"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classGoals": "class>goals>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classGoals/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classGoals": "class>goals>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classGoals > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.scout": {
+                "percentiles_bucket": {
+                  "buckets_path": "scout>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "sniper": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 2
+                      }
+                    },
+                    "aggs": {
+                      "goals": {
+                        "filter": {
+                          "term": {
+                            "type": "goal"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classGoals": "class>goals>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classGoals/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                      "classGoals": "class>goals>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classGoals > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.sniper": {
+                "percentiles_bucket": {
+                  "buckets_path": "sniper>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "soldier": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 3
+                      }
+                    },
+                    "aggs": {
+                      "goals": {
+                        "filter": {
+                          "term": {
+                            "type": "goal"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classGoals": "class>goals>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classGoals/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                      "classGoals": "class>goals>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classGoals > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.soldier": {
+                "percentiles_bucket": {
+                  "buckets_path": "soldier>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "demoman": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 4
+                      }
+                    },
+                    "aggs": {
+                      "goals": {
+                        "filter": {
+                          "term": {
+                            "type": "goal"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classGoals": "class>goals>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classGoals/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classGoals": "class>goals>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classGoals > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.demoman": {
+                "percentiles_bucket": {
+                  "buckets_path": "demoman>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "medic": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 5
+                      }
+                    },
+                    "aggs": {
+                      "goals": {
+                        "filter": {
+                          "term": {
+                            "type": "goal"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classGoals": "class>goals>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classGoals/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classGoals": "class>goals>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classGoals > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.medic": {
+                "percentiles_bucket": {
+                  "buckets_path": "medic>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "hwguy": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 6
+                      }
+                    },
+                    "aggs": {
+                      "goals": {
+                        "filter": {
+                          "term": {
+                            "type": "goal"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classGoals": "class>goals>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classGoals/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classGoals": "class>goals>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classGoals > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.hwguy": {
+                "percentiles_bucket": {
+                  "buckets_path": "hwguy>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "pyro": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 7
+                      }
+                    },
+                    "aggs": {
+                      "goals": {
+                        "filter": {
+                          "term": {
+                            "type": "goal"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classGoals": "class>goals>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classGoals/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classGoals": "class>goals>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classGoals > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.pyro": {
+                "percentiles_bucket": {
+                  "buckets_path": "pyro>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "spy": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 8
+                      }
+                    },
+                    "aggs": {
+                      "goals": {
+                        "filter": {
+                          "term": {
+                            "type": "goal"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classGoals": "class>goals>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classGoals/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classGoals": "class>goals>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classGoals > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.spy": {
+                "percentiles_bucket": {
+                  "buckets_path": "spy>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "engineer": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 9
+                      }
+                    },
+                    "aggs": {
+                      "goals": {
+                        "filter": {
+                          "term": {
+                            "type": "goal"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classGoals": "class>goals>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classGoals/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classGoals": "class>goals>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classGoals > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.engineer": {
+                "percentiles_bucket": {
+                  "buckets_path": "engineer>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }`
+    },
+
+    getTopFumbles() {
+      return `{
+        "size": 0,
+        "aggs": {
+          "all_matching_docs": {
+            "filters": {
+              "filters": {
+                "all": {
+                  "match_all": {}
+                }
+              }
+            },
+            "aggs": {
+              "scout": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 1
+                      }
+                    },
+                    "aggs": {
+                      "fumbles": {
+                        "filter": {
+                          "term": {
+                            "type": "fumble"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classfumbles": "class>fumbles>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classfumbles/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classfumbles": "class>fumbles>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.scout": {
+                "percentiles_bucket": {
+                  "buckets_path": "scout>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "sniper": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 2
+                      }
+                    },
+                    "aggs": {
+                      "fumbles": {
+                        "filter": {
+                          "term": {
+                            "type": "fumble"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classfumbles": "class>fumbles>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classfumbles/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                      "classfumbles": "class>fumbles>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.sniper": {
+                "percentiles_bucket": {
+                  "buckets_path": "sniper>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "soldier": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 3
+                      }
+                    },
+                    "aggs": {
+                      "fumbles": {
+                        "filter": {
+                          "term": {
+                            "type": "fumble"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classfumbles": "class>fumbles>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classfumbles/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                      "classfumbles": "class>fumbles>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.soldier": {
+                "percentiles_bucket": {
+                  "buckets_path": "soldier>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "demoman": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 4
+                      }
+                    },
+                    "aggs": {
+                      "fumbles": {
+                        "filter": {
+                          "term": {
+                            "type": "fumble"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classfumbles": "class>fumbles>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classfumbles/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classfumbles": "class>fumbles>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.demoman": {
+                "percentiles_bucket": {
+                  "buckets_path": "demoman>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "medic": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 5
+                      }
+                    },
+                    "aggs": {
+                      "fumbles": {
+                        "filter": {
+                          "term": {
+                            "type": "fumble"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classfumbles": "class>fumbles>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classfumbles/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classfumbles": "class>fumbles>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.medic": {
+                "percentiles_bucket": {
+                  "buckets_path": "medic>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "hwguy": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 6
+                      }
+                    },
+                    "aggs": {
+                      "fumbles": {
+                        "filter": {
+                          "term": {
+                            "type": "fumble"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classfumbles": "class>fumbles>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classfumbles/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classfumbles": "class>fumbles>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.hwguy": {
+                "percentiles_bucket": {
+                  "buckets_path": "hwguy>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "pyro": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 7
+                      }
+                    },
+                    "aggs": {
+                      "fumbles": {
+                        "filter": {
+                          "term": {
+                            "type": "fumble"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classfumbles": "class>fumbles>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classfumbles/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classfumbles": "class>fumbles>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.pyro": {
+                "percentiles_bucket": {
+                  "buckets_path": "pyro>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "spy": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 8
+                      }
+                    },
+                    "aggs": {
+                      "fumbles": {
+                        "filter": {
+                          "term": {
+                            "type": "fumble"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classfumbles": "class>fumbles>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classfumbles/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classfumbles": "class>fumbles>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.spy": {
+                "percentiles_bucket": {
+                  "buckets_path": "spy>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              },
+              "engineer": {
+                "terms": {
+                  "field": "player",
+                  "size": "10000"
+                },
+                "aggs": {
+                  "class": {
+                    "filter": {
+                      "term": {
+                        "playerClass": 9
+                      }
+                    },
+                    "aggs": {
+                      "fumbles": {
+                        "filter": {
+                          "term": {
+                            "type": "fumble"
+                          }
+                        }
+                      },
+                      "timePlayed": {
+                        "filter": {
+                          "term": {
+                            "type": "changeClass"
+                          }
+                        },
+                        "aggs": {
+                          "timePlayed": {
+                            "sum": {
+                              "field": "timePlayed"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "per10min": {
+                    "bucket_script": {
+                      "buckets_path": {
+                        "classfumbles": "class>fumbles>_count",
+                        "classTime": "class>timePlayed>timePlayed"
+                      },
+                      "script": "params.classfumbles/(params.classTime/600)"
+                    }
+                  },
+                  "restrict": {
+                    "bucket_selector": {
+                      "buckets_path": {
+                        "minTime": "class>timePlayed>timePlayed",
+                        "classfumbles": "class>fumbles>_count"
+                      },
+                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                    }
+                  },
+                  "final_sort": {
+                    "bucket_sort": {
+                      "sort": [
+                        {
+                          "per10min": {
+                            "order": "desc"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "percentiles.engineer": {
+                "percentiles_bucket": {
+                  "buckets_path": "engineer>per10min",
+                  "percents": [
+                    99,
+                    95,
+                    90,
+                    85,
+                    80,
+                    75,
+                    70,
+                    65,
+                    60,
+                    55,
+                    50,
+                    45,
+                    40,
+                    35,
+                    30,
+                    25,
+                    20,
+                    15,
+                    10,
+                    5,
+                    1
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }`
     }
+
+    
+
+
 }
 
 module.exports = player;
