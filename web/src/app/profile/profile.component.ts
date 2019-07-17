@@ -26,6 +26,8 @@ export class ProfileComponent implements OnInit {
   role: string;
   stats: any;
   classesImg = [];
+  reportingQuad: boolean = false;
+  selectedMaps = [];
   
   constructor(
     public auth: AuthService,
@@ -116,6 +118,20 @@ export class ProfileComponent implements OnInit {
     })
   }
 
+  selectQuad(event, index) {
+    event.stopPropagation();
+    if (this.selectedMaps.length < 3 && !this.isMapSelected(index) ) {
+      this.selectedMaps.push({"index": index, "match": this.stats.matches[index]});
+      this.selectedMaps = this.selectedMaps.sort((a,b) => (a.index > index) ? 1 : ((b.index > a.index) ? -1 : 0));
+    }
+  }
+
+  isMapSelected(index) {
+    var found = this.selectedMaps.filter(map => {
+      return index == map.index;
+    })
+    return found.length
+  }
   private async updateSecret() {
     if (!this.secret) {
       this.msgError = "No secret supplied";
