@@ -117,7 +117,8 @@
           <div class="card-header no-border">
             <h3 class="card-title">Match List</h3>
             <div class="card-tools">
-                <button  class="btn btn-primary btn-sm ml-2" (click)="reportingQuad = !reportingQuad">Report Competitive Quad</button>
+                <button  class="btn btn-primary btn-sm ml-2" *ngIf="!reportingQuad" (click)="reportQuad(true)">Report Competitive Quad</button>
+                <button  class="btn btn-danger btn-sm ml-2" *ngIf="reportingQuad" (click)="reportQuad(false)">Cancel</button>
             </div>
           </div>
           <div class="card-body p-0 table-responsive">
@@ -134,7 +135,7 @@
               </tr>
               </thead>
               <tbody>
-                    <tr (click)="reportingQuad ? selectQuad($event, i): return" *ngFor="let match of stats?.matches; let i = index" class="{{match.result == 'defeat' ? 'has-background-danger' : (match.result == 'victory' ? 'has-background-success' : '')}}" [ngStyle]="{'opacity' : reportingQuad ? (isMapSelected(i) ? 1 : 0.4) : 1, 'cursor': reportingQuad ? 'pointer':'normal'}">
+                    <tr (click)="reportingQuad ? selectQuad($event, i): return" *ngFor="let match of stats?.matches; let i = index" class="{{match.result == 'defeat' ? 'has-background-danger' : (match.result == 'victory' ? 'has-background-success' : '')}}" [ngStyle]="{'opacity' : reportingQuad ? (isMapSelected(i) ? 1 : 0.4) : 1, 'cursor': reportingQuad ? 'pointer':'initial'}">
                         <td>{{match.startTime | date: 'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{match.map}}</td>
                         <td>{{match.teamMates}}</td>

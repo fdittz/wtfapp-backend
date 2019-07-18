@@ -126,6 +126,12 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  reportQuad(value) {
+    this.reportingQuad = value;
+    if (!this.reportingQuad)
+      this.selectedMaps = [];
+  }
+
   isMapSelected(index) {
     var found = this.selectedMaps.filter(map => {
       return index == map.index;
