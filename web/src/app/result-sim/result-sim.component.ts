@@ -72,11 +72,11 @@ export class ResultSimComponent implements OnInit {
     
     try {
       var team1 = this.team1.map(player => {
-        var playerRank = getPlayerRank(player)[0];
+        var playerRank = getPlayerRank(player.toLowerCase())[0];
         return new trueskill.Rating(playerRank["mu"], playerRank["sigma"]);
       })
       var team2 = this.team2.map(player => {
-        var playerRank = getPlayerRank(player)[0];
+        var playerRank = getPlayerRank(player.toLowerCase())[0];
         return new trueskill.Rating(playerRank["mu"], playerRank["sigma"]);
       })
 

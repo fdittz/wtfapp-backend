@@ -581,7 +581,6 @@ class UserService {
     
     
     setRatings() {
-        console.log("TESTY")
         return esutil.sendQuery(matchQueries.getMatchRankings())
         .then(qResult => {
             var matches = qResult.data.aggregations.games.buckets;
