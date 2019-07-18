@@ -19,6 +19,7 @@ export class ResultSimComponent implements OnInit {
   team2: string[] = new Array();
   team1win: any;
   team2win: any;
+  draw: any;
   current: any;
   quality: any;
   winProb: number[] = new Array();
@@ -121,6 +122,18 @@ export class ResultSimComponent implements OnInit {
           }),
           team2: this.team2.map((login, index) => {
             var points = Math.round((result2[0][index].mu - result2[0][index].sigma)*100);
+            return {login: login, points: points, diff: points - this.current.team2[index].points};
+          }),
+        }
+
+        var result3 = trueskill.rate([team2,team1], [0, 0]);
+        this.draw = {
+          team1: this.team1.map((login, index) => {
+            var points = Math.round((result3[1][index].mu - result3[1][index].sigma)*100);
+            return {login: login, points: points, diff: points - this.current.team1[index].points};
+          }),
+          team2: this.team2.map((login, index) => {
+            var points = Math.round((result3[0][index].mu - result3[0][index].sigma)*100);
             return {login: login, points: points, diff: points - this.current.team2[index].points};
           }),
         }

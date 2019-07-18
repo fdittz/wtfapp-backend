@@ -581,6 +581,7 @@ class UserService {
     
     
     setRatings() {
+        console.log("TESTY")
         return esutil.sendQuery(matchQueries.getMatchRankings())
         .then(qResult => {
             var matches = qResult.data.aggregations.games.buckets;
@@ -643,11 +644,29 @@ class UserService {
                         //console.log("Winners: " + winners + " / Losers: " + losers);
                       }
                       else {
+                        var teams = [];
                         for (var player of match.players.buckets) {
                             if (player.timePlayed.perTeam.buckets.length) {
-                                getPlayer(player.key).games++;
+                                if (!teams[player.timePlayed.perTeam.buckets[0].key-1])
+                                    teams[player.timePlayed.perTeam.buckets[0].key-1] = [];
+                                teams[player.timePlayed.perTeam.buckets[0].key-1].push(player.key);
                             }
                         }
+
+                        var teamsRatings = [];
+                        teams.forEach((team, index) => {
+                            teamsRatings[index] = [];
+                            team.forEach(player => {
+                                teamsRatings[index].push(getPlayer(player).rating)
+                            })
+                        })
+                        const q = trueskill.rate(teamsRatings, [0,0]);                        
+                        teams.forEach((team, index) => {                            
+                            for (var i = 0; i < q[index].length; i++) {
+                                getPlayer(team[i]).rating = q[index][i];
+                                getPlayer(team[i]).games++;
+                            } 
+                        })
                       }
                     }
                   }
@@ -667,7 +686,9 @@ class UserService {
                   return {minMatches: minMatches, players: players}
             })
         })
-        
+        .catch(e => {
+            console.log(e)
+        })
 
     }
 }
