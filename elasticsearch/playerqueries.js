@@ -114,6 +114,18 @@ var player = {
                                 "sum": {
                                   "field": "timePlayed"
                                 }
+                              },
+                              "timePlayed_sort": {
+                                "bucket_sort": {
+                                  "sort": [
+                                    {
+                                      "timePlayed": {
+                                        "order": "desc"
+                                      }
+                                    }
+                                  ],
+                                  "size": 1
+                                }
                               }
                             }
                           }
