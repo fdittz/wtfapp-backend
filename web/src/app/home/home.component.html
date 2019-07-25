@@ -21,6 +21,13 @@
                 <div class="card">
                     <div class="card-header no-border">
                       <h3 class="card-title">Ranking</h3>
+                      <select class="form-control" #t (change)="getRankings(t.value)">
+                        <option value="{{availableMonths[0] | date: 'MM-yyyy' }}">Current Month</option>
+                        <option value="">All-time</option>
+                        <optgroup label="Past months">
+                          <option *ngFor="let month of availableMonths | slice: 1, let i = index" value="{{month | date: 'MM-yyyy' }}">{{month | date: 'MM/yyyy' }}</option>
+                        </optgroup>
+                      </select>
                       <span *ngIf="rankings" style="font-style: italic; font-size: 0.8em; font-weight: bold" class="text-secondary"> min {{rankings?.minMatches}} matches played</span>
                       <div class="card-tools">
                       </div>
@@ -90,7 +97,7 @@
         <div class="col-12">
             <div class="btn-group">
                 <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  {{currentRank}}
+                  {{currentRank}} (min one hour played)
                 </button>
                 <div class="dropdown-menu">
                     <button class="dropdown-item" (click)="getFragRanks()">Frags/10min</button>

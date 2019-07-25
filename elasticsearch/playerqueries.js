@@ -635,7 +635,7 @@ var player = {
                         "buckets_path": {
                             "minTime": "class>timePlayed>timePlayed"
                         },
-                        "script": "params.minTime > 599"
+                        "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -716,7 +716,7 @@ var player = {
                         "buckets_path": {
                             "minTime": "class>timePlayed>timePlayed"
                         },
-                        "script": "params.minTime > 599"
+                        "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -797,7 +797,7 @@ var player = {
                         "buckets_path": {
                             "minTime": "class>timePlayed>timePlayed"
                         },
-                        "script": "params.minTime > 599"
+                        "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -878,7 +878,7 @@ var player = {
                         "buckets_path": {
                             "minTime": "class>timePlayed>timePlayed"
                         },
-                        "script": "params.minTime > 599"
+                        "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -959,7 +959,7 @@ var player = {
                         "buckets_path": {
                             "minTime": "class>timePlayed>timePlayed"
                         },
-                        "script": "params.minTime > 599"
+                        "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -1040,7 +1040,7 @@ var player = {
                         "buckets_path": {
                             "minTime": "class>timePlayed>timePlayed"
                         },
-                        "script": "params.minTime > 599"
+                        "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -1121,7 +1121,7 @@ var player = {
                         "buckets_path": {
                             "minTime": "class>timePlayed>timePlayed"
                         },
-                        "script": "params.minTime > 599"
+                        "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -1202,7 +1202,7 @@ var player = {
                         "buckets_path": {
                             "minTime": "class>timePlayed>timePlayed"
                         },
-                        "script": "params.minTime > 599"
+                        "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -1283,7 +1283,7 @@ var player = {
                         "buckets_path": {
                             "minTime": "class>timePlayed>timePlayed"
                         },
-                        "script": "params.minTime > 599"
+                        "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -1404,7 +1404,7 @@ var player = {
                       "buckets_path": {
                         "minTime": "class>timePlayed>timePlayed"
                       },
-                      "script": "params.minTime > 599"
+                      "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -1514,7 +1514,7 @@ var player = {
                       "buckets_path": {
                         "minTime": "class>timePlayed>timePlayed"
                       },
-                      "script": "params.minTime > 599"
+                      "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -1624,7 +1624,7 @@ var player = {
                       "buckets_path": {
                         "minTime": "class>timePlayed>timePlayed"
                       },
-                      "script": "params.minTime > 599"
+                      "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -1734,7 +1734,7 @@ var player = {
                       "buckets_path": {
                         "minTime": "class>timePlayed>timePlayed"
                       },
-                      "script": "params.minTime > 599"
+                      "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -1844,7 +1844,7 @@ var player = {
                       "buckets_path": {
                         "minTime": "class>timePlayed>timePlayed"
                       },
-                      "script": "params.minTime > 599"
+                      "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -1954,7 +1954,7 @@ var player = {
                       "buckets_path": {
                         "minTime": "class>timePlayed>timePlayed"
                       },
-                      "script": "params.minTime > 599"
+                      "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -2064,7 +2064,7 @@ var player = {
                       "buckets_path": {
                         "minTime": "class>timePlayed>timePlayed"
                       },
-                      "script": "params.minTime > 599"
+                      "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -2174,7 +2174,7 @@ var player = {
                       "buckets_path": {
                         "minTime": "class>timePlayed>timePlayed"
                       },
-                      "script": "params.minTime > 599"
+                      "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -2284,7 +2284,7 @@ var player = {
                       "buckets_path": {
                         "minTime": "class>timePlayed>timePlayed"
                       },
-                      "script": "params.minTime > 599"
+                      "script": "params.minTime > 3599"
                     }
                   },
                   "final_sort": {
@@ -2398,7 +2398,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classGoals": "class>goals>_count"
                       },
-                      "script": "params.minTime > 599 && params.classGoals > 0"
+                      "script": "params.minTime > 3599 && params.classGoals > 0"
                     }
                   },
                   "final_sort": {
@@ -2493,7 +2493,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                       "classGoals": "class>goals>_count"
                       },
-                      "script": "params.minTime > 599 && params.classGoals > 0"
+                      "script": "params.minTime > 3599 && params.classGoals > 0"
                     }
                   },
                   "final_sort": {
@@ -2588,7 +2588,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                       "classGoals": "class>goals>_count"
                       },
-                      "script": "params.minTime > 599 && params.classGoals > 0"
+                      "script": "params.minTime > 3599 && params.classGoals > 0"
                     }
                   },
                   "final_sort": {
@@ -2683,7 +2683,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classGoals": "class>goals>_count"
                       },
-                      "script": "params.minTime > 599 && params.classGoals > 0"
+                      "script": "params.minTime > 3599 && params.classGoals > 0"
                     }
                   },
                   "final_sort": {
@@ -2778,7 +2778,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classGoals": "class>goals>_count"
                       },
-                      "script": "params.minTime > 599 && params.classGoals > 0"
+                      "script": "params.minTime > 3599 && params.classGoals > 0"
                     }
                   },
                   "final_sort": {
@@ -2873,7 +2873,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classGoals": "class>goals>_count"
                       },
-                      "script": "params.minTime > 599 && params.classGoals > 0"
+                      "script": "params.minTime > 3599 && params.classGoals > 0"
                     }
                   },
                   "final_sort": {
@@ -2968,7 +2968,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classGoals": "class>goals>_count"
                       },
-                      "script": "params.minTime > 599 && params.classGoals > 0"
+                      "script": "params.minTime > 3599 && params.classGoals > 0"
                     }
                   },
                   "final_sort": {
@@ -3063,7 +3063,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classGoals": "class>goals>_count"
                       },
-                      "script": "params.minTime > 599 && params.classGoals > 0"
+                      "script": "params.minTime > 3599 && params.classGoals > 0"
                     }
                   },
                   "final_sort": {
@@ -3158,7 +3158,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classGoals": "class>goals>_count"
                       },
-                      "script": "params.minTime > 599 && params.classGoals > 0"
+                      "script": "params.minTime > 3599 && params.classGoals > 0"
                     }
                   },
                   "final_sort": {
@@ -3272,7 +3272,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classfumbles": "class>fumbles>_count"
                       },
-                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                      "script": "params.minTime > 3599 && params.classfumbles > 0"
                     }
                   },
                   "final_sort": {
@@ -3367,7 +3367,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                       "classfumbles": "class>fumbles>_count"
                       },
-                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                      "script": "params.minTime > 3599 && params.classfumbles > 0"
                     }
                   },
                   "final_sort": {
@@ -3462,7 +3462,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                       "classfumbles": "class>fumbles>_count"
                       },
-                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                      "script": "params.minTime > 3599 && params.classfumbles > 0"
                     }
                   },
                   "final_sort": {
@@ -3557,7 +3557,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classfumbles": "class>fumbles>_count"
                       },
-                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                      "script": "params.minTime > 3599 && params.classfumbles > 0"
                     }
                   },
                   "final_sort": {
@@ -3652,7 +3652,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classfumbles": "class>fumbles>_count"
                       },
-                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                      "script": "params.minTime > 3599 && params.classfumbles > 0"
                     }
                   },
                   "final_sort": {
@@ -3747,7 +3747,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classfumbles": "class>fumbles>_count"
                       },
-                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                      "script": "params.minTime > 3599 && params.classfumbles > 0"
                     }
                   },
                   "final_sort": {
@@ -3842,7 +3842,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classfumbles": "class>fumbles>_count"
                       },
-                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                      "script": "params.minTime > 3599 && params.classfumbles > 0"
                     }
                   },
                   "final_sort": {
@@ -3937,7 +3937,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classfumbles": "class>fumbles>_count"
                       },
-                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                      "script": "params.minTime > 3599 && params.classfumbles > 0"
                     }
                   },
                   "final_sort": {
@@ -4032,7 +4032,7 @@ var player = {
                         "minTime": "class>timePlayed>timePlayed",
                         "classfumbles": "class>fumbles>_count"
                       },
-                      "script": "params.minTime > 599 && params.classfumbles > 0"
+                      "script": "params.minTime > 3599 && params.classfumbles > 0"
                     }
                   },
                   "final_sort": {

@@ -239,8 +239,17 @@ router.get('/top/fumbles', function(req, res, next) {
 
 
 router.get('/usr/ranks', function(req, res, next) {
-	
 	return UserService.setRatings()
+	.then(function(data) {
+		return res.status(200).json(data);
+	})
+	.catch(err => {
+		return res.status(200).json([]);
+	 })
+});
+
+router.get('/usr/ranks/:month', function(req, res, next) {
+	return UserService.setRatings(req.params.month)
 	.then(function(data) {
 		return res.status(200).json(data);
 	})

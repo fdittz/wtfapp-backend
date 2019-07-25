@@ -17,6 +17,8 @@
     "firebase-verify-token-middleware": "^1.1.0",
     "gamedig": "^2.0.14",
     "google-gax": "^1.1.1",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.26",
     "morgan": "^1.9.1",
     "ts-trueskill": "^2.4.5",
     "winston": "^3.2.1"
