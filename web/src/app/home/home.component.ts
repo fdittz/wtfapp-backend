@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
   ranks = [];
   p: number = 1;
   matchTerms: string;
+  availableMonths = [];
   constructor(public auth: AuthService,
     private http: HttpClient) { }
 
@@ -36,10 +37,17 @@ export class HomeComponent implements OnInit {
     this.classesImg[7] = {name: "Pyro", image: "https://wiki.megateamfortress.com/images/thumb/c/c8/Pyro.png/300px-Pyro.png", css: "bg-gray"};
     this.classesImg[8] = {name: "Spy", image: "https://wiki.megateamfortress.com/images/thumb/3/36/Spy.png/300px-Spy.png", css: "bg-black"};
     this.classesImg[9] = {name: "Engineer", image: "https://wiki.megateamfortress.com/images/thumb/d/d8/Engineer.png/300px-Engineer.png", css: "bg-yellow"}; 
-    this.getMatches();
-    this.getRankings();
+    this.getMatches();    
     this.ranks = [this.getFragRanks()];
     this.ranks[Math.floor(Math.random() * this.ranks.length)];
+    let dateStart = moment('2019-06-01');
+    let dateEnd = moment();
+    while (dateEnd > dateStart || dateStart.format('M') === dateEnd.format('M')) {
+      this.availableMonths.push(moment(dateStart.format('YYYY-MM')).toDate());
+      dateStart.add(1,'month');
+   }
+   this.availableMonths = this.availableMonths.reverse();
+   this.getRankings(moment(this.availableMonths[0]).format("MM-YYYY"));
     //this.getServers();
   }
 
@@ -64,8 +72,8 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  async getRankings() {
-    return this.http.get(`/api/users/usr/ranks`, {
+  async getRankings(month=null) {
+    return this.http.get(`/api/users/usr/ranks/${month}`, {
       headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
     }).subscribe(resp => {
       this.rankings = resp;
@@ -73,7 +81,6 @@ export class HomeComponent implements OnInit {
         player.mu = Math.round(player.mu*100);
         return player;
       });
-      console.log(this.rankings)
     }, resp => {
         this.msgError = resp.error.message;
     })

@@ -4,6 +4,7 @@ const matchQueries = require('../elasticsearch/matchqueries')
 var esutil = require('../util/esutil');
 var CryptoJS = require('crypto-js');
 var trueskill = require("ts-trueskill");
+var moment = require('moment-timezone');
 var env = new trueskill.TrueSkill();
 
 class UserService {
@@ -580,8 +581,11 @@ class UserService {
     }
     
     
-    setRatings() {
-        return esutil.sendQuery(matchQueries.getMatchRankings())
+    setRatings(month) {
+        var month = moment(month,'MM-YYYY');        
+        var startDate = moment.tz(month.startOf('month'), "America/Sao_Paulo").toISOString();
+        var endDate = moment.tz(month.endOf('month'), "America/Sao_Paulo").toISOString();
+        return esutil.sendQuery(matchQueries.getMatchRankings(startDate, endDate))
         .then(qResult => {
             var matches = qResult.data.aggregations.games.buckets;
             return esutil.sendQuery(playerQueries.getPlayers()).then(result => {
@@ -670,7 +674,7 @@ class UserService {
                     }
                   }
                   var maxMatches = (players.reduce((max, player) => max > player.games ? max : player.games, null));
-                  var minMatches = maxMatches/10 < 10 ? Math.floor(maxMatches/10) : 10;
+                  var minMatches = Math.floor(maxMatches/5) //maxMatches/10 < 10 ? Math.floor(maxMatches/10) : 10;
                   players = players              
                   .map(player => {
                         return {"login": player.login, points: Math.round((player.rating.mu - (player.rating.sigma))*100), "mu": player.rating.mu, "sigma": player.rating.sigma, "beta": player.rating.beta, "tau": player.rating.tau, "games": player.games}

@@ -519,9 +519,22 @@ var matches = {
 
     },
 
-    getMatchRankings() {
+    getMatchRankings(startDate, endDate) {
+      let query = "";
+      if (startDate && endDate) {
+        query = `
+        "query": {
+          "range": {
+            "gameTimeStamp": {
+              "gte": "${startDate}",
+              "lte": "${endDate}"
+            }
+          }
+        },`
+      }
       return `{
         "size": 0,
+        ${query}
         "aggs": {
           "games": {
             "composite": {

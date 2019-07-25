@@ -73,10 +73,14 @@ export class ResultSimComponent implements OnInit {
     try {
       var team1 = this.team1.map(player => {
         var playerRank = getPlayerRank(player.toLowerCase())[0];
+        if (!playerRank)
+          throw player.toLowerCase() + " not found or unranked"
         return new trueskill.Rating(playerRank["mu"], playerRank["sigma"]);
       })
       var team2 = this.team2.map(player => {
         var playerRank = getPlayerRank(player.toLowerCase())[0];
+        if (!playerRank)
+          throw player.toLowerCase() + " not found or unranked"
         return new trueskill.Rating(playerRank["mu"], playerRank["sigma"]);
       })
 
@@ -136,15 +140,12 @@ export class ResultSimComponent implements OnInit {
             var points = Math.round((result3[0][index].mu - result3[0][index].sigma)*100);
             return {login: login, points: points, diff: points - this.current.team2[index].points};
           }),
-        }
-        
+        }        
         this.location.replaceState(`/simulator/${this.team1[0]}/${this.team1[1]}/${this.team2[0]}/${this.team2[1]}`);
-
       }
     }
     catch (e) {
-      console.log(e)
-      this.msgError = "One or more players not found"
+      this.msgError = e
     }
   }
 
