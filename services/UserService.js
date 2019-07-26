@@ -606,7 +606,31 @@ class UserService {
                       
                 }
                 matches = matches.reverse();
-                for (var match of matches) {
+                matches = matches.map(match => {
+                    var returnGame = {};
+                    returnGame.startTime    = match.key.gameTimeStamp;
+                    returnGame["map"]       = match.gameInfo.map.buckets[0].key;
+                    if (match.gameInfo.demo.buckets.length)
+                        returnGame.demo         = match.gameInfo.demo.buckets[0].key;
+                    returnGame.numPlayers   = match.gameInfo.numPlayers.buckets[0].key;
+                    returnGame.numTeams     = match.gameInfo.numTeams.buckets[0].key;
+                    returnGame.winningTeam  = match.result.winningTeam.buckets[0].key;
+                    returnGame.teams = []
+                    for (var i = 1; i <= 4; i++) {
+                        if (match.result["team" + i +"Name"] && match.result["team" + i +"Name"].buckets.length)
+                            returnGame.teams.push({"name": match.result["team" + i +"Name"].buckets[0].key, "score": match.result["team" + i +"Score"], "number": i});
+                    }                    
+
+                    for (var i = 0; i < match.players.buckets.length; i++) {
+                        var player = match.players.buckets[i];                        
+                        if (player.timePlayed.perTeam.buckets[0] && player.timePlayed.perTeam.buckets[0].key != "") {
+                            var playerTeamNum = parseInt(player.timePlayed.perTeam.buckets[0].key) - 1;
+                            if (!returnGame.teams[playerTeamNum].players)
+                                returnGame.teams[playerTeamNum].players = [];
+                            returnGame.teams[playerTeamNum].players.push(player.key)
+                        }
+                    }
+
                     if (match.result.winningTeam.buckets.length) {
                       var winningTeam = match.result.winningTeam.buckets[0].key;
                       if (match.players.buckets.length && winningTeam > 0) {
@@ -634,16 +658,24 @@ class UserService {
                 
                         // q is quality of the match with the players at their current rating
                         const q = trueskill.rate([winRatings, loseRatings]);
-                        
+                        var pointsChange = {};
+
                         for (var i = 0; i < q[0].length; i++) {
+                          let prevPoints = Math.round((getPlayer(winners[i]).rating.mu - (getPlayer(winners[i]).rating.sigma))*100);
                           getPlayer(winners[i]).rating = q[0][i];
+                          let points = Math.round((getPlayer(winners[i]).rating.mu - (getPlayer(winners[i]).rating.sigma))*100);
+                          pointsChange[winners[i]] = points-prevPoints;
                           getPlayer(winners[i]).games++;
                         }
                         for (var i = 0; i < q[1].length; i++) {
+                          let prevPoints = Math.round((getPlayer(losers[i]).rating.mu - (getPlayer(losers[i]).rating.sigma))*100);
                           getPlayer(losers[i]).rating = q[1][i];
+                          let points = Math.round((getPlayer(losers[i]).rating.mu - (getPlayer(losers[i]).rating.sigma))*100);
+                          pointsChange[losers[i]] = points-prevPoints;
                           getPlayer(losers[i]).games++;
-                        }    
-                
+                        }
+                        returnGame.pointsChange = pointsChange;    
+                        return returnGame
                         //console.log("Winners: " + winners + " / Losers: " + losers);
                       }
                       else {
@@ -663,16 +695,22 @@ class UserService {
                                 teamsRatings[index].push(getPlayer(player).rating)
                             })
                         })
-                        const q = trueskill.rate(teamsRatings, [0,0]);                        
+                        const q = trueskill.rate(teamsRatings, [0,0]);     
+                        var pointsChange = {};                   
                         teams.forEach((team, index) => {                            
                             for (var i = 0; i < q[index].length; i++) {
+                                let prevPoints = Math.round((getPlayer(team[i]).rating.mu - (getPlayer(team[i]).rating.sigma))*100);
                                 getPlayer(team[i]).rating = q[index][i];
+                                let points = Math.round((getPlayer(team[i]).rating.mu - (getPlayer(team[i]).rating.sigma))*100);
+                                pointsChange[team[i]] = points-prevPoints;
                                 getPlayer(team[i]).games++;
                             } 
                         })
+                        returnGame.pointsChange = pointsChange;    
+                        return returnGame
                       }
                     }
-                  }
+                  })
                   var maxMatches = (players.reduce((max, player) => max > player.games ? max : player.games, null));
                   var minMatches = Math.floor(maxMatches/5) //maxMatches/10 < 10 ? Math.floor(maxMatches/10) : 10;
                   players = players              
@@ -686,7 +724,7 @@ class UserService {
                   .sort(function(a, b){
                     return b.points - a.points;
                   })    
-                  return {minMatches: minMatches, players: players}
+                  return {matches: matches, rankings: {minMatches: minMatches, players: players}}
             })
         })
         .catch(e => {

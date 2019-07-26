@@ -70,7 +70,7 @@
                         <td><b>{{match.map | uppercase}}</b></td>
                         <td><span *ngFor="let team of match.teams" class="{{team.number == 1 ? 'text-primary': (team.number == 2 ? 'text-danger': (team.number == 3 ? 'text-warning': (team.number == 4 ? 'text-success': '')))}}">
                               <b>{{team.name | uppercase}}</b>: 
-                              <span *ngFor="let player of team.players; let i = index">{{i != 0 ? "," : ""}} {{player}}</span>
+                              <span *ngFor="let player of team.players; let i = index">{{i != 0 ? "," : ""}} {{player}} ({{getDiff(player,match)}})</span>
                               <br>
                             </span>
                         </td>
