@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { User  } from '../model/user.model';
 import {Location} from '@angular/common';
+import * as moment from "moment"
 import * as trueskill from 'ts-trueskill';
 
 @Component({
@@ -32,7 +33,8 @@ export class ResultSimComponent implements OnInit {
   
 
   ngOnInit() {
-    this.getRankings()
+    let dateEnd = moment().format("MM-YYYY");
+    this.getRankings(dateEnd)
     .then(_ => {
       this.route.paramMap.subscribe(paramMap => {
         if (paramMap["params"].team1p1 && paramMap["params"].team1p2 && paramMap["params"].team2p1 && paramMap["params"].team2p2) {
@@ -47,8 +49,8 @@ export class ResultSimComponent implements OnInit {
     });
   }
 
-  async getRankings() {
-    return this.http.get(`/api/users/usr/ranks`, {
+  async getRankings(month=null) {
+    return this.http.get(`/api/users/usr/ranks/${month}`, {
       headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
     })
     .toPromise()

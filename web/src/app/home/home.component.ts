@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
     this.classesImg[7] = {name: "Pyro", image: "https://wiki.megateamfortress.com/images/thumb/c/c8/Pyro.png/300px-Pyro.png", css: "bg-gray"};
     this.classesImg[8] = {name: "Spy", image: "https://wiki.megateamfortress.com/images/thumb/3/36/Spy.png/300px-Spy.png", css: "bg-black"};
     this.classesImg[9] = {name: "Engineer", image: "https://wiki.megateamfortress.com/images/thumb/d/d8/Engineer.png/300px-Engineer.png", css: "bg-yellow"}; 
-    this.getMatches();    
+    //this.getMatches();    
     this.ranks = [this.getFragRanks()];
     this.ranks[Math.floor(Math.random() * this.ranks.length)];
     let dateStart = moment('2019-06-01');
@@ -76,7 +76,8 @@ export class HomeComponent implements OnInit {
     return this.http.get(`/api/users/usr/ranks/${month}`, {
       headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
     }).subscribe(resp => {
-      this.rankings = resp;
+      this.matches = resp["matches"].reverse();
+      this.rankings = resp["rankings"];
       this.rankings.players = this.rankings.players.map(player => {
         player.mu = Math.round(player.mu*100);
         return player;
@@ -86,6 +87,12 @@ export class HomeComponent implements OnInit {
     })
   }
   
+  getDiff(player, match) {
+    if (match.pointsChange[player] > 0)
+      return "+" +match.pointsChange[player];
+    else
+      return  match.pointsChange[player].toString();
+  }
 
   async getFragRanks() {
     return this.http.get(`/api/users/top/fraggers`, {

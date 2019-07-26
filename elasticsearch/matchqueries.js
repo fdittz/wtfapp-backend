@@ -551,6 +551,35 @@ var matches = {
               "size": 10000
             },
             "aggs": {
+              "gameInfo": {
+                "filter": {
+                  "term": {
+                    "type": "gameStart"
+                  }
+                },
+                "aggs": {
+                  "numPlayers": {
+                    "terms": {
+                      "field": "numPlayers"
+                    }
+                  },
+                  "numTeams": {
+                    "terms": {
+                      "field": "numTeams"
+                    }
+                  },
+                  "map": {
+                    "terms": {
+                      "field": "map"
+                    }
+                  },
+                  "demo": {
+                    "terms": {
+                      "field": "demo"
+                    }
+                  }
+                }
+              },
               "players": {
                 "terms": {
                   "field": "player",
@@ -605,6 +634,26 @@ var matches = {
                   }
                 },
                 "aggs": {
+                  "team1Score": {
+                    "terms": {
+                      "field": "team1Score"
+                    }
+                  },
+                  "team1Name": {
+                    "terms": {
+                      "field": "team1Name"
+                    }
+                  },
+                  "team2Score": {
+                    "terms": {
+                      "field": "team2Score"
+                    }
+                  },
+                  "team2Name": {
+                    "terms": {
+                      "field": "team2Name"
+                    }
+                  },
                   "winningTeam": {
                     "terms": {
                       "field": "winningTeam"
