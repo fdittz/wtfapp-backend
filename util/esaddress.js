@@ -1,2 +1,1 @@
-
-module.exports = "http://vison.andi.com.br:9200"
+module.exports = "http://localhost:9200"
