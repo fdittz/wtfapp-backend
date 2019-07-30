@@ -8,7 +8,7 @@
           <ol class="breadcrumb float-sm-left">
             <li class="breadcrumb-item"><a href="#">Profile</a></li>
             <li class="breadcrumb-item active">{{player ? player.login : " "}}</li>
-            <li *ngIf="player?.uid == auth?.uid"><button  class="btn btn-primary btn-sm ml-2" (click)="secretSet = false; secret = ''" data-toggle="modal" data-target="#modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  </li>
+            <li *ngIf="auth?.uid && player?.uid == auth?.uid"><button  class="btn btn-primary btn-sm ml-2" (click)="secretSet = false; secret = ''" data-toggle="modal" data-target="#modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  </li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -31,11 +31,11 @@
                         <span class="badge bg-warning font-weight-light badge-pill" *ngIf="player?.role == 'master'">Master</span>
                         <span class="badge bg-success font-weight-light badge-pill" *ngIf="player?.role == 'admin'">Admin</span>
                         <span class="badge bg-info font-weight-light badge-pill" *ngIf="player?.role != 'admin' && player?.role != 'master'">Player</span>                         
-                    <button type="button" class="btn btn-tool" data-toggle="dropdown" title="Contacts" data-widget="chat-pane-toggle">
+                    <button type="button" class="btn btn-tool" data-toggle="dropdown" title="Contacts" data-widget="chat-pane-toggle" *ngIf="(auth?.id && player?.uid == auth?.uid) || (!player?.role && (role == 'master' || role == 'admin')) || (player?.role == 'admin' && role == 'master')">
                         <i class="fas fa-cog"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right text-center">
-                        <button *ngIf="player?.uid == auth?.uid" class="btn btn-primary btn-sm mt-2 mb-2" data-target="modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  
+                        <button *ngIf="auth?.id && player?.uid == auth?.uid" class="btn btn-primary btn-sm mt-2 mb-2" data-target="modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  
                         <button *ngIf="!player?.role && (role == 'master' || role == 'admin')" class="btn btn-success mt-2 mb-2" (click)="grantAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Grant Admin Rights</button>
                         <button *ngIf="player?.role == 'admin' && role == 'master'" class="btn btn-danger mt-2 mb-2" (click)="revokeAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Revoke Admin Rights</button>
                     </div>
@@ -45,7 +45,7 @@
             <h5 class="widget-user-desc"></h5>
           </div>
           <div class="widget-user-image">
-            <img class="img-circle elevation-2" src="{{player && player?.uid == auth.uid ? player?.photoURL : 'https://bulma.io/images/placeholders/128x128.png'}}" alt="User Avatar">
+            <img class="img-circle elevation-2" src="{{auth?.uid && player && player?.uid == auth.uid ? player?.photoURL : 'https://bulma.io/images/placeholders/128x128.png'}}" alt="User Avatar">
           </div>
           <div class="card-footer">
             <div class="row">
