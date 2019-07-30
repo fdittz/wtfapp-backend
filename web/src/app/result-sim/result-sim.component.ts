@@ -55,7 +55,7 @@ export class ResultSimComponent implements OnInit {
     })
     .toPromise()
     .then(resp => {
-      this.rankings = resp;
+      this.rankings = resp["rankings"];
     })
     .catch(err => {
       this.msgError = err.error.message;
