@@ -222,7 +222,11 @@ var matches = {
                               "timePlayed_sort": {
                                 "bucket_sort": {
                                   "sort": [
-                                    {"timePlayed": {"order": "desc"}}
+                                    {
+                                      "timePlayed": {
+                                        "order": "desc"
+                                      }
+                                    }
                                   ],
                                   "size": 1
                                 }
@@ -314,8 +318,17 @@ var matches = {
                       },
                       "playersKilled": {
                         "filter": {
-                          "term": {
-                            "type": "kill"
+                          "bool": {
+                            "must": {
+                              "term": {
+                                "type": "kill"
+                              }
+                            },
+                            "must_not": {
+                              "term": {
+                                "kind": "self"
+                              }
+                            }
                           }
                         },
                         "aggs": {
@@ -454,15 +467,35 @@ var matches = {
                       },
                       "playersuicides": {
                         "filter": {
-                          "term": {
-                            "type": "killSelf"
+                          "bool": {
+                            "must": [
+                              {
+                                "term": {
+                                  "type": "kill"
+                                }
+                              },
+                              {
+                                "term": {
+                                  "kind": "self"
+                                }
+                              }
+                            ]
                           }
                         }
                       },
                       "playersKilledBy": {
                         "filter": {
-                          "term": {
-                            "type": "kill"
+                          "bool": {
+                            "must": {
+                              "term": {
+                                "type": "death"
+                              }
+                            },
+                            "must_not": {
+                              "term": {
+                                "kind": "self"
+                              }
+                            }
                           }
                         },
                         "aggs": {

@@ -159,6 +159,16 @@ class MatchService {
                 returnPlayer.login = player.key;
                 if (player.timePlayed.perTeam.buckets && player.timePlayed.perTeam.buckets.length)
                     returnPlayer.team = player.timePlayed.perTeam.buckets[0].key
+                returnPlayer.playerKills = player.playersKilled.perPlayer.buckets.map(playerKilled => {
+                    return {player: playerKilled.key, frags: playerKilled.doc_count }
+                }).filter(player => {
+                    return player.player && player.player.length
+                });   
+                returnPlayer.playersKilledBy = player.playersKilledBy.perPlayer.buckets.map(playerKilledBy => {
+                    return {player: playerKilledBy.key, frags: playerKilledBy.doc_count }
+                }).filter(player => {
+                    return player.player && player.player.length
+                });                
                 return returnPlayer
             }).filter(player => {
                 return ((player.login.length > 0) && (player.login != 'world')) 
