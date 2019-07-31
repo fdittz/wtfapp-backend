@@ -4,6 +4,7 @@ var admin = require('../util/firebaseadmin');
 var UserService = require("../services/UserService")
 var isUserAuthenticated  = require('../middleware/auth')
 var isAdmin  = require('../middleware/admin')
+var getUserData = require('../middleware/user')
 
 const PAGE_SIZE = 25;
 
@@ -122,14 +123,15 @@ router.post('/registerlogin', isUserAuthenticated, function(req, res, next) {
 	);
 });
 
-router.get('/:login', isUserAuthenticated, function(req, res, next) {
+router.get('/:login', getUserData, function(req, res, next) {
 	if (req.params.login.length < 3) {
 		return res.status(400).json({
 			status:400,
 			message: 'login must be at least 3 characters long'
 		});
 	}
-	return UserService.getUserProfile(res.locals.auth.uid, req.params.login)
+	let uid = res.locals.auth ? res.locals.auth.uid : "";
+	return UserService.getUserProfile(uid, req.params.login)
 	.then((user) => {
 		if (user)
 			return res.status(200).json(user);

@@ -71,7 +71,7 @@ export class ProfileComponent implements OnInit {
         headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
       }).subscribe(resp => {
         this.player = <User>resp;
-        if (this.auth.uid == this.player.uid && !this.player.secret) {
+        if (this.auth.uid && this.auth.uid == this.player.uid && !this.player.secret) {
           if (!this.player.secret)
             $("#modal-secret")["modal"]("show")
         }
