@@ -141,26 +141,38 @@
                         <!-- /.card-header -->
                         <div class="card-footer">
                           <div class="row">
-                          <div class="col-12 col-md-6">
-                            FRAGS
-                            <table class="table table-striped table-sm table-valign-middle">
-                              <tbody>
-                                <tr *ngFor="let player of player.playerKills; let i = index">
-                                  <td style="padding-left: 0.5rem!important; max-width: 35px">#{{i+1}}</td><td style="font-family: 'BebasNeueRegular'; max-width: 80px"><a href="/profile/{{player.player}}">{{player.player}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.frags}}</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                          <div class="col-12 col-md-6">
-                            DEATHS
-                            <table class="table table-striped table-sm table-valign-middle">
-                              <tbody>
-                                <tr *ngFor="let player of player.playersKilledBy; let i = index">
-                                  <td style="padding-left: 0.5rem!important; max-width: 35px">#{{i+1}}</td><td style="font-family: 'BebasNeueRegular'; max-width: 80px"><a href="/profile/{{player.player}}">{{player.player}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.frags}}</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
+                            <div class="col-12 col-md-6">
+                              FRAGS
+                              <table class="table table-striped table-sm table-valign-middle">
+                                <tbody>
+                                  <tr *ngFor="let player of player.playerKills; let i = index">
+                                    <td style="padding-left: 0.5rem!important; max-width: 35px">#{{i+1}}</td><td style="font-family: 'BebasNeueRegular'; max-width: 80px"><a href="/profile/{{player.player}}" class="{{getTeam(player.player) == 1 ? 'text-primary' : 
+                                      (getTeam(player.player) == 2 ? 'text-danger': 
+                                        (getTeam(player.player) == 3 ? 'text-warning': 
+                                          (getTeam(player.player) == 4 ? 'text-success': '')
+                                        )
+                                      )                                                                    
+                                    }}">{{player.player}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.frags}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div class="col-12 col-md-6">
+                              DEATHS
+                              <table class="table table-striped table-sm table-valign-middle">
+                                <tbody>
+                                  <tr *ngFor="let player of player.playersKilledBy; let i = index">
+                                    <td style="padding-left: 0.5rem!important; max-width: 35px">#{{i+1}}</td><td style="font-family: 'BebasNeueRegular'; max-width: 80px"><a href="/profile/{{player.player}}" class="{{getTeam(player.player) == 1 ? 'text-primary' : 
+                                      (getTeam(player.player) == 2 ? 'text-danger': 
+                                        (getTeam(player.player) == 3 ? 'text-warning': 
+                                          (getTeam(player.player) == 4 ? 'text-success': '')
+                                        )
+                                      )                                                                    
+                                    }}">{{player.player}}</a></td><td style="padding-right: 0.5rem!important;text-align: right">{{player.frags}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
                         </div>
                         <!-- /.card-body -->

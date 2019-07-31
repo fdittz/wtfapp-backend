@@ -57,4 +57,15 @@ export class MatchComponent implements OnInit {
     })
   }
 
+  getTeam(login) {
+    for (var i in this.match.teams) {
+      var players = this.match.teams[i];
+      if (players.filter(player => {
+        return player == login
+      }).length) {
+        return parseInt(i)+1;
+      }
+    }
+  }
+
 }

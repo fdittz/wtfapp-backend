@@ -31,11 +31,11 @@
                         <span class="badge bg-warning font-weight-light badge-pill" *ngIf="player?.role == 'master'">Master</span>
                         <span class="badge bg-success font-weight-light badge-pill" *ngIf="player?.role == 'admin'">Admin</span>
                         <span class="badge bg-info font-weight-light badge-pill" *ngIf="player?.role != 'admin' && player?.role != 'master'">Player</span>                         
-                    <button type="button" class="btn btn-tool" data-toggle="dropdown" title="Contacts" data-widget="chat-pane-toggle" *ngIf="(auth?.id && player?.uid == auth?.uid) || (!player?.role && (role == 'master' || role == 'admin')) || (player?.role == 'admin' && role == 'master')">
+                    <button type="button" class="btn btn-tool" data-toggle="dropdown" title="Contacts" data-widget="chat-pane-toggle" *ngIf="(auth?.uid && player?.uid == auth?.uid) || (!player?.role && (role == 'master' || role == 'admin')) || (player?.role == 'admin' && role == 'master')">
                         <i class="fas fa-cog"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right text-center">
-                        <button *ngIf="auth?.id && player?.uid == auth?.uid" class="btn btn-primary btn-sm mt-2 mb-2" data-target="modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  
+                        <button *ngIf="auth?.uid && player?.uid == auth?.uid" class="btn btn-primary btn-sm mt-2 mb-2" data-target="modal-secret">{{ player?.secret ? 'Change Secret' : 'Create secret'}}</button>  
                         <button *ngIf="!player?.role && (role == 'master' || role == 'admin')" class="btn btn-success mt-2 mb-2" (click)="grantAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Grant Admin Rights</button>
                         <button *ngIf="player?.role == 'admin' && role == 'master'" class="btn btn-danger mt-2 mb-2" (click)="revokeAdmin()"><i class="fas fa-key"></i> &nbsp;&nbsp;Revoke Admin Rights</button>
                     </div>

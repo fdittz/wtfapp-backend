@@ -136,8 +136,8 @@ class MatchService {
         var match = {
             gameTimeStamp: matchId,
             map: "",
-            players: []
-
+            players: [],
+            teams: []
         }
         var query = matchQueries.getMatchDetails(matchId);
           return esutil.sendQuery(query)
@@ -157,8 +157,12 @@ class MatchService {
                 returnPlayer.fumbles = player.fumbles.doc_count;
                 returnPlayer.goals = player.goals.doc_count;
                 returnPlayer.login = player.key;
-                if (player.timePlayed.perTeam.buckets && player.timePlayed.perTeam.buckets.length)
+                if (player.timePlayed.perTeam.buckets && player.timePlayed.perTeam.buckets.length) {                    
                     returnPlayer.team = player.timePlayed.perTeam.buckets[0].key
+                    if (!match.teams[returnPlayer.team-1])
+                        match.teams[returnPlayer.team-1] = []
+                    match.teams[returnPlayer.team-1].push(returnPlayer.login);
+                }
                 returnPlayer.playerKills = player.playersKilled.perPlayer.buckets.map(playerKilled => {
                     return {player: playerKilled.key, frags: playerKilled.doc_count }
                 }).filter(player => {
