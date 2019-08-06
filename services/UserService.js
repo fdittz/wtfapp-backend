@@ -609,40 +609,40 @@ class UserService {
                 matches = matches.map(match => {
                     var returnGame = {};
                     returnGame.startTime    = match.key.gameTimeStamp;
-                    returnGame["map"]       = match.gameInfo.map.buckets[0].key;
-                    if (match.gameInfo.demo.buckets.length)
-                        returnGame.demo         = match.gameInfo.demo.buckets[0].key;
-                    returnGame.numPlayers   = match.gameInfo.numPlayers.buckets[0].key;
-                    returnGame.numTeams     = match.gameInfo.numTeams.buckets[0].key;
-                    returnGame.winningTeam  = match.result.winningTeam.buckets[0].key;
+                    returnGame["map"]       = match.gameInfo.documents.hits.hits[0]._source.map;
+                    returnGame.demo         = match.gameInfo.documents.hits.hits[0]._source.demo;
+                    returnGame.numPlayers   = match.gameInfo.documents.hits.hits[0]._source.numPlayers;
+                    returnGame.numTeams     = match.gameInfo.documents.hits.hits[0]._source.numTeams;
+                    returnGame.winningTeam  = match.result.documents.hits.hits[0]._source.winningTeam;
                     returnGame.teams = []
                     for (var i = 1; i <= 4; i++) {
-                        if (match.result["team" + i +"Name"] && match.result["team" + i +"Name"].buckets.length)
-                            returnGame.teams.push({"name": match.result["team" + i +"Name"].buckets[0].key, "score": match.result["team" + i +"Score"], "number": i});
+                        if (match.result.documents.hits.hits[0]._source["team" + i +"Name"])
+                            returnGame.teams.push({"name": match.result.documents.hits.hits[0]._source["team" + i +"Name"], "score": match.result.documents.hits.hits[0]._source["team" + i +"Score"], "number": i, "players": []});
                     }                    
 
-                    for (var i = 0; i < match.players.buckets.length; i++) {
-                        var player = match.players.buckets[i];                        
-                        if (player.timePlayed.perTeam.buckets[0] && player.timePlayed.perTeam.buckets[0].key != "") {
-                            var playerTeamNum = parseInt(player.timePlayed.perTeam.buckets[0].key) - 1;
-                            if (!returnGame.teams[playerTeamNum].players)
-                                returnGame.teams[playerTeamNum].players = [];
-                            returnGame.teams[playerTeamNum].players.push(player.key)
+                    for (var player of  match.timePlayed.byPlayer.value) {                      
+                        var mostTime = 0;
+                        var playerTeamNum;                        
+                        player.byTeam = player.byTeam.sort((a,b) => (Object.values(a)[0] < Object.values(b)[0]) ? 1 : ((Object.values(b)[0] < Object.values(a)[0]) ? -1 : 0)); 
+                        
+                        if (Object.values(player.byTeam[0])[0] > 0) {
+                            var playerTeamNum = parseInt(Object.keys(player.byTeam[0])[0]) - 1;
+                            returnGame.teams[playerTeamNum].players.push(player.login)
                         }
                     }
+                    
+                      var winningTeam =  match.result.documents.hits.hits[0]._source.winningTeam;
 
-                    if (match.result.winningTeam.buckets.length) {
-                      var winningTeam = match.result.winningTeam.buckets[0].key;
-                      if (match.players.buckets.length && winningTeam > 0) {
+                      if (match.timePlayed.byPlayer.value.length && winningTeam > 0) {
                         var winners = [];
                         var losers = [];
-                        for (var player of match.players.buckets) {
-                          if (player.timePlayed.perTeam.buckets.length) {
-                              if (player.timePlayed.perTeam.buckets[0].key == winningTeam) { 
-                                winners.push(player.key);
+                        for (var player of match.timePlayed.byPlayer.value) {
+                          if (parseInt(Object.values(player.byTeam[0])[0]) > 0) {
+                              if (Object.keys(player.byTeam[0])[0] == winningTeam) { 
+                                winners.push(player.login);
                               }
                               else
-                                losers.push(player.key);
+                                losers.push(player.login);
                           }
                         }
                 
@@ -680,14 +680,13 @@ class UserService {
                       }
                       else {
                         var teams = [];
-                        for (var player of match.players.buckets) {
-                            if (player.timePlayed.perTeam.buckets.length) {
-                                if (!teams[player.timePlayed.perTeam.buckets[0].key-1])
-                                    teams[player.timePlayed.perTeam.buckets[0].key-1] = [];
-                                teams[player.timePlayed.perTeam.buckets[0].key-1].push(player.key);
+                        for (var player of match.timePlayed.byPlayer.value) {
+                            if (Object.values(player.byTeam[0])[0] > 0) {
+                                if (!teams[Object.keys(player.byTeam[0])[0]-1])
+                                    teams[Object.keys(player.byTeam[0])[0]-1] = [];
+                                teams[Object.keys(player.byTeam[0])[0]-1].push(player.login);
                             }
                         }
-
                         var teamsRatings = [];
                         teams.forEach((team, index) => {
                             teamsRatings[index] = [];
@@ -709,7 +708,7 @@ class UserService {
                         returnGame.pointsChange = pointsChange;    
                         return returnGame
                       }
-                    }
+                    
                   })
                   var maxMatches = (players.reduce((max, player) => max > player.games ? max : player.games, null));
                   var minMatches = Math.floor(maxMatches/5) //maxMatches/10 < 10 ? Math.floor(maxMatches/10) : 10;

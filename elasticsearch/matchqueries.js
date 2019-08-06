@@ -591,71 +591,26 @@ var matches = {
                   }
                 },
                 "aggs": {
-                  "numPlayers": {
-                    "terms": {
-                      "field": "numPlayers"
-                    }
-                  },
-                  "numTeams": {
-                    "terms": {
-                      "field": "numTeams"
-                    }
-                  },
-                  "map": {
-                    "terms": {
-                      "field": "map"
-                    }
-                  },
-                  "demo": {
-                    "terms": {
-                      "field": "demo"
+                  "documents": {
+                    "top_hits": {
+                      "size": 10
                     }
                   }
                 }
               },
-              "players": {
-                "terms": {
-                  "field": "player",
-                  "size": 64
+              "timePlayed": {
+                "filter": {
+                  "term": {
+                    "type": "changeClass"
+                  }
                 },
                 "aggs": {
-                  "timePlayed": {
-                    "filter": {
-                      "term": {
-                        "type": "changeClass"
-                      }
-                    },
-                    "aggs": {
-                      "total": {
-                        "sum": {
-                          "field": "timePlayed"
-                        }
-                      },
-                      "perTeam": {
-                        "terms": {
-                          "field": "team",
-                          "size": "64"
-                        },
-                        "aggs": {
-                          "timePlayed": {
-                            "sum": {
-                              "field": "timePlayed"
-                            }
-                          },
-                          "timePlayed_sort": {
-                            "bucket_sort": {
-                              "sort": [
-                                {
-                                  "timePlayed": {
-                                    "order": "desc"
-                                  }
-                                }
-                              ],
-                              "size": 1
-                            }
-                          }
-                        }
-                      }
+                  "byPlayer": {
+                    "scripted_metric": {
+                      "init_script": "state.players = [:];",
+                      "map_script": "if (state.players[doc.player.value] == null) { state.players[doc.player.value] = [:]; state.players[doc.player.value]['1'] = []; state.players[doc.player.value]['2'] = []; state.players[doc.player.value]['3'] = []; state.players[doc.player.value]['4'] = []; state.players[doc.player.value].byTeam = [['1':0], ['2':0], ['3':0], ['4':0]] } state.players[doc.player.value]['1'].add(doc.team.value == 1 ? doc.timePlayed.value : 0); state.players[doc.player.value]['2'].add(doc.team.value == 2 ? doc.timePlayed.value : 0); state.players[doc.player.value]['3'].add(doc.team.value == 3 ? doc.timePlayed.value : 0); state.players[doc.player.value]['4'].add(doc.team.value == 4 ? doc.timePlayed.value : 0)",
+                      "combine_script": "state.returnPlayers = []; Iterator it = state.players.entrySet().iterator(); while (it.hasNext()) { Map.Entry pair = (Map.Entry)it.next(); for (t in pair.getValue()['1']) pair.getValue().byTeam[0]['1'] += t; for (t in pair.getValue()['2']) pair.getValue().byTeam[1]['2'] += t; for (t in pair.getValue()['3']) pair.getValue().byTeam[2]['3'] += t; for (t in pair.getValue()['4']) pair.getValue().byTeam[3]['4'] += t; state.returnPlayers.add(['login':pair.getKey(), 'byTeam':pair.getValue().byTeam])} return state.returnPlayers",
+                      "reduce_script": "return states[0]"
                     }
                   }
                 }
@@ -667,29 +622,9 @@ var matches = {
                   }
                 },
                 "aggs": {
-                  "team1Score": {
-                    "terms": {
-                      "field": "team1Score"
-                    }
-                  },
-                  "team1Name": {
-                    "terms": {
-                      "field": "team1Name"
-                    }
-                  },
-                  "team2Score": {
-                    "terms": {
-                      "field": "team2Score"
-                    }
-                  },
-                  "team2Name": {
-                    "terms": {
-                      "field": "team2Name"
-                    }
-                  },
-                  "winningTeam": {
-                    "terms": {
-                      "field": "winningTeam"
+                  "documents": {
+                    "top_hits": {
+                      "size": 10
                     }
                   }
                 }
