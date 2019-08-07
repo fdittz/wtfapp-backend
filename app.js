@@ -14,6 +14,7 @@ var matches = require('./routes/matches');
 var morgan  = require('morgan')
 const compress = require('compression');
 var winston = require('./config/winston');
+var serveStatic = require('serve-static')
 
 var app = express();
 
@@ -42,7 +43,7 @@ app.use('/api/matches', matches);
 app.get('/demos', function(req, res) {
     res.redirect('http://tf.quadclub.com.br:27520/');
 });
-app.use(express.static('public'));
+app.use(serveStatic(path.join(__dirname, 'public')))
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
   });
