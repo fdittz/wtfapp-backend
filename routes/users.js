@@ -5,8 +5,16 @@ var UserService = require("../services/UserService")
 var isUserAuthenticated  = require('../middleware/auth')
 var isAdmin  = require('../middleware/admin')
 var getUserData = require('../middleware/user')
+var apicache = require('apicache');
+
+let cache = apicache.middleware;
+
+
+
 
 const PAGE_SIZE = 25;
+
+router.use(cache('5 minutes'));
 
 /* GET users listing. */
 router.get('/list/:page?', function(req, res, next) {
