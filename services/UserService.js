@@ -687,25 +687,27 @@ class UserService {
                                 teams[Object.keys(player.byTeam[0])[0]-1].push(player.login);
                             }
                         }
-                        var teamsRatings = [];
-                        teams.forEach((team, index) => {
-                            teamsRatings[index] = [];
-                            team.forEach(player => {
-                                teamsRatings[index].push(getPlayer(player).rating)
+                        if (teams.length > 1) {
+                            var teamsRatings = [];
+                            teams.forEach((team, index) => {
+                                teamsRatings[index] = [];
+                                team.forEach(player => {
+                                    teamsRatings[index].push(getPlayer(player).rating)
+                                })
                             })
-                        })
-                        const q = trueskill.rate(teamsRatings, [0,0]);     
-                        var pointsChange = {};                   
-                        teams.forEach((team, index) => {                            
-                            for (var i = 0; i < q[index].length; i++) {
-                                let prevPoints = Math.round((getPlayer(team[i]).rating.mu - (getPlayer(team[i]).rating.sigma))*100);
-                                getPlayer(team[i]).rating = q[index][i];
-                                let points = Math.round((getPlayer(team[i]).rating.mu - (getPlayer(team[i]).rating.sigma))*100);
-                                pointsChange[team[i]] = points-prevPoints;
-                                getPlayer(team[i]).games++;
-                            } 
-                        })
-                        returnGame.pointsChange = pointsChange;    
+                            const q = trueskill.rate(teamsRatings, [0,0]);     
+                            var pointsChange = {};                   
+                            teams.forEach((team, index) => {                            
+                                for (var i = 0; i < q[index].length; i++) {
+                                    let prevPoints = Math.round((getPlayer(team[i]).rating.mu - (getPlayer(team[i]).rating.sigma))*100);
+                                    getPlayer(team[i]).rating = q[index][i];
+                                    let points = Math.round((getPlayer(team[i]).rating.mu - (getPlayer(team[i]).rating.sigma))*100);
+                                    pointsChange[team[i]] = points-prevPoints;
+                                    getPlayer(team[i]).games++;
+                                } 
+                            })
+                            returnGame.pointsChange = pointsChange;    
+                        }
                         return returnGame
                       }
                     
