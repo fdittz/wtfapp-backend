@@ -712,6 +712,10 @@ class UserService {
                       }
                     
                   })
+                  //remove matches with less than one team playing
+                  matches = matches.filter(match => {
+                    return (match.teams.length > 1)
+                  })
                   var maxMatches = (players.reduce((max, player) => max > player.games ? max : player.games, null));
                   var minMatches = Math.floor(maxMatches/5) //maxMatches/10 < 10 ? Math.floor(maxMatches/10) : 10;
                   players = players              
