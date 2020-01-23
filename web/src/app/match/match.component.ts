@@ -19,6 +19,7 @@ export class MatchComponent implements OnInit {
 
   msgError: String;
   match: any;
+  events: any;
   classesImg = [];
 
   constructor(
@@ -29,6 +30,7 @@ export class MatchComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+    this.classesImg[0] = {name: "None", image: "", css: "bg-info"};
     this.classesImg[1] = {name: "Scout", image: "https://wiki.megateamfortress.com/images/thumb/6/69/Scout.png/300px-Scout.png", css: "bg-info"};
     this.classesImg[2] = {name: "Sniper", image: "https://wiki.megateamfortress.com/images/thumb/8/8f/Sniper.png/300px-Sniper.png", css: "bg-gray"};
     this.classesImg[3] = {name: "Soldier", image: "https://wiki.megateamfortress.com/images/thumb/7/7b/Soldier.png/300px-Soldier.png", css: "bg-blue"};
@@ -43,6 +45,7 @@ export class MatchComponent implements OnInit {
     this.route.paramMap.subscribe(paramMap => {
       if (paramMap["params"].matchId) {
         this.getMatchDetails(paramMap["params"].matchId);
+        this.getMatchPbp(paramMap["params"].matchId);
       }
     });
   }
@@ -52,6 +55,16 @@ export class MatchComponent implements OnInit {
       headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
     }).subscribe(resp => {
         this.match = resp;
+    }, resp => {
+        this.msgError = resp.error.message;
+    })
+  }
+
+  async getMatchPbp(matchId) {
+    return this.http.get(`/api/matches/pbp/${matchId}`, {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
+    }).subscribe(resp => {
+        this.events = resp;
     }, resp => {
         this.msgError = resp.error.message;
     })

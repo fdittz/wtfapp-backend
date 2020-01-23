@@ -190,6 +190,17 @@ class MatchService {
             return match
         });
     }
+
+    getMatchPbp(matchId) {
+        var query = matchQueries.getMatchPbp(matchId);
+        return esutil.sendQuery(query)
+        .then(res => { 
+            var events = res.data.hits.hits.map(event => {
+                return (event._source)
+            });
+            return events;            
+        });
+    } 
 }
 
 module.exports = new MatchService();
