@@ -202,13 +202,17 @@ class UserService {
         returnGame.result       = returnGame.winningTeam == 0 ? "draw" : (returnGame.winningTeam == returnGame.playerTeam ? "victory" : "defeat");
         returnGame.teamMates    = []
         returnGame.enemies      = []
-        for (var i = 0; i < match.players.buckets.length; i++) {
-            var player = match.players.buckets[i];
-            if (player.timePlayed.perTeam.buckets[0] && player.timePlayed.perTeam.buckets[0].key != "") {
-                if (player.timePlayed.perTeam.buckets[0].key == returnGame.playerTeam)
-                    returnGame.teamMates.push(player.key);
+        for (var i = 0; i < match.players.timePlayed.value.length; i++) {
+            var player = match.players.timePlayed.value[i];
+            player.byTeam = player.byTeam.sort(function(a, b) {
+                return b[Object.keys(b)] - a[Object.keys(a)]
+            })
+            var playerTeam = Object.keys(player.byTeam[0])[0]
+            if (playerTeam && playerTeam != "") {
+                if (playerTeam == returnGame.playerTeam)
+                    returnGame.teamMates.push(player.login);
                 else
-                    returnGame.enemies.push(player.key);
+                    returnGame.enemies.push(player.login);
             }
         }
         return (returnGame);
@@ -225,7 +229,7 @@ class UserService {
             winRate: "0%"
         }
         var query = playerQueries.getMatches(login);
-        return esutil.sendQuery(query)
+         return esutil.sendQuery(query)
         .then(res => {
             if (!res.data.aggregations.unique_ids.buckets.length)
                 return stats
