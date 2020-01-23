@@ -633,9 +633,38 @@ var matches = {
           }
         }
       }`;
+    },
+
+    getMatchPbp(matchId) {
+      return `{
+        "size": 10000,
+        "query": {
+          "bool": {
+            "must" : {
+              "term" : { "gameTimeStamp" : "${matchId}" }
+            },
+            "should": [
+              { "term" : { "type" : "gameStart" } },
+              { "term" : { "type" : "playerStart" } },
+              { "term" : { "type" : "changeClass" } },
+              { "term" : { "type" : "kill" } },
+              { "term" : { "type" : "fumble" } },
+              { "term" : { "type" : "goal" } },
+              { "term" : { "type" : "teamScores" } },
+              { "term" : { "type" : "gameEnd" } }
+            ],
+          "minimum_should_match" : 1
+          }
+        },
+        "sort": [
+          {
+            "time": {
+              "order": "asc"
+            }
+          }
+        ]
+      }`
     }
-
-
 }
 
 module.exports = matches;

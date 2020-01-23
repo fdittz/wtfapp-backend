@@ -23,6 +23,112 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-9">
+          <div class="card card-default collapsed-card">
+            <div class="card-header">
+              <h3 class="card-title">Play-By-Play</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-widget="collapse"><i class="fas fa-plus"></i>
+                </button>
+              </div>
+              <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-footer">
+              <div class="row">
+                <div class="col-12">
+                  <table class="table table-striped table-sm table-valign-middle">
+                    <tbody>
+                      <tr *ngFor="let event of events; let i = index">
+                        <td style="padding-left: 0.5rem!important;">{{event.time | minutesSeconds}} </td>
+                          <td [ngSwitch]="event.type">
+                            <span *ngSwitchCase="'playerStart'">Player Start: 
+                              <span class="{{getTeam(event.player) == 1 ? 'text-primary' : 
+                                 (getTeam(event.player) == 2 ? 'text-danger': 
+                                    (getTeam(event.player) == 3 ? 'text-warning': 
+                                      (getTeam(event.player) == 4 ? 'text-success': '')
+                                    )
+                                  )                                                                    
+                                }}">{{event.player}}
+                              </span>
+                            </span>
+                            <span *ngSwitchCase="'changeClass'">
+                              <span class="{{getTeam(event.player) == 1 ? 'text-primary' : 
+                                (getTeam(event.player) == 2 ? 'text-danger': 
+                                  (getTeam(event.player) == 3 ? 'text-warning': 
+                                    (getTeam(event.player) == 4 ? 'text-success': '')
+                                  )
+                                )                                                                    
+                              }}">{{event.player}}
+                              </span> 
+                              changes class to {{classesImg[event.nextClass].name}}</span>
+                            <span *ngSwitchCase="'goal'">GOAL: 
+                              <span class="{{getTeam(event.player) == 1 ? 'text-primary' : 
+                                (getTeam(event.player) == 2 ? 'text-danger': 
+                                  (getTeam(event.player) == 3 ? 'text-warning': 
+                                    (getTeam(event.player) == 4 ? 'text-success': '')
+                                  )
+                                )                                                                    
+                              }}">{{event.player}}</span>
+                            </span>
+                            <span *ngSwitchCase="'fumble'">
+                              <span class="{{getTeam(event.player) == 1 ? 'text-primary' : 
+                                (getTeam(event.player) == 2 ? 'text-danger': 
+                                  (getTeam(event.player) == 3 ? 'text-warning': 
+                                    (getTeam(event.player) == 4 ? 'text-success': '')
+                                  )
+                                )                                                                    
+                              }}">{{event.player}}</span> loses the goal item</span>
+                            <span *ngSwitchCase="'kill'">
+                            <span *ngIf="event.player != event.target">
+                              <span class="{{getTeam(event.player) == 1 ? 'text-primary' : 
+                                  (getTeam(event.player) == 2 ? 'text-danger': 
+                                    (getTeam(event.player) == 3 ? 'text-warning': 
+                                      (getTeam(event.player) == 4 ? 'text-success': '')
+                                    )
+                                  )                                                                    
+                                }}">{{event.player}}
+                              </span>  KILLS 
+                              <span class="{{getTeam(event.target) == 1 ? 'text-primary' : 
+                                (getTeam(event.target) == 2 ? 'text-danger': 
+                                  (getTeam(event.target) == 3 ? 'text-warning': 
+                                    (getTeam(event.target) == 4 ? 'text-success': '')
+                                  )
+                                )                                                                    
+                              }}">{{event.target}}
+                              </span> [{{event.inflictor}}]
+                            </span>
+                            <span *ngIf="event.player == event.target">
+                              <span class="{{getTeam(event.player) == 1 ? 'text-primary' : 
+                                  (getTeam(event.player) == 2 ? 'text-danger': 
+                                    (getTeam(event.player) == 3 ? 'text-warning': 
+                                      (getTeam(event.player) == 4 ? 'text-success': '')
+                                    )
+                                  )                                                                    
+                                }}">{{event.player}}
+                              </span> SUICIDES [{{event.inflictor}}]</span>
+                            </span>
+                            <span *ngSwitchCase="'gameEnd'">Game end</span>
+                            <span *ngSwitchCase="'teamScores'">
+                              <span *ngIf="event.winningTeam != 0">Result: 
+                                <span class="{{event.winningTeam == 1 ? 'text-primary' : 
+                                  (event.winningTeam == 2 ? 'text-danger': 
+                                    (event.winningTeam == 3 ? 'text-warning': 
+                                      (event.winningTeam == 4 ? 'text-success': '')
+                                    )
+                                  )                                                                    
+                                }}">{{event["team"+event.winningTeam+"Name"]}}</span> wins</span>
+                              <span *ngIf="event.winningTeam == 0">Result: Draw</span>
+                            </span>
+                            
+                          </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
           <!-- Widget: user widget style 1 -->
           <div class="card card-widget widget-user" *ngFor="let player of match?.players">
             <!-- Add the bg color to the header using any of the bg-* classes -->
