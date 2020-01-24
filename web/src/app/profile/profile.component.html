@@ -97,16 +97,29 @@
         </div>
         <!-- /.card -->
         
-        <div class="small-box {{classesImg[class?.key].css}}" *ngFor="let class of stats?.perClass">
+        <div class="small-box {{classesImg[class?.key].css}} classBox" *ngFor="let class of stats?.perClass">
             <a href="#" class="small-box-footer text-left pl-1 pr-1">
                 {{classesImg[class?.key].name}}
                 <span class="float-right">{{class.timePlayed/60 | number:'1.0-0'}} min</span>
             </a>
-            <div class="inner">
+            <div class="inner row">
+              <div class="col-6">
+                <h6><b>Stats</b></h6>
+              </div>
+              <div class="col-6">
+                <h6><b>Frags by weapon</b></h6>
+              </div>
+            </div>
+            <div class="inner row">
+              <div class="col-6">
                 <b>Frags:</b> {{class.frags/(class.timePlayed/600) | number: '1.0-2'}}/10min<br/>
                 <b>Damage:</b> {{class.damageDone/(class.timePlayed/600) | number: '1.0-2'}}/10min<br/>
                 <b>Deaths:</b> {{class.deaths/(class.timePlayed/600) | number: '1.0-2'}}/10min<br/>
                 <b>Team Kills:</b> {{class.teamKills/(class.timePlayed/600) | number: '1.0-2'}}/10min<br/>
+              </div>
+              <div class="col-6">
+                  <canvas id="frags-{{class?.key}}" style=""></canvas>
+              </div>
             </div>
         </div>
 

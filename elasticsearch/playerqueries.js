@@ -381,6 +381,13 @@ var player = {
                           "term": {
                             "kind": "enemy"
                           }
+                        },
+                        "aggs": {
+                          "perWeapon": {
+                            "terms": {
+                              "field": "inflictor"
+                            }
+                          }
                         }
                       },
                       "team": {
