@@ -26,6 +26,7 @@ export class ProfileComponent implements OnInit {
   role: string;
   stats: any;
   classesImg = [];
+  hasRenderedPieCharts: boolean
   
   constructor(
     public auth: AuthService,
@@ -45,6 +46,7 @@ export class ProfileComponent implements OnInit {
     this.classesImg[8] = {name: "Spy", image: "https://wiki.megateamfortress.com/images/thumb/3/36/Spy.png/300px-Spy.png", css: "bg-black"};
     this.classesImg[9] = {name: "Engineer", image: "https://wiki.megateamfortress.com/images/thumb/d/d8/Engineer.png/300px-Engineer.png", css: "bg-yellow"}; 
 
+    this.hasRenderedPieCharts = false;
     var self = this;
     this.showAlias = false;    
     this.route.paramMap.subscribe(paramMap => {
@@ -63,6 +65,14 @@ export class ProfileComponent implements OnInit {
     this.auth.user$.subscribe(userdata => {
       this.role = userdata.role;
     });
+  }
+  ngAfterViewChecked() {
+    if (document.getElementsByClassName("classBox").length > 0 && !this.hasRenderedPieCharts) {
+      this.stats.perClass.forEach(classStats => {
+        this.pieChart(classStats.key, classStats.fragsByWeapon);
+        this.hasRenderedPieCharts = true;
+      })
+    }
   }
 
   async getProfileData(login) {
@@ -102,7 +112,6 @@ export class ProfileComponent implements OnInit {
         this.msgError = resp.error.message;
         console.log(this.msgError);
     })
-
   }
 
   private async grantAdmin() {
@@ -145,6 +154,39 @@ export class ProfileComponent implements OnInit {
   
   formatTime(time: string) {
     return moment("2019-06-04T02:24:01.310Z").format("DD/MM/YYY HH:MM")
+  }
+
+  private pieChart(id, fragsByWeapon) {
+    var pieChartCanvas = <HTMLCanvasElement>document.getElementById('frags-'+ id);
+    var ctx = pieChartCanvas.getContext('2d')
+    var pieData        = {
+      labels: fragsByWeapon.map(weapon => {
+        return weapon.key
+      }),
+      datasets: [
+        {
+          data: fragsByWeapon.map(weapon => {
+            return weapon.frags
+          }),
+          backgroundColor : ['#003f5c', '#2f4b7c', '#665191', '#a05195', '#d45087','#f95d6a','#ff7c43','#ffa600'],          
+          borderWidth: 0.8,
+        }
+      ]
+    }
+    var pieOptions     = {
+      maintainAspectRatio: false,
+      legend: {
+        display: false
+      },
+      responsive: true
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var pieChart = new Chart(ctx, {
+      type: 'pie',
+      data: pieData,
+      options: pieOptions      
+    })
   }
 
 }

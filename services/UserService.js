@@ -282,12 +282,16 @@ class UserService {
             return esutil.sendQuery(query)
             .then(result => {     
                 stats.perTeam  = (result.data.aggregations.player.timePlayed.perTeam.buckets);
-                stats.perClass = (result.data.aggregations.player.perClass.buckets);                 
+                stats.perClass = (result.data.aggregations.player.perClass.buckets);         
                 stats.totalTime = (result.data.aggregations.player.timePlayed.total.value);
                 stats.perClass = result.data.aggregations.player.perClass.buckets.map(classStats => {
+                    var weaponStats = classStats.kills.enemy.perWeapon.buckets.map(weapon => {
+                        return {key: weapon.key, frags: weapon.doc_count}
+                    })
                     return {
                         key :               classStats.key,
                         frags:              classStats.kills.enemy.doc_count,
+                        fragsByWeapon:      weaponStats,
                         damageDone:         classStats.damageDone.enemy.damage.value,
                         teamKills:          classStats.kills.team.doc_count,
                         teamDamage:         classStats.damageDone.team.damage.value,
