@@ -128,6 +128,29 @@
       <div class="col-md-9">
         <div class="card">
           <div class="card-header no-border">
+            <h3 class="card-title">Weapon Accuracy</h3>
+            <div class="card-tools">
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="row">
+              <div class="col-sm-4" *ngFor="let weapon of accuracyStats">
+                <div class="description-block">
+                  <h5 class="description-header">{{weapon.accuracy}}</h5>
+                  <span class="description-text">{{weapon.name}}</span>
+                </div>
+                <!-- /.description-block -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        
+
+
+        <div class="card">
+          <div class="card-header no-border">
             <h3 class="card-title">Match List</h3>
             <div class="card-tools">
             </div>
@@ -164,8 +187,10 @@
     <!-- /.row -->
     <!-- Main row -->
     <!-- /.row (main row) -->
+    
   </div><!-- /.container-fluid -->
 </section>
+
 <!-- /.content -->
 
 <div class="modal" id="modal-secret" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">

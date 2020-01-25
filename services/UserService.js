@@ -13,6 +13,19 @@ class UserService {
         this.db = admin.firestore();
     }   
 
+    getAttackDamagePairs() {
+        return {
+            "axe": "axe",
+            "shotgun": "shotgun",
+            "supershotgun": "supershotgun",
+            "nailgun": "spike",
+            "supernailgun": "superspike",
+            "grenadelauncher": "grenade",
+            "pipebomblauncher": "pipebomb",
+            "rocketlauncher": "rocket"
+        }
+    }
+
     newUser(data) {
         const userRef = this.db.collection('users').doc(data.uid);
 		return userRef.set(data, { merge: true }) 
@@ -218,6 +231,7 @@ class UserService {
         return (returnGame);
 
     }
+
     getStats(login) {
         var matches = [];
         var stats = {
@@ -280,7 +294,7 @@ class UserService {
         .then(stats => {
             var query = playerQueries.getTimePlayedByClassAndTeam(login);
             return esutil.sendQuery(query)
-            .then(result => {     
+            .then(result => {
                 stats.perTeam  = (result.data.aggregations.player.timePlayed.perTeam.buckets);
                 stats.perClass = (result.data.aggregations.player.perClass.buckets);         
                 stats.totalTime = (result.data.aggregations.player.timePlayed.total.value);
@@ -309,6 +323,33 @@ class UserService {
             console.log(err)
             return Promise.reject();
         })       
+    }
+
+    getAccuracyStats(login) {
+        var weapons = [];
+        var query = playerQueries.getAccuracyStats(login);
+        return esutil.sendQuery(query)
+        .then(res => {
+            var attackAndDamge = this.getAttackDamagePairs();
+            res.data.aggregations.player.attack.perWeapon.buckets.forEach(weapon => {
+                console.log(weapon.key)
+                if (weapon.key in attackAndDamge)
+                    res.data.aggregations.player.damageDone.enemy.perWeapon.buckets.forEach(damageEvents => {
+                        if (damageEvents.key == attackAndDamge[weapon.key]) {
+                            var result = {
+                                "name": weapon.key,
+                                "accuracy":  Math.floor((damageEvents.doc_count/weapon.doc_count*100)*100)/100
+                            };
+                            weapons.push(result);
+                        }                            
+                    })
+            })
+            return weapons;
+        })
+        .catch(err => {
+            console.log(err)
+            return Promise.reject();
+        })   
     }
 
     getOldStats(login) {

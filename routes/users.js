@@ -14,7 +14,7 @@ let cache = apicache.middleware;
 
 const PAGE_SIZE = 25;
 
-router.use(cache('5 minutes'));
+//router.use(cache('5 minutes'));
 
 /* GET users listing. */
 router.get('/list/:page?', function(req, res, next) {
@@ -189,6 +189,16 @@ router.put('/admin/revoke', isAdmin, isUserAuthenticated, function(req, res, nex
 
 router.get('/profile/stats/:login', function(req, res, next) {
 	return UserService.getStats(req.params.login)
+	.then(function(data) {
+		return res.status(200).json(data);
+	})
+	.catch(err => {
+		return res.status(200).json([]);
+	})
+})
+
+router.get('/profile/stats/accuracy/:login', function(req, res, next) {
+	return UserService.getAccuracyStats(req.params.login)
 	.then(function(data) {
 		return res.status(200).json(data);
 	})

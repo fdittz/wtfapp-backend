@@ -275,6 +275,70 @@ var player = {
           }`        
     },
 
+    getAccuracyStats(login) {
+      return `{
+        "size": 0,
+        "query": {
+          "range": {
+            "gameTimeStamp": {
+              "gte": "2020-01-24T22:20:19.320Z"
+            }
+          }
+        },
+        "aggs": {
+          "player": {
+            "filter": {
+              "term": {
+                "player": "${login}"
+              }
+            },
+            "aggs": {
+              "attack": {
+                "filter": {
+                  "term": {
+                      "type": "attack"
+                  }
+                },
+                "aggs" : {
+                  "perWeapon": {
+                    "terms": {
+                      "field": "inflictor",
+                      "size": "64"
+                    }
+                  }
+                }
+              },
+              "damageDone": {
+                "filter": {
+                  "term": {
+                      "type": "damageDone"
+                      
+                  }
+                },
+                "aggs" : {
+                  "enemy": {
+                    "filter": {
+                      "term": {
+                        "kind": "enemy"
+                      }
+                    },
+                    "aggs": {
+                      "perWeapon": {
+                        "terms": {
+                          "field": "inflictor",
+                          "size": "64"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }`
+    },
+
     getTimePlayedByClassAndTeam(login) {
       return `
       {
@@ -320,6 +384,46 @@ var player = {
                             }
                           ],
                           "size": 10
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "attack": {
+                "filter": {
+                  "term": {
+                      "type": "attack"
+                  }
+                },
+                "aggs" : {
+                  "perWeapon": {
+                    "terms": {
+                      "field": "inflictor",
+                      "size": "64"
+                    }
+                  }
+                }
+              },
+              "damageDone": {
+                "filter": {
+                  "term": {
+                      "type": "damageDone"
+                      
+                  }
+                },
+                "aggs" : {
+                  "enemy": {
+                    "filter": {
+                      "term": {
+                        "kind": "enemy"
+                      }
+                    },
+                    "aggs": {
+                      "perWeapon": {
+                        "terms": {
+                          "field": "inflictor",
+                          "size": "64"
                         }
                       }
                     }
