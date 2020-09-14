@@ -29,13 +29,13 @@ var player = {
 
     getMatchesByPlayer(login, timeStampArray) {        
         var matchTerms = []
-        timeStampArray.forEach(element => {
-            matchTerms.push(`{
-                                "term": {
-                                "gameTimeStamp": "${element}"
-                                }
-                            }`)
-        });
+        matchTerms.push(`{
+                            "terms": {
+                              "gameTimeStamp": ${JSON.stringify(timeStampArray)},
+                              "boost": 1.0
+                            }
+                         }`);
+
         matchTerms = matchTerms.join(",")
         return `
         {
@@ -110,33 +110,14 @@ var player = {
                       }
                     },
                     "aggs": {
-                      "team1Score": {
-                        "terms": {
-                          "field": "team1Score"
-                        }
-                      },
-                      "team1Name": {
-                        "terms": {
-                          "field": "team1Name"
-                        }
-                      },
-                      "team2Score": {
-                        "terms": {
-                          "field": "team2Score"
-                        }
-                      },
-                      "team2Name": {
-                        "terms": {
-                          "field": "team2Name"
-                        }
-                      },
-                      "winningTeam": {
-                        "terms": {
-                          "field": "winningTeam"
+                      "scores": {
+                        "scripted_metric": {
+                          "init_script": "state.teams = new Object[2]; state.winner = 0",
+                          "map_script": "if (state.teams[0] == null) {  if (doc.team1Name.size() > 0) state.teams[0] = ['name': doc.team1Name.value, 'score': doc.team1Score.value]; if (doc.team2Name.size() > 0) state.teams[1] = ['name': doc.team2Name.value, 'score': doc.team2Score.value]; if (doc.winningTeam.size() > 0) state.winningTeam = doc.winningTeam.value;}",
+                          "combine_script": "return state",
+                          "reduce_script": "return states"
                         }
                       }
-                      
-                      
                     }
                   },
                   "player": {
@@ -496,13 +477,12 @@ var player = {
 
     getMatchesByPlayerAndMatchList(login, timeStampArray) {
       var matchTerms = []
-      timeStampArray.forEach(element => {
-          matchTerms.push(`{
-                              "term": {
-                              "gameTimeStamp": "${element}"
-                              }
-                          }`)
-      });
+      matchTerms.push(`{
+                         "terms": {
+                            "gameTimeStamp": ${JSON.stringify(timeStampArray)},
+                            "boost": 1.0
+                          }
+                       }`);
       matchTerms = matchTerms.join(",")
       return `
       {

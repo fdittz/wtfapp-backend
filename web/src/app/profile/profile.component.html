@@ -153,7 +153,7 @@
                         <td>{{match.enemies}}</td>
                         <td><span class="badge {{match.result == 'defeat' ? 'bg-danger' : (match.result == 'victory' ? 'bg-success' : 'bg-secondary')}}">{{match.result}}</span></td>    
                         <td><a href="/match/{{match.startTime}}" target="_blank">Stats</a></td>
-                        <td><a *ngIf="match.demo" href="http://tf.quadclub.com.br:27520/{{match.demo}}">Download</a></td>    
+                        <td><a *ngIf="match.demo" href="http://play.qwtf.com.br:27520/{{match.demo}}">Download</a></td>    
                     </tr>
               </tbody>
             </table>
