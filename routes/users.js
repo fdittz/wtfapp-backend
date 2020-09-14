@@ -14,7 +14,7 @@ let cache = apicache.middleware;
 
 const PAGE_SIZE = 25;
 
-router.use(cache('5 minutes'));
+//router.use(cache('5 minutes'));
 
 /* GET users listing. */
 router.get('/list/:page?', function(req, res, next) {

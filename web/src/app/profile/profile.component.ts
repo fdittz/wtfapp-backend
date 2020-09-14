@@ -8,6 +8,7 @@ import { HttpHeaders } from '@angular/common/http';
 import * as CryptoJS from 'crypto-js';
 import { User  } from '../model/user.model';
 import { Router } from '@angular/router';
+import { Chart } from 'chart.js';
 import * as moment from 'moment';
 
 @Component({
@@ -25,6 +26,7 @@ export class ProfileComponent implements OnInit {
   secret: string;
   role: string;
   stats: any;
+  accuracyStats: any;
   classesImg = [];
   hasRenderedPieCharts: boolean
   
@@ -60,10 +62,11 @@ export class ProfileComponent implements OnInit {
       else {
         this.getProfileData(paramMap["params"].login);
         this.getStatsData(paramMap["params"].login);
+        this.getAccuracyStatsData(paramMap["params"].login);
       }
     });
     this.auth.user$.subscribe(userdata => {
-      this.role = userdata.role;
+      this.role = userdata?.role;
     });
   }
   ngAfterViewChecked() {
@@ -98,6 +101,16 @@ export class ProfileComponent implements OnInit {
         return thisClass.key != 0;
       })
       this.stats = resp;
+    }, resp => {
+        this.msgError = resp.error.message;
+    })
+  }
+
+  async getAccuracyStatsData(login) {
+    return this.http.get(`/api/users/profile/stats/accuracy/${login}`, {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
+    }).subscribe(resp => {
+      this.accuracyStats = resp;
     }, resp => {
         this.msgError = resp.error.message;
     })

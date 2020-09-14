@@ -52,7 +52,7 @@ export class AuthService {
 
 	async socialSignIn(provider) {
 		var thisAuth = this;
-		this.redirect(await this.afAuth.auth.signInWithPopup(provider)
+		this.redirect(await this.afAuth.signInWithPopup(provider)
 		.then((credential) => {
 			thisAuth.loginFailed$ = false;
 			return this.updateUserData(credential.user).then(_ => {
@@ -106,7 +106,7 @@ export class AuthService {
 	}
 
 	async signOut() {
-		await this.afAuth.auth.signOut();
+		await this.afAuth.signOut();
 		this.router.navigate(['/']);
 	}
 }

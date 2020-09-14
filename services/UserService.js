@@ -5,6 +5,7 @@ var esutil = require('../util/esutil');
 var CryptoJS = require('crypto-js');
 var trueskill = require("ts-trueskill");
 var moment = require('moment-timezone');
+const logger = require('../config/winston');
 var env = new trueskill.TrueSkill();
 
 class UserService {
@@ -197,7 +198,7 @@ class UserService {
             returnGame.demo         = match.gameInfo.demo.buckets[0].key;
         returnGame.numPlayers   = match.gameInfo.numPlayers.buckets[0].key;
         returnGame.numTeams     = match.gameInfo.numTeams.buckets[0].key;
-        returnGame.winningTeam  = match.result.winningTeam.buckets[0].key;
+        returnGame.winningTeam  = match.result.scores.value[0].winningTeam;
         returnGame.playerTeam   = match.player.timePlayed.perTeam.buckets[0].key;
         returnGame.result       = returnGame.winningTeam == 0 ? "draw" : (returnGame.winningTeam == returnGame.playerTeam ? "victory" : "defeat");
         returnGame.teamMates    = []
@@ -234,9 +235,10 @@ class UserService {
             if (!res.data.aggregations.unique_ids.buckets.length)
                 return stats
             var resultMatches = res.data.aggregations.unique_ids.buckets;
+                        
             matches = resultMatches.map(match => {
                 return match.key
-            })            
+            })      
             var query = playerQueries.getMatchesByPlayer(login,matches)
             return esutil.sendQuery(query)
             .then( result => {
@@ -246,7 +248,7 @@ class UserService {
                     if (!game.gameInfo.map.buckets.length ||
                         !game.gameInfo.numPlayers.buckets.length ||
                         !game.gameInfo.numTeams.buckets.length ||
-                        !game.result.winningTeam.buckets.length ||
+                        !(game.result.scores.value[0].winningTeam >= 0) ||
                         !game.player.timePlayed.perTeam.buckets.length)
                         return false;
                     return true;
@@ -628,6 +630,11 @@ class UserService {
                             returnGame.teams.push({"name": match.result.documents.hits.hits[0]._source["team" + i +"Name"], "score": match.result.documents.hits.hits[0]._source["team" + i +"Score"], "number": i, "players": []});
                     }                    
 
+                    //removing players without login or name
+                    match.timePlayed.byPlayer.value = match.timePlayed.byPlayer.value.filter(player => {
+                        return player.login && player.login.length > 0;
+                    });
+
                     for (var player of  match.timePlayed.byPlayer.value) {                      
                         var mostTime = 0;
                         var playerTeamNum;                        
@@ -639,7 +646,7 @@ class UserService {
                         }
                     }
                     
-                      var winningTeam =  match.result.documents.hits.hits[0]._source.winningTeam;
+                      var winningTeam =  match.result.documents.hits.hits[0]._source.winningTeam;                      
 
                       if (match.timePlayed.byPlayer.value.length && winningTeam > 0) {
                         var winners = [];

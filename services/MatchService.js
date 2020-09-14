@@ -4,6 +4,7 @@ var esutil = require('../util/esutil');
 class MatchService {
 
     getMatches() {
+        console.log("1111111111111111111111");
         var query = matchQueries.getMatches();
         return esutil.sendQuery(query)
         .then(result => {
@@ -43,6 +44,7 @@ class MatchService {
                     }
                     return (returnGame);
                 })
+                console.log(games)
                 return games
             
            

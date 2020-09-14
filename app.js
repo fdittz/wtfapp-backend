@@ -19,9 +19,9 @@ var serveStatic = require('serve-static')
 var app = express();
 
 // Certificate
-const privateKey = fs.readFileSync('/home/qw/archive/tf.quadclub.com.br/privkey1.pem', 'utf8');
-const certificate = fs.readFileSync('/home/qw/archive/tf.quadclub.com.br/cert1.pem', 'utf8');
-const ca = fs.readFileSync('/home/qw/archive/tf.quadclub.com.br/chain1.pem', 'utf8');
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/qwtf.com.br/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/qwtf.com.br/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/qwtf.com.br/chain.pem', 'utf8');
 
 const credentials = {
 	key: privateKey,
@@ -41,7 +41,7 @@ app.use('/api/servers', servers);
 app.use('/api/matches', matches);
 
 app.get('/demos', function(req, res) {
-    res.redirect('http://tf.quadclub.com.br:27520/');
+    res.redirect('http://play.qwtf.com.br:27520/');
 });
 app.use(serveStatic(path.join(__dirname, 'public')))
 app.get('*', (req, res) => {
