@@ -66,7 +66,7 @@ export class ProfileComponent implements OnInit {
       }
     });
     this.auth.user$.subscribe(userdata => {
-      this.role = userdata.role;
+      this.role = userdata?.role;
     });
   }
   ngAfterViewChecked() {
