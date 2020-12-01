@@ -15,117 +15,134 @@
 </section>
 
 <section class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-12 col-lg-3">
-                <div class="card">
-                    <div class="card-header no-border">
-                      <h3 class="card-title">Ranking</h3>
-                      <select class="form-control" #t (change)="getRankings(t.value)">
-                        <option value="{{availableMonths[0] | date: 'MM-yyyy' }}">Current Month</option>
-                        <option value="">All-time</option>
-                        <optgroup label="Past months">
-                          <option *ngFor="let month of availableMonths | slice: 1, let i = index" value="{{month | date: 'MM-yyyy' }}">{{month | date: 'MM/yyyy' }}</option>
-                        </optgroup>
-                      </select>
-                      <span *ngIf="rankings" style="font-style: italic; font-size: 0.8em; font-weight: bold" class="text-secondary"> min {{rankings?.minMatches}} matches played</span>
-                      <div class="card-tools">
-                      </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <table class="table table-striped table-sm table-valign-middle">
-                          <tbody>
-                            <tr *ngFor="let player of rankings?.players; let i = index">
-                              <td style="padding-left: 0.5rem!important; max-width: 35px">#{{i+1}}</td><td style="font-family: 'BebasNeueRegular'; max-width: 80px"><a href="/profile/{{player.login}}">{{player.login}}</a></td><td style="padding-right: 0.5rem!important;text-align: right"><span title="Inactivity Penalty: -{{player.sigma*100 | number: '1.0-0'}} points">{{player.points}}</span></td>
-                            </tr>
-                          </tbody>
-                            
-                        </table>
-                    </div>
-                </div>
-        </div>    
-        <div class="col-12 col-lg-9">
-          <div class="card">
-              <div class="card-header no-border">
-                <h3 class="card-title">Match List</h3>
-                <span *ngIf="rankings" style="font-style: italic; font-size: 0.8em; font-weight: bold" class="text-secondary"> {{matches.length}} matches found</span>
-                <div class="card-tools">
-                    <input type="search" class="form-control form-control-sm" placeholder="" (ngModelChange)="searchMatches($event)"  [(ngModel)]="matchTerms" placeholder="Search...">
-                </div>
-              </div>
-              <div class="card-body p-0 table-responsive">
-                <table class="table table-striped table-sm table-valign-middle">
-                  <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Time</th>
-                    <th>Map</th>
-                    <th>Teams</th>
-                    <th>Winner</th>
-                    <th>Stats</th>
-                    <th>Demo</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let match of matches | paginate: { itemsPerPage: 25, currentPage: p }; let i = index" class="{{match.result == 'defeat' ? 'has-background-danger' : (match.result == 'victory' ? 'has-background-success' : '')}}">
-                        <td>{{(matches.length - (i)) - (25 * (p-1))}}</td>
-                        <td>{{match.startTime | date: 'dd/MM/yyyy HH:mm'}}</td>
-                        <td><b>{{match.map | uppercase}}</b></td>
-                        <td><span *ngFor="let team of match.teams" class="{{team.number == 1 ? 'text-primary': (team.number == 2 ? 'text-danger': (team.number == 3 ? 'text-warning': (team.number == 4 ? 'text-success': '')))}}">
-                              <b>{{team.name | uppercase}}</b>: 
-                              <span *ngFor="let player of team.players; let i = index">{{i != 0 ? "," : ""}} {{player}} ({{getDiff(player,match)}})</span>
-                              <br>
-                            </span>
-                        </td>
-                        <td>
-                            <span *ngIf="match.winningTeam == 1" class="badge bg-primary">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
-                            <span *ngIf="match.winningTeam == 2" class="badge bg-danger">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
-                            <span *ngIf="match.winningTeam == 3" class="badge bg-warning">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
-                            <span *ngIf="match.winningTeam == 4" class="badge bg-success">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
-                            <span *ngIf="!match.winningTeam" class="badge bg-secondary">DRAW</span>                            
-                        </td>  
-                        <td><a href="/match/{{match.startTime}}" target="_blank">Stats</a></td>
-                        <td><a *ngIf="match.demo" href="http://play.qwtf.com.br:27520/{{match.demo}}">Download</a></td>    
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="card-footer clearfix text-center">
-                  <pagination (pageChange)="p = $event"></pagination>
-              </div>
-            </div>
-        </div>      
-    </div>
-    <div class="row mb-2">
-        <div class="col-12">
-            <div class="btn-group">
-                <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  {{currentRank}} (min one hour played)
-                </button>
-                <div class="dropdown-menu">
-                    <button class="dropdown-item" (click)="getFragRanks()">Frags/10min</button>
-                    <button class="dropdown-item" (click)="getDamageRanks()">Damage/10min</button>
-                    <button class="dropdown-item" (click)="getGoalRanks()">Goals/10min</button>
-                    <button class="dropdown-item" (click)="getFumbleRanks()">Touches/10min</button>
-                </div>
-              </div>
-        </div>
-      </div>
-      <div class="row">        
-        <ng-template ngFor let-i="index" let-rank [ngForOf]="classRank">
-          <div class="col-md-4" *ngIf="rank.players.length">
-            <div class="small-box {{classesImg[i+1].css}}"  style="min-height: 306px;">
-                <a href="#" class="small-box-footer text-left pl-1 pr-1">
-                    {{rank.name}}               
-                </a>
-                <div class="inner">
-                    <ng-template ngFor let-i="index" let-player [ngForOf]="rank.players">
-                      <span *ngIf="i < 10"><b>{{player.login}}:</b> {{player.per10min | number: '1.0-2' }}<br/></span>
-                    </ng-template>
-                </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 col-lg-3">
+        <div class="card">
+          <div class="card-header no-border">
+            <h3 class="card-title">Ranking</h3>
+            <select class="form-control" #t (change)="getRankings(t.value)">
+              <option value="{{availableMonths[0] | date: 'MM-yyyy' }}">Current Month</option>
+              <option value="">All-time</option>
+              <optgroup label="Past months">
+                <option *ngFor="let month of availableMonths | slice: 1, let i = index"
+                  value="{{month | date: 'MM-yyyy' }}">{{month | date: 'MM/yyyy' }}</option>
+              </optgroup>
+            </select>
+            <span *ngIf="rankings" style="font-style: italic; font-size: 0.8em; font-weight: bold"
+              class="text-secondary"> min {{rankings?.minMatches}} matches played</span>
+            <div class="card-tools">
             </div>
           </div>
-        </ng-template>
+          <div class="card-body p-0">
+            <table class="table table-striped table-sm table-valign-middle">
+              <tbody>
+                <tr *ngFor="let player of rankings?.players; let i = index">
+                  <td style="padding-left: 0.5rem!important; max-width: 35px">#{{i+1}}</td>
+                  <td style="font-family: 'BebasNeueRegular'; max-width: 80px"><a
+                      href="/profile/{{player.login}}">{{player.login}}</a></td>
+                  <td style="padding-right: 0.5rem!important;text-align: right"><span
+                      title="Inactivity Penalty: -{{player.sigma*100 | number: '1.0-0'}} points">{{player.points}}</span>
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+        </div>
       </div>
+      <div class="col-12 col-lg-9">
+        <div class="card">
+          <div class="card-header no-border">
+            <h3 class="card-title">Match List</h3>
+            <span *ngIf="rankings" style="font-style: italic; font-size: 0.8em; font-weight: bold"
+              class="text-secondary"> {{matches.length}} matches found</span>
+            <div class="card-tools">
+              <input type="search" class="form-control form-control-sm" placeholder=""
+                (ngModelChange)="searchMatches($event)" [(ngModel)]="matchTerms" placeholder="Search...">
+            </div>
+          </div>
+          <div class="card-body p-0 table-responsive">
+            <table class="table table-striped table-sm table-valign-middle">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Time</th>
+                  <th>Map</th>
+                  <th>Teams</th>
+                  <th>Winner</th>
+                  <th>Stats</th>
+                  <th>Demo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let match of matches | paginate: { itemsPerPage: 25, currentPage: p }; let i = index"
+                  class="{{match.result == 'defeat' ? 'has-background-danger' : (match.result == 'victory' ? 'has-background-success' : '')}}">
+                  <td>{{(matches.length - (i)) - (25 * (p-1))}}</td>
+                  <td>{{match.startTime | date: 'dd/MM/yyyy HH:mm'}}</td>
+                  <td><b>{{match.map | uppercase}}</b></td>
+                  <td><span *ngFor="let team of match.teams"
+                      class="{{team.number == 1 ? 'text-primary': (team.number == 2 ? 'text-danger': (team.number == 3 ? 'text-warning': (team.number == 4 ? 'text-success': '')))}}">
+                      <b>{{team.name | uppercase}}</b>:
+                      <span *ngFor="let player of team.players; let i = index">{{i != 0 ? "," : ""}} {{player}}
+                        ({{getDiff(player,match)}})</span>
+                      <br>
+                    </span>
+                  </td>
+                  <td>
+                    <span *ngIf="match.winningTeam == 1"
+                      class="badge bg-primary">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
+                    <span *ngIf="match.winningTeam == 2"
+                      class="badge bg-danger">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
+                    <span *ngIf="match.winningTeam == 3"
+                      class="badge bg-warning">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
+                    <span *ngIf="match.winningTeam == 4"
+                      class="badge bg-success">{{match.teams[match.winningTeam-1].name | uppercase}}</span>
+                    <span *ngIf="!match.winningTeam" class="badge bg-secondary">DRAW</span>
+                  </td>
+                  <td><a href="/match/{{match.startTime}}" target="_blank">Stats</a></td>
+                  <td><a *ngIf="match.demo" href="http://play.qwtf.com.br:27520/{{match.demo}}">Download</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer clearfix text-center">
+            <pagination (pageChange)="p = $event"></pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-12">
+        <div class="btn-group">
+          <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            {{currentRank}} (min one hour played)
+          </button>
+          <div class="dropdown-menu">
+            <button class="dropdown-item" (click)="getFragRanks()">Frags/10min</button>
+            <button class="dropdown-item" (click)="getDamageRanks()">Damage/10min</button>
+            <button class="dropdown-item" (click)="getGoalRanks()">Goals/10min</button>
+            <button class="dropdown-item" (click)="getFumbleRanks()">Touches/10min</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <ng-template ngFor let-i="index" let-rank [ngForOf]="classRank">
+        <div class="col-md-4" *ngIf="rank.players.length">
+          <div class="small-box {{classesImg[i+1].css}}" style="min-height: 306px;">
+            <a href="#" class="small-box-footer text-left pl-1 pr-1">
+              {{rank.name}}
+            </a>
+            <div class="inner">
+              <ng-template ngFor let-i="index" let-player [ngForOf]="rank.players">
+                <span *ngIf="i < 10"><b>{{player.login}}:</b> {{player.per10min | number: '1.0-2' }}<br /></span>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
   </div>
 </section>
