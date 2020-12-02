@@ -137,5 +137,8 @@
       }
     }
   },
-  "defaultProject": "fortressone"
+  "defaultProject": "fortressone",
+  "cli": {
+    "analytics": "1bbc9a2e-5716-42a8-9478-6f31e14e41ed"
+  }
 }
