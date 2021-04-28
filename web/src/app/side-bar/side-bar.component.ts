@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { auth } from 'firebase/app';
+import firebase from 'firebase/app';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -23,7 +23,7 @@ export class SideBarComponent implements OnInit {
   }
 
   async googleSignIn() {
-    return this.auth.socialSignIn(new auth.GoogleAuthProvider());
+    return this.auth.socialSignIn(new firebase.auth.GoogleAuthProvider());
   }
 
 }
