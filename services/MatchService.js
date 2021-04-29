@@ -3,9 +3,9 @@ var esutil = require('../util/esutil');
 
 class MatchService {
 
-    getMatches() {
+    getMatches(index) {
         var query = matchQueries.getMatches();
-        return esutil.sendQuery(query)
+        return esutil.sendQuery(query, index)
             .then(result => {
                 var games = result.data.aggregations.games.buckets;
                 games = result.data.aggregations.games.buckets

@@ -14,7 +14,7 @@ let cache = apicache.middleware;
 
 const PAGE_SIZE = 25;
 
-router.use(cache('5 minutes'));
+//router.use(cache('5 minutes'));
 
 /* GET users listing. */
 router.get('/list/:page?', function(req, res, next) {
@@ -187,8 +187,8 @@ router.put('/admin/revoke', isAdmin, isUserAuthenticated, function(req, res, nex
 	});
 });
 
-router.get('/profile/stats/:login', function(req, res, next) {
-	return UserService.getStats(req.params.login)
+router.get('/profile/stats/:index/:login', function(req, res, next) {
+	return UserService.getStats(req.params.login, req.params.index)
 	.then(function(data) {
 		return res.status(200).json(data);
 	})
@@ -207,8 +207,8 @@ router.get('/headtohead/:login1/:login2?', function(req, res, next) {
 	})
 });
 
-router.get('/top/fraggers', function(req, res, next) {
-	return UserService.getTopFraggers()
+router.get('/top/fraggers/:index', function(req, res, next) {
+	return UserService.getTopFraggers(req.params.index)
 	.then(function(data) {
 		return res.status(200).json(data);
 	})
@@ -217,8 +217,8 @@ router.get('/top/fraggers', function(req, res, next) {
 	})
 });
 
-router.get('/top/damage', function(req, res, next) {
-	return UserService.getTopDamage()
+router.get('/top/damage/:index', function(req, res, next) {
+	return UserService.getTopDamage(req.params.index)
 	.then(function(data) {
 		return res.status(200).json(data);
 	})
@@ -227,8 +227,8 @@ router.get('/top/damage', function(req, res, next) {
 	})
 });
 
-router.get('/top/goals', function(req, res, next) {
-	return UserService.getTopGoals()
+router.get('/top/goals/:index', function(req, res, next) {
+	return UserService.getTopGoals(req.params.index)
 	.then(function(data) {
 		return res.status(200).json(data);
 	})
@@ -237,8 +237,8 @@ router.get('/top/goals', function(req, res, next) {
 	})
 });
 
-router.get('/top/fumbles', function(req, res, next) {
-	return UserService.getTopFumbles()
+router.get('/top/fumbles/:index', function(req, res, next) {
+	return UserService.getTopFumbles(req.params.index)
 	.then(function(data) {
 		return res.status(200).json(data);
 	})
@@ -248,8 +248,8 @@ router.get('/top/fumbles', function(req, res, next) {
 });
 
 
-router.get('/usr/ranks', function(req, res, next) {
-	return UserService.setRatings()
+router.get('/usr/ranks/:index', function(req, res, next) {
+	return UserService.setRatings(req.params.index)
 	.then(function(data) {
 		return res.status(200).json(data);
 	})
@@ -258,8 +258,8 @@ router.get('/usr/ranks', function(req, res, next) {
 	 })
 });
 
-router.get('/usr/ranks/:month', function(req, res, next) {
-	return UserService.setRatings(req.params.month)
+router.get('/usr/ranks/:index/:month', function(req, res, next) {
+	return UserService.setRatings(req.params.index,req.params.month)
 	.then(function(data) {
 		return res.status(200).json(data);
 	})

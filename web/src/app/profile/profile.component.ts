@@ -1,3 +1,4 @@
+import { IndexService } from './../index.service';
 import { Component, OnInit, } from '@angular/core';
 import { ActivatedRoute,  ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
@@ -10,6 +11,7 @@ import { User  } from '../model/user.model';
 import { Router } from '@angular/router';
 import { Chart } from 'chart.js';
 import * as moment from 'moment';
+
 
 @Component({
   selector: 'app-profile',
@@ -29,15 +31,18 @@ export class ProfileComponent implements OnInit {
   accuracyStats: any;
   classesImg = [];
   hasRenderedPieCharts: boolean
-  
+  currentIndex: string;
+
   constructor(
     public auth: AuthService,
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
+    private indexService: IndexService
     ) { }
 
   ngOnInit() {
+    this.indexService.currentIndex.subscribe(index => this.currentIndex = index);
     this.classesImg[1] = {name: "Scout", image: "https://wiki.megateamfortress.com/images/thumb/6/69/Scout.png/300px-Scout.png", css: "bg-info"};
     this.classesImg[2] = {name: "Sniper", image: "https://wiki.megateamfortress.com/images/thumb/8/8f/Sniper.png/300px-Sniper.png", css: "bg-gray"};
     this.classesImg[3] = {name: "Soldier", image: "https://wiki.megateamfortress.com/images/thumb/7/7b/Soldier.png/300px-Soldier.png", css: "bg-blue"};
@@ -68,6 +73,7 @@ export class ProfileComponent implements OnInit {
     this.auth.user$.subscribe(userdata => {
       this.role = userdata?.role;
     });
+    
   }
   ngAfterViewChecked() {
     if (document.getElementsByClassName("classBox").length > 0 && !this.hasRenderedPieCharts) {
@@ -80,9 +86,7 @@ export class ProfileComponent implements OnInit {
 
   async getProfileData(login) {
     var self = this;
-    return this.http.get(`/api/users/${login}`, {
-        headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
-      }).subscribe(resp => {
+    return this.http.get(`/api/users/${login}`).subscribe(resp => {
         this.player = <User>resp;
         if (this.auth.uid && this.auth.uid == this.player.uid && !this.player.secret) {
           if (!this.player.secret)
@@ -94,9 +98,7 @@ export class ProfileComponent implements OnInit {
   }
 
   async getStatsData(login) {
-    return this.http.get(`/api/users/profile/stats/${login}`, {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
-    }).subscribe(resp => {
+    return this.http.get(`/api/users/profile/stats/${this.currentIndex}/${login}`).subscribe(resp => {
       resp["perClass"] = resp["perClass"].filter(thisClass => {
         return thisClass.key != 0;
       })
@@ -107,9 +109,7 @@ export class ProfileComponent implements OnInit {
   }
 
   async getAccuracyStatsData(login) {
-    return this.http.get(`/api/users/profile/stats/accuracy/${login}`, {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
-    }).subscribe(resp => {
+    return this.http.get(`/api/users/${this.currentIndex}/profile/stats/accuracy/${login}`).subscribe(resp => {
       this.accuracyStats = resp;
     }, resp => {
         this.msgError = resp.error.message;
@@ -117,9 +117,7 @@ export class ProfileComponent implements OnInit {
   }
 
   private async revokeAdmin() {
-    return this.http.put(`/api/users/admin/revoke`, {login: this.player.login}, {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
-    }).subscribe(resp => {
+    return this.http.put(`/api/users/admin/revoke`, {login: this.player.login}).subscribe(resp => {
         this.player.role = null;   
     }, resp => {
         this.msgError = resp.error.message;
@@ -128,9 +126,7 @@ export class ProfileComponent implements OnInit {
   }
 
   private async grantAdmin() {
-    return this.http.put(`/api/users/admin/grant`, {login: this.player.login}, {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
-    }).subscribe(resp => {
+    return this.http.put(`/api/users/admin/grant`, {login: this.player.login}).subscribe(resp => {
        this.player.role = "admin"
     }, resp => {
         this.msgError = resp.error.message;
@@ -149,9 +145,7 @@ export class ProfileComponent implements OnInit {
     //secretButton.classList.add("loader");
     secretButton.disabled = true;
 
-    return this.http.post(`/api/users/secret`, {secret: this.secret}, {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${await this.auth.accessToken}`)
-    }).subscribe(resp => {
+    return this.http.post(`/api/users/secret`, {secret: this.secret}).subscribe(resp => {
       if (resp["status"] == 200) {
         this.getProfileData(this.player.login).then(_ => {
           this.secretSet = true;

@@ -2,8 +2,8 @@ var axios = require('axios');
 const ESDADDRES = require('./esaddress');
 
 var esutil = {
-    sendQuery(query) {
-        return axios.get(ESDADDRES + '/tf/_search', {
+    sendQuery(query, index) {
+        return axios.get(ESDADDRES + `/${index ? index : 'tf'}/_search`, {
             headers: {"Content-Type": "application/json"},
             data: (query),
         }).then((res) => {

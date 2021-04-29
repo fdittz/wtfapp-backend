@@ -268,7 +268,9 @@ class UserService {
     }
     return returnGame;
   }
-  getStats(login) {
+
+  getStats(login, index) {
+    console.log(index)
     var matches = [];
     var stats = {
       matches: [],
@@ -280,7 +282,7 @@ class UserService {
     };
     var query = playerQueries.getMatches(login);
     return esutil
-      .sendQuery(query)
+      .sendQuery(query, index)
       .then((res) => {
         if (!res.data.aggregations.unique_ids.buckets.length) return stats;
         var resultMatches = res.data.aggregations.unique_ids.buckets;
@@ -289,7 +291,7 @@ class UserService {
           return match.key;
         });
         var query = playerQueries.getMatchesByPlayer(login, matches);
-        return esutil.sendQuery(query).then((result) => {
+        return esutil.sendQuery(query, index).then((result) => {
           var games = result.data.aggregations.games.buckets;
           games = result.data.aggregations.games.buckets
             .filter((game) => {
@@ -328,7 +330,7 @@ class UserService {
       })
       .then((stats) => {
         var query = playerQueries.getTimePlayedByClassAndTeam(login);
-        return esutil.sendQuery(query).then((result) => {
+        return esutil.sendQuery(query, index).then((result) => {
           stats.perTeam =
             result.data.aggregations.player.timePlayed.perTeam.buckets;
           stats.perClass = result.data.aggregations.player.perClass.buckets;
@@ -463,11 +465,11 @@ class UserService {
       });
   }
 
-  getTopFraggers() {
+  getTopFraggers(index) {
     var classes = [];
     var query = playerQueries.getTopFraggers();
     return esutil
-      .sendQuery(query)
+      .sendQuery(query, index)
       .then((res) => {
         return Promise.resolve(
           res.data.aggregations.all_matching_docs.buckets.all
@@ -535,11 +537,11 @@ class UserService {
       });
   }
 
-  getTopDamage() {
+  getTopDamage(index) {
     var classes = [];
     var query = playerQueries.getTopDamage();
     return esutil
-      .sendQuery(query)
+      .sendQuery(query,index)
       .then((res) => {
         return Promise.resolve(
           res.data.aggregations.all_matching_docs.buckets.all
@@ -607,11 +609,11 @@ class UserService {
       });
   }
 
-  getTopGoals() {
+  getTopGoals(index,) {
     var classes = [];
     var query = playerQueries.getTopGoals();
     return esutil
-      .sendQuery(query)
+      .sendQuery(query,index)
       .then((res) => {
         return Promise.resolve(
           res.data.aggregations.all_matching_docs.buckets.all
@@ -679,11 +681,11 @@ class UserService {
       });
   }
 
-  getTopFumbles() {
+  getTopFumbles(index) {
     var classes = [];
     var query = playerQueries.getTopFumbles();
     return esutil
-      .sendQuery(query)
+      .sendQuery(query,index)
       .then((res) => {
         return Promise.resolve(
           res.data.aggregations.all_matching_docs.buckets.all
@@ -764,7 +766,7 @@ class UserService {
       });
   }
 
-  setRatings(month) {
+  setRatings(index,month) {
     var month = moment(month, "MM-YYYY");
     var startDate = moment
       .tz(month.startOf("month"), "America/Sao_Paulo")
@@ -773,10 +775,10 @@ class UserService {
       .tz(month.endOf("month"), "America/Sao_Paulo")
       .toISOString();
     return esutil
-      .sendQuery(matchQueries.getMatchRankings(startDate, endDate))
+      .sendQuery(matchQueries.getMatchRankings(startDate, endDate),index)
       .then((qResult) => {
         var matches = qResult.data.aggregations.games.buckets;
-        return esutil.sendQuery(playerQueries.getPlayers()).then((result) => {
+        return esutil.sendQuery(playerQueries.getPlayers(),index).then((result) => {
           var players = result.data.aggregations.players.buckets
             .filter((pl) => {
               if (pl.key == "" || pl.key == "world") return false;
@@ -791,12 +793,13 @@ class UserService {
               if (player.login == login) return player;
             }
           };
-          matches = matches.reverse();
+          matches = matches.reverse().filter(match => match.gameInfo.doc_count > 0 && match.result.doc_count > 0);
           matches = matches.map((match) => {
+
             var returnGame = {};
-            returnGame.startTime = match.key.gameTimeStamp;
+            returnGame.startTime = match.key.gameTimeStamp;            
             returnGame["map"] =
-              match.gameInfo.documents.hits.hits[0]._source.map;
+              match.gameInfo.documents.hits.hits[0]._source.map;            
             returnGame.demo =
               match.gameInfo.documents.hits.hits[0]._source.demo;
             returnGame.numPlayers =
@@ -804,7 +807,7 @@ class UserService {
             returnGame.numTeams =
               match.gameInfo.documents.hits.hits[0]._source.numTeams;
             returnGame.winningTeam =
-              match.result.documents.hits.hits[0]._source.winningTeam;
+              match.result.documents.hits.hits[0]._source.winningTeam;   
             returnGame.teams = [];
             for (var i = 1; i <= 4; i++) {
               if (

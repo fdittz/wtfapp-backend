@@ -7,8 +7,8 @@ var isAdmin  = require('../middleware/admin')
 
 const PAGE_SIZE = 10;
 
-router.get('/', function(req, res, next) {
-	return MatchService.getMatches()
+router.get('/:index', function(req, res, next) {
+	return MatchService.getMatches(req.params.index)
 	.then(function(data) {
 		return res.status(200).json(data);
 	})

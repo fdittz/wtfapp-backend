@@ -14,11 +14,11 @@ import { MatchComponent } from './match/match.component';
 import { ResultSimComponent } from './result-sim/result-sim.component';
 
 const routes: Routes = [
-	{ path: '', component: HomeComponent, canActivate: [ /*AuthGuard,*/  LoginGuard]},
+	{ path: ':index', component: HomeComponent, canActivate: [ /*AuthGuard,*/  LoginGuard]},
 	{ path: 'login', component: LoginComponent },
 	{ path: 'first',	component: FirstLoginComponent,  canActivate: [AuthGuard] },
-	{ path: 'profile',	component: ProfileComponent,  canActivate: [ AuthGuard, LoginGuard] },
-	{ path: 'profile/:login',	component: ProfileComponent,  canActivate: [/* AuthGuard,*/ LoginGuard] },
+	{ path: 'profile/:index',	component: ProfileComponent,  canActivate: [ AuthGuard, LoginGuard] },
+	{ path: 'profile/:index/:login',	component: ProfileComponent,  canActivate: [/* AuthGuard,*/ LoginGuard] },
 	{ path: 'playerlist',	component: PlayerListComponent,  canActivate: [/* AuthGuard,*/ LoginGuard] },
 	{ path: 'playerlist/:page',	component: PlayerListComponent,  canActivate: [/* AuthGuard,*/ LoginGuard] },
 	{ path: 'headtohead',	component: HeadToHeadComponent,  canActivate: [/* AuthGuard, */ LoginGuard] },

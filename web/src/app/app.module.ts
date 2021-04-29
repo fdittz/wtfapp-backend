@@ -30,6 +30,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoaderService } from './services/loader.service';
 import { LoaderInterceptor } from './interceptors/loader.interceptor';
+import { HttpReqInterceptor } from './interceptors/httpreq.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
@@ -81,7 +82,7 @@ import { ResultSimComponent } from './result-sim/result-sim.component'
     BrowserModule,
     MatProgressSpinnerModule
   ],
-  providers: [LoaderService, { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }],
+  providers: [LoaderService, { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }, { provide: HTTP_INTERCEPTORS, useClass: HttpReqInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

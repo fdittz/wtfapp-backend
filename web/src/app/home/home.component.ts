@@ -4,6 +4,7 @@ import { HttpHeaders } from "@angular/common/http";
 import { AuthService } from "../auth.service";
 import { PaginationComponent } from "../pagination/pagination.component";
 import * as moment from "moment";
+import { IndexService } from './../index.service';
 
 @Component({
   selector: "app-home",
@@ -23,9 +24,12 @@ export class HomeComponent implements OnInit {
   p: number = 1;
   matchTerms: string;
   availableMonths = [];
-  constructor(public auth: AuthService, private http: HttpClient) { }
+  currentIndex: string;
+
+  constructor(public auth: AuthService, private http: HttpClient, private indexService: IndexService) { }
 
   ngOnInit() {
+    this.indexService.currentIndex.subscribe(index => this.currentIndex = index);
     this.classesImg[1] = {
       name: "Scout",
       image:
@@ -99,12 +103,7 @@ export class HomeComponent implements OnInit {
 
   async getMatches() {
     return this.http
-      .get(`/api/matches`, {
-        headers: new HttpHeaders().set(
-          "Authorization",
-          `Bearer ${await this.auth.accessToken}`
-        ),
-      })
+      .get(`/api/matches/${this.currentIndex}`)
       .subscribe(
         (resp) => {
           this.stats = resp;
@@ -118,12 +117,7 @@ export class HomeComponent implements OnInit {
 
   async getServers() {
     return this.http
-      .get(`/api/servers/registered`, {
-        headers: new HttpHeaders().set(
-          "Authorization",
-          `Bearer ${await this.auth.accessToken}`
-        ),
-      })
+      .get(`/api/servers/registered`)
       .subscribe(
         (resp) => {
           this.servers = resp;
@@ -136,12 +130,7 @@ export class HomeComponent implements OnInit {
 
   async getRankings(month = null) {
     return this.http
-      .get(`/api/users/usr/ranks/${month}`, {
-        headers: new HttpHeaders().set(
-          "Authorization",
-          `Bearer ${await this.auth.accessToken}`
-        ),
-      })
+      .get(`/api/users/usr/ranks/${this.currentIndex}/${month}`)
       .subscribe(
         (resp) => {
           this.matches = resp["matches"].reverse();
@@ -164,12 +153,7 @@ export class HomeComponent implements OnInit {
 
   async getFragRanks() {
     return this.http
-      .get(`/api/users/top/fraggers`, {
-        headers: new HttpHeaders().set(
-          "Authorization",
-          `Bearer ${await this.auth.accessToken}`
-        ),
-      })
+      .get(`/api/users/top/fraggers/${this.currentIndex}`)
       .subscribe(
         (resp) => {
           this.classRank = resp;
@@ -183,12 +167,7 @@ export class HomeComponent implements OnInit {
 
   async getDamageRanks() {
     return this.http
-      .get(`/api/users/top/damage`, {
-        headers: new HttpHeaders().set(
-          "Authorization",
-          `Bearer ${await this.auth.accessToken}`
-        ),
-      })
+      .get(`/api/users/top/damage/${this.currentIndex}`)
       .subscribe(
         (resp) => {
           this.classRank = resp;
@@ -202,12 +181,7 @@ export class HomeComponent implements OnInit {
 
   async getGoalRanks() {
     return this.http
-      .get(`/api/users/top/goals`, {
-        headers: new HttpHeaders().set(
-          "Authorization",
-          `Bearer ${await this.auth.accessToken}`
-        ),
-      })
+      .get(`/api/users/top/goals/${this.currentIndex}`)
       .subscribe(
         (resp) => {
           this.classRank = resp;
@@ -221,12 +195,7 @@ export class HomeComponent implements OnInit {
 
   async getFumbleRanks() {
     return this.http
-      .get(`/api/users/top/fumbles`, {
-        headers: new HttpHeaders().set(
-          "Authorization",
-          `Bearer ${await this.auth.accessToken}`
-        ),
-      })
+      .get(`/api/users/top/fumbles/${this.currentIndex}`)
       .subscribe(
         (resp) => {
           this.classRank = resp;
