@@ -1,1 +1,1 @@
-module.exports = "http://localhost:9200"
+module.exports = "http://elastic.andi.com.br:9200"
