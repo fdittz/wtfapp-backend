@@ -1,3 +1,4 @@
+console.log("STARTING")
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
@@ -18,8 +19,8 @@ var serveStatic = require('serve-static')
 
 var app = express();
 var proc = require('process');
-var access = fs.createWriteStream('/home/ubuntu/node.access.log', { flags: 'a' })
-      , error = fs.createWriteStream( '/home/ubuntu/node.error.log', { flags: 'a' });
+var access = fs.createWriteStream('logs/node.access.log', { flags: 'a' })
+      , error = fs.createWriteStream( 'logs/node.error.log', { flags: 'a' });
 
 // redirect stdout / stderr
 //proc.stdout.pipe(access);

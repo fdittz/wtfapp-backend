@@ -36,7 +36,7 @@ import { SideBarComponent } from './side-bar/side-bar.component';
 import { HeadToHeadComponent } from './head-to-head/head-to-head.component';
 import { MatchComponent } from './match/match.component';
 import { MinutesSecondsPipe} from './util/minutes-seconds.pipe'
-import { Config } from './app.config.js';
+import { Config } from './app.config';
 import { ResultSimComponent } from './result-sim/result-sim.component'
 
 

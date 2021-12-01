@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 //import { User } from './model/user.model'; // optional
 
-import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireDatabase, AngularFireAction } from '@angular/fire/database';
@@ -60,7 +59,7 @@ export class AuthService {
 			});
 		})
 		.then((user) => {
-			return this.getUser(user).ref.get().then((doc) => {
+			return this.getUser(user).ref.get().then((doc:any) => {
 				if (doc.exists) 
 					if (!doc.data().login)
 						return "/first";
