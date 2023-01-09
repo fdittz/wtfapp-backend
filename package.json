@@ -15,7 +15,7 @@
     "cookie-parser": "~1.4.5",
     "crypto-js": "^4.0.0",
     "express": "~4.17.1",
-    "firebase-admin": "^9.7.0",
+    "firebase-admin": "^11.4.1",
     "firebase-verify-token-middleware": "^1.1.0",
     "gamedig": "^3.0.3",
     "google-gax": "^2.11.2",
